@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class SignIn extends StatelessWidget {
-  const SignIn({super.key});
+class Authorization extends StatelessWidget {
+  final Widget? child;
+
+  const Authorization({
+    super.key,
+    this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,7 @@ class SignIn extends StatelessWidget {
           ),
         ),
       ),
-      body: const Text("111111"),
+      body: child,
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:fanfan/pages/authorization/how_to_authorize.dart';
+import 'package:fanfan/pages/authorization/main.dart';
 import 'package:fanfan/pages/home.dart';
 import 'package:fanfan/service/main.dart';
 import 'package:fanfan/store/user_profile.dart';
@@ -6,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/pages/authorization/sign_in.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   // graphql client
@@ -16,7 +19,9 @@ void main() async {
   client.authorize(userProfile);
 
   // 交换用户信息
-  await userProfile.authorize();
+  userProfile.authorize();
+  // 禁用http请求获取远程字体
+  GoogleFonts.config.allowRuntimeFetching = false;
 
   runApp(MultiProvider(
     providers: [
@@ -33,28 +38,47 @@ class App extends StatelessWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return MaterialApp.router(
       routerConfig: GoRouter(
+        initialLocation: '/authorization',
         routes: [
           GoRoute(
               path: '/',
-              builder: (BuildContext context, GoRouterState state) {
+              builder: (context, state) {
                 return const Home();
               }),
-          GoRoute(
-              path: '/authorization',
-              builder: (BuildContext context, GoRouterState state) {
-                return const SignIn();
-              })
+          ShellRoute(
+            builder: (context, state, child) {
+              return Authorization(child: child);
+            },
+            routes: [
+              GoRoute(
+                path: '/authorization',
+                builder: (context, staet) {
+                  return const HowToAuthorize();
+                },
+                routes: [
+                  GoRoute(
+                    path: 'sign-in',
+                    builder: (context, state) {
+                      return const SignIn();
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
-        redirect: (BuildContext context, GoRouterState state) {
+        redirect: (context, state) {
           return null;
         },
       ),
       theme: ThemeData(
-          primarySwatch: Colors.lightBlue,
-          scaffoldBackgroundColor: Colors.white),
+        primarySwatch: Colors.lightBlue,
+        scaffoldBackgroundColor: Colors.white,
+        textTheme: GoogleFonts.josefinSansTextTheme(),
+      ),
     );
   }
 }
