@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.fanfan">
+    package="com.fantufantu.fanfan">
    <application
         android:label="fanfan"
         android:name="${applicationName}"
