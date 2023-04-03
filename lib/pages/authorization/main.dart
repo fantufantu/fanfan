@@ -25,7 +25,12 @@ class Authorization extends StatelessWidget {
           ),
         ),
       ),
-      body: child,
+      body: Container(
+        padding: const EdgeInsets.only(left: 40, right: 40),
+        child: SafeArea(
+          child: SizedBox.expand(child: child),
+        ),
+      ),
     );
   }
 }

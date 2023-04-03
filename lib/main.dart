@@ -16,10 +16,8 @@ void main() async {
   // 全局状态
   final userProfile = UserProfile(client.created);
   // 设置状态机
-  client.authorize(userProfile);
+  client.setUserProfile(userProfile);
 
-  // 交换用户信息
-  userProfile.authorize();
   // 禁用http请求获取远程字体
   GoogleFonts.config.allowRuntimeFetching = false;
 
@@ -32,6 +30,9 @@ void main() async {
       child: const App(),
     ),
   ));
+
+  // 交换用户信息
+  userProfile.authorize();
 }
 
 class App extends StatelessWidget {

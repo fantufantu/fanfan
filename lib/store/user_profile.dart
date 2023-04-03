@@ -10,7 +10,7 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   WhoAmI? _whoAmI = null;
 
   /// token
-  String? _token;
+  String _token = '';
 
   /// 请求客户端
   GraphQLClient _client;
@@ -41,7 +41,7 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
     if (fetched.hasException || fetched.parsedData == null) {
       _isLoggedIn = false;
       _whoAmI = null;
-      _token = null;
+      _token = '';
       return;
     }
 

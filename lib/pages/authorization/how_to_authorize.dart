@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class HowToAuthorize extends StatelessWidget {
@@ -8,42 +5,73 @@ class HowToAuthorize extends StatelessWidget {
 
   @override
   Widget build(context) {
-    return Scaffold(
-        body: SafeArea(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return CustomScrollView(
+      slivers: [
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            childCount: 1,
+            (context, index) => Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(children: [
+                  Image.asset(
+                    "images/unauthorized.png",
+                    width: double.infinity,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 40),
+                    child: const Text(
+                      'Let`s you in',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ]),
+              ],
+            ),
+          ),
+        ),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Column(children: [
-                Image.asset(
-                  "images/unauthorized.png",
-                  scale: 3,
-                ),
-                const Text(
-                  'Let`s you in',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
+              Row(
+                children: [
+                  const Expanded(
+                    child: Divider(
+                      thickness: 1,
+                    ),
                   ),
-                ),
-              ]),
-              Column(
-                children: const [
-                  Divider(
-                    color: Colors.black,
-                    thickness: 30,
+                  Container(
+                    margin: const EdgeInsets.only(left: 20, right: 20),
+                    child: const Text(
+                      "or",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  Text(
-                    '用账号密码方式',
+                  const Expanded(
+                    child: Divider(
+                      thickness: 1,
+                    ),
                   ),
                 ],
               ),
+              Container(
+                margin: const EdgeInsets.only(top: 14),
+                child: const Text(
+                  '用账号密码方式',
+                ),
+              )
             ],
-          )
-        ],
-      ),
-    ));
+          ),
+        ),
+      ],
+    );
   }
 }

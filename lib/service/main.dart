@@ -6,7 +6,7 @@ class Client {
   late GraphQLClient _client;
 
   /// 用户 store
-  late UserProfile _userProfile;
+  UserProfile? _userProfile;
 
   // 实例化
   Client() {
@@ -15,7 +15,8 @@ class Client {
     );
 
     final authLink = AuthLink(
-      getToken: () => 'Bearer ${_userProfile.token}',
+      getToken: () =>
+          'Bearer ${_userProfile == null ? '' : _userProfile!.token}',
     );
 
     final Link link = authLink.concat(httpLink);
@@ -32,7 +33,7 @@ class Client {
   }
 
   /// 设置全局状态
-  void authorize(UserProfile userProfile) {
+  void setUserProfile(UserProfile userProfile) {
     _userProfile = userProfile;
   }
 }
