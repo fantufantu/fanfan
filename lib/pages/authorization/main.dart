@@ -18,7 +18,7 @@ class Authorization extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.only(left: 20),
           child: IconButton(
-            onPressed: () => {context.go('/')},
+            onPressed: () => context.go('/'),
             icon: const Icon(Icons.arrow_back),
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,

@@ -20,7 +20,42 @@ class SignIn extends StatelessWidget {
           ),
         ),
       ),
-      body: const Text("111111"),
+      body: const _SignIn(),
+    );
+  }
+}
+
+class _SignIn extends StatefulWidget {
+  const _SignIn();
+
+  @override
+  _SignInState createState() => _SignInState();
+}
+
+class _SignInState extends State<_SignIn> {
+  /// 用户名、邮箱
+  String keyword = '';
+
+  /// 密码
+  String password = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: Column(
+        children: [
+          TextFormField(
+            decoration: InputDecoration(
+              label: Text("请输入用户名"),
+            ),
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              label: Text("请输入密码"),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

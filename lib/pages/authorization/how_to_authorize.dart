@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HowToAuthorize extends StatelessWidget {
   const HowToAuthorize({super.key});
@@ -63,9 +64,36 @@ class HowToAuthorize extends StatelessWidget {
                 ],
               ),
               Container(
-                margin: const EdgeInsets.only(top: 14),
-                child: const Text(
-                  '用账号密码方式',
+                margin: const EdgeInsets.only(top: 24),
+                width: double.infinity,
+                height: 48,
+                child: FilledButton(
+                  style: const ButtonStyle(
+                    shadowColor: MaterialStatePropertyAll(Colors.lightBlue),
+                    elevation: MaterialStatePropertyAll(4),
+                  ),
+                  onPressed: () => context.go('/authorization/sign-in'),
+                  child: const Text(
+                    'Sign in with password',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                width: double.infinity,
+                height: 48,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Don`t have an account?'),
+                    TextButton(
+                      onPressed: () => context.go('/authorization/sign-up'),
+                      child: const Text("Sign up"),
+                    ),
+                  ],
                 ),
               )
             ],
