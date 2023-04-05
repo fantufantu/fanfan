@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/pages/authorization/sign_in.dart';
+import 'package:fanfan/pages/authorization/sign_up.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
@@ -42,7 +43,7 @@ class App extends StatelessWidget {
   Widget build(context) {
     return MaterialApp.router(
       routerConfig: GoRouter(
-        initialLocation: '/authorization',
+        initialLocation: '/',
         routes: [
           GoRoute(
               path: '/',
@@ -64,6 +65,12 @@ class App extends StatelessWidget {
                     path: 'sign-in',
                     builder: (context, state) {
                       return const SignIn();
+                    },
+                  ),
+                  GoRoute(
+                    path: 'sign-up',
+                    builder: (context, state) {
+                      return const SignUp();
                     },
                   ),
                 ],

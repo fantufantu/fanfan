@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class SignIn extends StatelessWidget {
-  const SignIn({super.key});
+class SignUp extends StatelessWidget {
+  const SignUp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const _SignInForm();
+    return const _SignUpForm();
   }
 }
 
-class _SignInForm extends StatefulWidget {
-  const _SignInForm();
+class _SignUpForm extends StatefulWidget {
+  const _SignUpForm();
 
   @override
-  _SignInFormState createState() => _SignInFormState();
+  _SignUpFormState createState() => _SignUpFormState();
 }
 
-class _SignInFormState extends State<_SignInForm> {
+class _SignUpFormState extends State<_SignUpForm> {
   /// 记住我
   bool _isRememberMe = false;
 
@@ -39,7 +39,7 @@ class _SignInFormState extends State<_SignInForm> {
                       top: 40,
                     ),
                     child: const Text(
-                      'Login to your',
+                      'Create your',
                       style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
@@ -126,23 +126,7 @@ class _SignInFormState extends State<_SignInForm> {
                           ),
                         ),
                       ),
-                      child: const Text('Sign in'),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 8,
-                    ),
-                    child: Center(
-                      child: TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          '忘记密码',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
+                      child: const Text('Sign up'),
                     ),
                   ),
                 ],
@@ -160,10 +144,10 @@ class _SignInFormState extends State<_SignInForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text('Don`t have an account?'),
+                  const Text('Already have an account?'),
                   TextButton(
-                    onPressed: () => context.go('/authorization/sign-up'),
-                    child: const Text("Sign up"),
+                    onPressed: () => context.go('/authorization/sign-in'),
+                    child: const Text("Sign in"),
                   ),
                 ],
               ),
