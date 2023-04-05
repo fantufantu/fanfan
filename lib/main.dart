@@ -76,9 +76,65 @@ class App extends StatelessWidget {
         },
       ),
       theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
+        primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
         textTheme: GoogleFonts.josefinSansTextTheme(),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.grey.shade100,
+          focusColor: Colors.deepOrange,
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+            borderSide: BorderSide.none,
+          ),
+          errorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+            borderSide: BorderSide(
+              color: Colors.red,
+            ),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+            borderSide: BorderSide(
+              color: Colors.blue,
+            ),
+          ),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+            borderSide: BorderSide(
+              color: Colors.red,
+            ),
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          labelStyle: const TextStyle(
+            fontSize: 14,
+          ),
+        ),
+        checkboxTheme: const CheckboxThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(6),
+            ),
+          ),
+          side: BorderSide(
+            color: Colors.blue,
+            width: 2,
+          ),
+        ),
       ),
     );
   }

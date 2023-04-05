@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fanfan/components/styled_text_form_field.dart';
+import 'package:go_router/go_router.dart';
 
 class SignIn extends StatelessWidget {
   const SignIn({super.key});
@@ -49,7 +49,6 @@ class _SignInFormState extends State<_SignInForm> {
                   Container(
                     margin: const EdgeInsets.only(
                       top: 12,
-                      bottom: 60,
                     ),
                     child: const Text(
                       'Account',
@@ -59,13 +58,37 @@ class _SignInFormState extends State<_SignInForm> {
                       ),
                     ),
                   ),
-                  const StyledTextFormField(
-                    label: Text('请输入'),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      top: 40,
+                    ),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        label: Text('邮箱'),
+                        prefixIcon: Icon(
+                          Icons.email_rounded,
+                          size: 16,
+                        ),
+                      ),
+                    ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    child: const StyledTextFormField(
-                      label: Text('请输入'),
+                    margin: const EdgeInsets.only(top: 28),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        label: const Text('密码'),
+                        prefixIcon: const Icon(
+                          Icons.lock_rounded,
+                          size: 16,
+                        ),
+                        suffixIcon: InkWell(
+                          onTap: () {},
+                          child: const Icon(
+                            Icons.remove_red_eye_rounded,
+                            size: 16,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Container(
@@ -74,11 +97,6 @@ class _SignInFormState extends State<_SignInForm> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Checkbox(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(6),
-                            ),
-                          ),
                           value: _isRememberMe,
                           onChanged: (changed) => setState(() {
                             _isRememberMe = changed == true;
@@ -88,7 +106,10 @@ class _SignInFormState extends State<_SignInForm> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  Container(
+                    margin: const EdgeInsets.only(
+                      top: 8,
+                    ),
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
@@ -108,10 +129,45 @@ class _SignInFormState extends State<_SignInForm> {
                       child: const Text('Sign in'),
                     ),
                   ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      top: 8,
+                    ),
+                    child: Center(
+                      child: TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          '忘记密码',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
             childCount: 1,
+          ),
+        ),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text('Don`t have an account?'),
+                  TextButton(
+                    onPressed: () => context.go('/authorization/sign-up'),
+                    child: const Text("Sign up"),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ],

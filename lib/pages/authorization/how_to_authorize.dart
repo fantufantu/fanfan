@@ -69,7 +69,7 @@ class HowToAuthorize extends StatelessWidget {
                 height: 48,
                 child: FilledButton(
                   style: const ButtonStyle(
-                    shadowColor: MaterialStatePropertyAll(Colors.lightBlue),
+                    shadowColor: MaterialStatePropertyAll(Colors.blue),
                     elevation: MaterialStatePropertyAll(4),
                   ),
                   onPressed: () => context.go('/authorization/sign-in'),
@@ -87,6 +87,7 @@ class HowToAuthorize extends StatelessWidget {
                 height: 48,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text('Don`t have an account?'),
                     TextButton(
