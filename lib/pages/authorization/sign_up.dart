@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:fanfan/service/authorization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({super.key});
@@ -18,10 +22,79 @@ class _SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<_SignUpForm> {
-  /// 记住我
+  /// 是否记住我
   bool _isRememberMe = false;
 
+  /// 邮箱
+  String _emailAddress = '';
+
+  /// 密码
+  String _password = '';
+
+  /// 验证码
+  String _captcha = '';
+
+  /// 倒计时
+  int countdown = 0;
+
+  /// 是否密码可见
+  bool _isPasswordVisable = false;
+
+  /// 是否表单填写完整
+  get isCompleted {
+    return _emailAddress.isNotEmpty &&
+        _password.isNotEmpty &&
+        _captcha.isNotEmpty;
+  }
+
+  /// 注册 api
+  // final registerMutation = useMutation(MutationOptions(document: REGISTER));
+
+  /// 注册
+  useRegister() {
+    if (!isCompleted) return null;
+    return () {
+      // // 请求
+      // final registered = registerMutation.runMutation({
+      //   'registerBy': {
+      //     'emailAddress': _emailAddress,
+      //     'captcha': _captcha,
+      //     'password': _password,
+      //   }
+      // });
+
+      // print("registered=====");
+      // print(registered);
+    };
+  }
+
   final _formKey = GlobalKey<FormState>();
+
+  /// 开启倒计时
+  onCaptchaSent() {
+    setState(() {
+      countdown = 60;
+    });
+
+    // 定时器
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (countdown == 0) {
+        timer.cancel();
+        return;
+      }
+      // - 1 秒
+      setState(() {
+        countdown = countdown - 1;
+      });
+    });
+  }
+
+  /// 切换是否密码可见
+  onIsPasswordVisableChange() {
+    setState(() {
+      _isPasswordVisable = !_isPasswordVisable;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +136,7 @@ class _SignUpFormState extends State<_SignUpForm> {
                       top: 40,
                     ),
                     child: TextFormField(
+                      initialValue: _emailAddress,
                       decoration: const InputDecoration(
                         label: Text('邮箱'),
                         prefixIcon: Icon(
@@ -70,11 +144,53 @@ class _SignUpFormState extends State<_SignUpForm> {
                           size: 16,
                         ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _emailAddress = value;
+                        });
+                      },
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: TextFormField(
+                      initialValue: _captcha,
+                      decoration: InputDecoration(
+                        label: const Text('验证码'),
+                        prefixIcon: const Icon(
+                          Icons.fingerprint_rounded,
+                          size: 16,
+                        ),
+                        suffix: countdown == 0
+                            ? InkWell(
+                                onTap: onCaptchaSent,
+                                child: Text(
+                                  '发送验证码',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.blue.shade700,
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                '倒计时 $countdown s',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _captcha = value;
+                        });
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    child: TextFormField(
+                      initialValue: _password,
+                      obscureText: !_isPasswordVisable,
                       decoration: InputDecoration(
                         label: const Text('密码'),
                         prefixIcon: const Icon(
@@ -82,13 +198,20 @@ class _SignUpFormState extends State<_SignUpForm> {
                           size: 16,
                         ),
                         suffixIcon: InkWell(
-                          onTap: () {},
-                          child: const Icon(
-                            Icons.remove_red_eye_rounded,
+                          onTap: onIsPasswordVisableChange,
+                          child: Icon(
+                            _isPasswordVisable
+                                ? Icons.remove_red_eye_rounded
+                                : Icons.password_rounded,
                             size: 16,
                           ),
                         ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _password = value;
+                        });
+                      },
                     ),
                   ),
                   Container(
@@ -113,10 +236,7 @@ class _SignUpFormState extends State<_SignUpForm> {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: () {
-                        _formKey.currentState?.validate();
-                        _formKey.currentState?.save();
-                      },
+                      onPressed: useRegister(),
                       style: const ButtonStyle(
                         shape: MaterialStatePropertyAll(
                           RoundedRectangleBorder(
