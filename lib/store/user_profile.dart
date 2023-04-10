@@ -1,42 +1,37 @@
+import 'package:fanfan/service/main.dart';
 import 'package:flutter/foundation.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:fanfan/service/user.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
-  /// 是否已登录
+  static final UserProfile _instance = UserProfile._internal();
+  late Service _service;
+  String _token = '';
+  WhoAmI? _whoAmI = null;
   bool _isLoggedIn = false;
 
-  /// 用户信息
-  WhoAmI? _whoAmI = null;
+  UserProfile._internal() {
+    _service = Service();
+  }
 
-  /// token
-  String _token = '';
+  factory UserProfile() => _instance;
 
-  /// 请求客户端
-  GraphQLClient _client;
-
-  /// 构造函数
-  UserProfile(this._client);
-
-  /// get token
-  String? get token {
+  String get token {
     return _token;
   }
 
-  /// get whoAmI
-  get whoAmI {
+  WhoAmI? get whoAmI {
     return _whoAmI;
   }
 
-  /// isLoggedIn
-  get isLoggedIn {
+  bool get isLoggedIn {
     return _isLoggedIn;
   }
 
   /// 交换用户信息
   authorize() async {
     final fetched =
-        await _client.query<WhoAmI>(QueryOptions(document: WHO_AM_I));
+        await _service.client.query<WhoAmI>(QueryOptions(document: WHO_AM_I));
 
     if (fetched.hasException || fetched.parsedData == null) {
       _isLoggedIn = false;

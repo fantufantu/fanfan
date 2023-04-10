@@ -1,22 +1,20 @@
 import 'package:fanfan/store/user_profile.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class Client {
-  /// 客户端
+class Service {
+  static final _instance = Service._internal();
   late GraphQLClient _client;
+  late UserProfile _userProfile;
 
-  /// 用户 store
-  UserProfile? _userProfile;
+  Service._internal() {
+    _userProfile = UserProfile();
 
-  // 实例化
-  Client() {
     final HttpLink httpLink = HttpLink(
       'https://api.fantufantu.com/',
     );
 
     final authLink = AuthLink(
-      getToken: () =>
-          'Bearer ${_userProfile == null ? '' : _userProfile!.token}',
+      getToken: () => 'Bearer ${_userProfile.token}',
     );
 
     final Link link = authLink.concat(httpLink);
@@ -27,13 +25,9 @@ class Client {
     );
   }
 
-  /// 客户端
-  GraphQLClient get created {
-    return _client;
-  }
+  factory Service() => _instance;
 
-  /// 设置全局状态
-  void setUserProfile(UserProfile userProfile) {
-    _userProfile = userProfile;
+  GraphQLClient get client {
+    return _client;
   }
 }

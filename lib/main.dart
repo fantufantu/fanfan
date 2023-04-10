@@ -1,39 +1,24 @@
 import 'package:fanfan/pages/authorization/how_to_authorize.dart';
 import 'package:fanfan/pages/authorization/main.dart';
 import 'package:fanfan/pages/home.dart';
-import 'package:fanfan/service/main.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/pages/authorization/sign_in.dart';
 import 'package:fanfan/pages/authorization/sign_up.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
-  // graphql client
-  final client = Client();
-  // 全局状态
-  final userProfile = UserProfile(client.created);
-  // 设置状态机
-  client.setUserProfile(userProfile);
-
   // 禁用http请求获取远程字体
   GoogleFonts.config.allowRuntimeFetching = false;
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => userProfile),
+      ChangeNotifierProvider(create: (_) => UserProfile()),
     ],
-    child: GraphQLProvider(
-      client: ValueNotifier(client.created),
-      child: const App(),
-    ),
+    child: const App(),
   ));
-
-  // 交换用户信息
-  userProfile.authorize();
 }
 
 class App extends StatelessWidget {
