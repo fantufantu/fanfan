@@ -1,6 +1,6 @@
 import 'package:fanfan/utils/client.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fanfan/service/user.dart';
+import 'package:fanfan/service/schemas/user.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
@@ -48,7 +48,8 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
     _whoAmI = authorized.parsedData;
   }
 
-  get clent {
-    return _client;
+  /// 设置 token
+  setToken(String token) {
+    _token = token;
   }
 }
