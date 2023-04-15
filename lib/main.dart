@@ -1,7 +1,7 @@
 import 'package:fanfan/pages/authorization/how_to_authorize.dart';
 import 'package:fanfan/pages/authorization/main.dart';
 import 'package:fanfan/pages/home.dart';
-import 'package:fanfan/service/main.dart';
+import 'package:fanfan/utils/client.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

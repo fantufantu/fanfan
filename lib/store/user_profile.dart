@@ -1,4 +1,4 @@
-import 'package:fanfan/service/main.dart';
+import 'package:fanfan/utils/client.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/user.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
