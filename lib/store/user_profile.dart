@@ -4,17 +4,23 @@ import 'package:fanfan/service/user.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
-  static final UserProfile _instance = UserProfile._internal();
-  late Service _service;
+  /// 单例
+  static UserProfile? _instance;
+
+  /// 请求客户端
+  late Client _client;
+
+  /// 用户凭证
   String _token = '';
-  WhoAmI? _whoAmI = null;
-  bool _isLoggedIn = false;
+
+  /// 用户信息
+  WhoAmI? _whoAmI;
 
   UserProfile._internal() {
-    _service = Service();
+    _client = Client();
   }
 
-  factory UserProfile() => _instance;
+  factory UserProfile() => _instance ??= UserProfile._internal();
 
   String get token {
     return _token;
@@ -25,22 +31,24 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   bool get isLoggedIn {
-    return _isLoggedIn;
+    return _whoAmI != null;
   }
 
   /// 交换用户信息
   authorize() async {
-    final fetched =
-        await _service.client.query<WhoAmI>(QueryOptions(document: WHO_AM_I));
+    final authorized =
+        await _client.query<WhoAmI>(QueryOptions(document: WHO_AM_I));
 
-    if (fetched.hasException || fetched.parsedData == null) {
-      _isLoggedIn = false;
+    if (authorized.hasException || authorized.parsedData == null) {
       _whoAmI = null;
       _token = '';
       return;
     }
 
-    _isLoggedIn = true;
-    _whoAmI = fetched.parsedData;
+    _whoAmI = authorized.parsedData;
+  }
+
+  get clent {
+    return _client;
   }
 }

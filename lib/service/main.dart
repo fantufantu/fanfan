@@ -1,33 +1,25 @@
 import 'package:fanfan/store/user_profile.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class Service {
-  static final _instance = Service._internal();
-  late GraphQLClient _client;
-  late UserProfile _userProfile;
+class Client extends GraphQLClient {
+  /// 单例
+  static Client? _clinet;
 
-  Service._internal() {
-    _userProfile = UserProfile();
-
-    final HttpLink httpLink = HttpLink(
-      'https://api.fantufantu.com/',
-    );
-
-    final authLink = AuthLink(
-      getToken: () => 'Bearer ${_userProfile.token}',
-    );
-
-    final Link link = authLink.concat(httpLink);
-
-    _client = GraphQLClient(
-      link: link,
+  factory Client() {
+    return _clinet ??= Client._internal(
+      link: AuthLink(
+        getToken: () => 'Bearer ${UserProfile().token}',
+      ).concat(
+        HttpLink(
+          'https://api.fantufantu.com/',
+        ),
+      ),
       cache: GraphQLCache(),
     );
   }
 
-  factory Service() => _instance;
-
-  GraphQLClient get client {
-    return _client;
-  }
+  Client._internal({
+    required super.link,
+    required super.cache,
+  });
 }
