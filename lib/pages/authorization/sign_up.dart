@@ -1,13 +1,9 @@
 import 'dart:async';
-
 import 'package:fanfan/service/api/authorization.dart';
-import 'package:fanfan/service/entities/captcha_sent.dart';
-import 'package:fanfan/service/schemas/authorization.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
 class SignUp extends StatelessWidget {
