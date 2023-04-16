@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:fanfan/service/api/authorization.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';

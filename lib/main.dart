@@ -1,6 +1,8 @@
 import 'package:fanfan/pages/authorization/how_to_authorize.dart';
 import 'package:fanfan/pages/authorization/main.dart';
 import 'package:fanfan/pages/home.dart';
+import 'package:fanfan/pages/layout.dart';
+import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/utils/client.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +19,7 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(
-        create: (_) => UserProfile(),
-      ),
+      ChangeNotifierProvider(create: (_) => UserProfile()),
     ],
     child: GraphQLProvider(
       client: ValueNotifier(
@@ -33,45 +33,68 @@ void main() async {
 class App extends StatelessWidget {
   const App({super.key});
 
+  /// 路由
+  List<RouteBase> _buildRoutes(BuildContext context) {
+    // 是否认证
+    bool isLoggedIn =
+        context.select((UserProfile userProfile) => userProfile.isLoggedIn);
+
+    return [
+      ShellRoute(
+        builder: (context, state, child) => Layout(child: child),
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) {
+              return const Home();
+            },
+          ),
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) {
+              return const Profile();
+            },
+          ),
+        ],
+      ),
+      ...(!isLoggedIn
+          ? [
+              ShellRoute(
+                builder: (context, state, child) => Authorization(child: child),
+                routes: [
+                  GoRoute(
+                    path: '/authorization',
+                    builder: (context, staet) {
+                      return const HowToAuthorize();
+                    },
+                    routes: [
+                      GoRoute(
+                        path: 'sign-in',
+                        builder: (context, state) {
+                          return const SignIn();
+                        },
+                      ),
+                      GoRoute(
+                        path: 'sign-up',
+                        builder: (context, state) {
+                          return const SignUp();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ]
+          : []),
+    ];
+  }
+
   @override
   Widget build(context) {
     return MaterialApp.router(
       routerConfig: GoRouter(
         initialLocation: '/',
-        routes: [
-          GoRoute(
-              path: '/',
-              builder: (context, state) {
-                return const Home();
-              }),
-          ShellRoute(
-            builder: (context, state, child) {
-              return Authorization(child: child);
-            },
-            routes: [
-              GoRoute(
-                path: '/authorization',
-                builder: (context, staet) {
-                  return const HowToAuthorize();
-                },
-                routes: [
-                  GoRoute(
-                    path: 'sign-in',
-                    builder: (context, state) {
-                      return const SignIn();
-                    },
-                  ),
-                  GoRoute(
-                    path: 'sign-up',
-                    builder: (context, state) {
-                      return const SignUp();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+        routes: _buildRoutes(context),
         redirect: (context, state) {
           return null;
         },

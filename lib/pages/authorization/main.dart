@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class Authorization extends StatelessWidget {
-  final Widget? child;
+  final Widget child;
 
   const Authorization({
     super.key,
-    this.child,
+    required this.child,
   });
 
   @override

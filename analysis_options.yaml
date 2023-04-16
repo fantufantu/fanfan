@@ -24,5 +24,6 @@ linter:
   rules:
     non_constant_identifier_names: false
     constant_identifier_names: false
+    no_logic_in_create_state: false
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

@@ -17,6 +17,8 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   /// 用户信息
   WhoAmI? _whoAmI;
 
+  int _count = 0;
+
   UserProfile._internal() {
     _client = Client();
   }
@@ -35,6 +37,10 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
     return _whoAmI != null;
   }
 
+  int get count {
+    return _count;
+  }
+
   /// 交换用户信息
   authorize() async {
     final response =
@@ -43,14 +49,19 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
     if (response.hasException || response.data == null) {
       _whoAmI = null;
       _token = '';
-      return;
+    } else {
+      _whoAmI = WhoAmI.fromJson(response.data!['whoAmI']);
     }
 
-    _whoAmI = WhoAmI.fromJson(response.data!['whoAmI']);
+    // 消息触达
+    notifyListeners();
   }
 
   /// 设置 token
   setToken(String token) {
     _token = token;
+
+    // 消息触达
+    notifyListeners();
   }
 }
