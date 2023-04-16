@@ -2,6 +2,7 @@ import 'package:fanfan/utils/client.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/schemas/user.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:fanfan/service/entities/who_am_i.dart';
 
 class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   /// 单例
@@ -36,16 +37,16 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
 
   /// 交换用户信息
   authorize() async {
-    final authorized =
+    final response =
         await _client.query<WhoAmI>(QueryOptions(document: WHO_AM_I));
 
-    if (authorized.hasException || authorized.parsedData == null) {
+    if (response.hasException || response.data == null) {
       _whoAmI = null;
       _token = '';
       return;
     }
 
-    _whoAmI = authorized.parsedData;
+    _whoAmI = WhoAmI.fromJson(response.data!['whoAmI']);
   }
 
   /// 设置 token

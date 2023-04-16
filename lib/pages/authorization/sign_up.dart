@@ -42,15 +42,15 @@ class _SignUpFormState extends State<_SignUpForm> {
   bool _isPasswordVisable = false;
 
   /// 是否表单填写完整
-  get isCompleted {
+  get _isCompleted {
     return _emailAddress.isNotEmpty &&
         _password.isNotEmpty &&
         _captcha.isNotEmpty;
   }
 
   /// 注册
-  useRegister(BuildContext context) {
-    if (!isCompleted) return null;
+  _useRegister(BuildContext context) {
+    if (!_isCompleted) return null;
 
     final userProfile = context.read<UserProfile>();
 
@@ -79,23 +79,19 @@ class _SignUpFormState extends State<_SignUpForm> {
           ),
         );
 
-        return null;
+        throw error;
       });
 
-      if (registered == null) {
-        return;
-      }
-
       // 设置 token
-      userProfile.setToken(registered.register);
+      userProfile.setToken(registered);
     };
   }
 
   final _formKey = GlobalKey<FormState>();
 
   /// 发送验证码，开启倒计时
-  onCaptchaSent(BuildContext context) async {
-    final sent = await Authorization.sendCaptcha(
+  _onCaptchaSent(BuildContext context) async {
+    await Authorization.sendCaptcha(
       to: _emailAddress,
       type: describeEnum(VerificationType.Email),
     ).catchError((error) {
@@ -117,12 +113,8 @@ class _SignUpFormState extends State<_SignUpForm> {
         ),
       );
 
-      return null;
+      throw error;
     });
-
-    if (sent == null) {
-      return;
-    }
 
     setState(() {
       _countdown = 60;
@@ -142,7 +134,7 @@ class _SignUpFormState extends State<_SignUpForm> {
   }
 
   /// 切换是否密码可见
-  onIsPasswordVisableChange() {
+  _onIsPasswordVisableChange() {
     setState(() {
       _isPasswordVisable = !_isPasswordVisable;
     });
@@ -173,7 +165,7 @@ class _SignUpFormState extends State<_SignUpForm> {
 
     // 发送按钮
     return InkWell(
-      onTap: _emailAddress.isNotEmpty ? () => onCaptchaSent(context) : null,
+      onTap: _emailAddress.isNotEmpty ? () => _onCaptchaSent(context) : null,
       child: Text(
         '发送验证码',
         style: TextStyle(
@@ -285,7 +277,7 @@ class _SignUpFormState extends State<_SignUpForm> {
                           size: 16,
                         ),
                         suffixIcon: InkWell(
-                          onTap: onIsPasswordVisableChange,
+                          onTap: _onIsPasswordVisableChange,
                           child: Icon(
                             _isPasswordVisable
                                 ? Icons.remove_red_eye_rounded
@@ -323,7 +315,7 @@ class _SignUpFormState extends State<_SignUpForm> {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: useRegister(context),
+                      onPressed: _useRegister(context),
                       style: const ButtonStyle(
                         shape: MaterialStatePropertyAll(
                           RoundedRectangleBorder(

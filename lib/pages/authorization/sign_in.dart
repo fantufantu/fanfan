@@ -1,5 +1,10 @@
+import 'dart:async';
+
+import 'package:fanfan/service/api/authorization.dart';
+import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class SignIn extends StatelessWidget {
   const SignIn({super.key});
@@ -21,7 +26,97 @@ class _SignInFormState extends State<_SignInForm> {
   /// 记住我
   bool _isRememberMe = false;
 
+  /// 用户凭证
+  String _who = 'tutu@fantufantu.com';
+
+  /// 密码
+  String _password = 'hjz+++0502';
+
+  /// 是否密码可见
+  bool _isPasswordVisable = false;
+
   final _formKey = GlobalKey<FormState>();
+
+  /// 是否表单填写完整
+  get _isCompleted {
+    return _who.isNotEmpty && _password.isNotEmpty;
+  }
+
+  /// 切换是否密码可见
+  _onIsPasswordVisableChange() {
+    setState(() {
+      _isPasswordVisable = !_isPasswordVisable;
+    });
+  }
+
+  /// 登录触发器
+  _useLogin(BuildContext context) {
+    if (!_isCompleted) return null;
+
+    // store 中的用户模块
+    final userProfile = context.read<UserProfile>();
+
+    // 展示 loading
+    showLoading() => showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.run_circle,
+                    size: 80,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 12),
+                    child: const Text("登录成功，正在跳转..."),
+                  ),
+                ],
+              ),
+            );
+          },
+          barrierDismissible: false,
+        );
+
+    // 登录
+    return () async {
+      final signedIn = await Authorization.login(who: _who, password: _password)
+          .catchError((error) {
+        // 展示异常信息
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  error.message,
+                  style: TextStyle(
+                    color: Colors.redAccent.shade200,
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.grey.shade50,
+          ),
+        );
+
+        throw error;
+      });
+
+      // 显示对话框正在登录
+      showLoading();
+
+      // 设置 token
+      userProfile.setToken(signedIn);
+      // 换取用户信息
+      await userProfile.authorize();
+
+      // 跳转到首页
+      // ignore: use_build_context_synchronously
+      context.go('/');
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +158,7 @@ class _SignInFormState extends State<_SignInForm> {
                       top: 40,
                     ),
                     child: TextFormField(
+                      initialValue: _who,
                       decoration: const InputDecoration(
                         label: Text('邮箱'),
                         prefixIcon: Icon(
@@ -70,11 +166,18 @@ class _SignInFormState extends State<_SignInForm> {
                           size: 16,
                         ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _who = value;
+                        });
+                      },
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: TextFormField(
+                      initialValue: _password,
+                      obscureText: !_isPasswordVisable,
                       decoration: InputDecoration(
                         label: const Text('密码'),
                         prefixIcon: const Icon(
@@ -82,13 +185,20 @@ class _SignInFormState extends State<_SignInForm> {
                           size: 16,
                         ),
                         suffixIcon: InkWell(
-                          onTap: () {},
-                          child: const Icon(
-                            Icons.remove_red_eye_rounded,
+                          onTap: _onIsPasswordVisableChange,
+                          child: Icon(
+                            _isPasswordVisable
+                                ? Icons.remove_red_eye_rounded
+                                : Icons.password_rounded,
                             size: 16,
                           ),
                         ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _password = value;
+                        });
+                      },
                     ),
                   ),
                   Container(
@@ -113,10 +223,7 @@ class _SignInFormState extends State<_SignInForm> {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: () {
-                        _formKey.currentState?.validate();
-                        _formKey.currentState?.save();
-                      },
+                      onPressed: _useLogin(context),
                       style: const ButtonStyle(
                         shape: MaterialStatePropertyAll(
                           RoundedRectangleBorder(
@@ -129,22 +236,22 @@ class _SignInFormState extends State<_SignInForm> {
                       child: const Text('Sign in'),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 8,
-                    ),
-                    child: Center(
-                      child: TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          '忘记密码',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   margin: const EdgeInsets.only(
+                  //     top: 8,
+                  //   ),
+                  //   child: Center(
+                  //     child: TextButton(
+                  //       onPressed: () {},
+                  //       child: const Text(
+                  //         '忘记密码',
+                  //         style: TextStyle(
+                  //           fontWeight: FontWeight.w600,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

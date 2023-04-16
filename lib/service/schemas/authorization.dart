@@ -11,3 +11,9 @@ final SEND_CAPTCHA = gql('''
     sendCaptcha(sendCaptchaBy: \$sendCaptchaBy)
   }
 ''');
+
+final LOGIN = gql('''
+  mutation Login(\$loginBy: LoginBy!) {
+    login(loginBy: \$loginBy)
+  }
+''');
