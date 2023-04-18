@@ -14,7 +14,8 @@ class Home extends StatelessWidget {
           ElevatedButton(
             onPressed: () {},
             child: Text(
-                context.select((UserProfile userProfile) => userProfile.token)),
+              context.select((UserProfile userProfile) => userProfile.token),
+            ),
           ),
         ],
       ),

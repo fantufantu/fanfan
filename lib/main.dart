@@ -3,6 +3,7 @@ import 'package:fanfan/pages/authorization/main.dart';
 import 'package:fanfan/pages/home.dart';
 import 'package:fanfan/pages/layout.dart';
 import 'package:fanfan/pages/profile.dart';
+import 'package:fanfan/pages/statistics.dart';
 import 'package:fanfan/utils/client.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
@@ -41,19 +42,24 @@ class App extends StatelessWidget {
 
     return [
       ShellRoute(
-        builder: (context, state, child) => Layout(child: child),
+        builder: (context, state, child) {
+          print("child=======");
+          print(state.fullpath);
+          print(state.path);
+          return Layout(child: child);
+        },
         routes: [
           GoRoute(
-            path: '/',
-            builder: (context, state) {
-              return const Home();
-            },
+            path: "/statistics",
+            pageBuilder: (context, state) => MaterialPage(child: Statistics()),
           ),
           GoRoute(
             path: '/profile',
-            builder: (context, state) {
-              return const Profile();
-            },
+            pageBuilder: (context, state) => MaterialPage(child: Profile()),
+          ),
+          GoRoute(
+            path: '/sss',
+            pageBuilder: (context, state) => MaterialPage(child: Home()),
           ),
         ],
       ),
@@ -93,7 +99,7 @@ class App extends StatelessWidget {
   Widget build(context) {
     return MaterialApp.router(
       routerConfig: GoRouter(
-        initialLocation: '/',
+        initialLocation: '/statistics',
         routes: _buildRoutes(context),
         redirect: (context, state) {
           return null;

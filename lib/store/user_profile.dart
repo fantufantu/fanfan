@@ -17,7 +17,7 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   /// 用户信息
   WhoAmI? _whoAmI;
 
-  int _count = 0;
+  final _count = 0;
 
   UserProfile._internal() {
     _client = Client();

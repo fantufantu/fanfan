@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class Layout extends StatelessWidget {
-  final Widget child;
+  Widget child;
 
-  const Layout({
+  Layout({
     super.key,
     required this.child,
   });
@@ -34,6 +34,37 @@ class _LayoutState extends State<_Layout> {
 
   _LayoutState({required this.child});
 
+  _navigate({
+    required int activateIndex,
+    required BuildContext context,
+    required bool isLoggedIn,
+  }) {
+    print(activateIndex);
+    // 路由切换
+    switch (activateIndex) {
+      case 0:
+        print("22222");
+        context.go('/sss');
+        break;
+      case 1:
+        context.go('/statistics');
+        break;
+      case 2:
+        if (isLoggedIn) {
+          context.go('/profile');
+          break;
+        }
+
+        context.go('/authorization');
+        break;
+    }
+
+    // 下标变更
+    setState(() {
+      _activateBottomNavigationIndex = activateIndex;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final isLoggedIn =
@@ -42,32 +73,24 @@ class _LayoutState extends State<_Layout> {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _activateBottomNavigationIndex,
-        onTap: (int activateIndex) => setState(() {
-          _activateBottomNavigationIndex = activateIndex;
-        }),
-        items: [
+        onTap: (int activateIndex) => _navigate(
+          activateIndex: activateIndex,
+          context: context,
+          isLoggedIn: isLoggedIn,
+        ),
+        items: const [
           BottomNavigationBarItem(
-            icon: InkWell(
-              child: const Icon(CupertinoIcons.home),
-              onTap: () => context.go('/'),
-            ),
+            icon: Icon(CupertinoIcons.home),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: InkWell(
-              child: const Icon(
-                CupertinoIcons.staroflife_fill,
-              ),
-              onTap: () => context.go('/statistics'),
+            icon: Icon(
+              CupertinoIcons.staroflife_fill,
             ),
             label: "Statistics",
           ),
           BottomNavigationBarItem(
-            icon: InkWell(
-              child: const Icon(CupertinoIcons.person_fill),
-              onTap: () =>
-                  context.go(!isLoggedIn ? '/profile' : '/authorization'),
-            ),
+            icon: Icon(CupertinoIcons.person_fill),
             label: "Profile",
           ),
         ],
