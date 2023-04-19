@@ -97,7 +97,7 @@ class App extends StatelessWidget {
   Widget build(context) {
     return MaterialApp.router(
       routerConfig: GoRouter(
-        initialLocation: '/statistics',
+        initialLocation: '/',
         routes: _buildRoutes(context),
         redirect: (context, state) {
           return null;
