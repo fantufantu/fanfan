@@ -79,7 +79,7 @@ class Layout extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       body: Container(
-        padding: const EdgeInsets.only(left: 40, right: 40),
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
         child: SafeArea(
           child: SizedBox.expand(child: child),
         ),
