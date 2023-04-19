@@ -104,6 +104,8 @@ class App extends StatelessWidget {
         },
       ),
       theme: ThemeData(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
         textTheme: GoogleFonts.josefinSansTextTheme(),

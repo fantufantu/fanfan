@@ -25,8 +25,6 @@ class Authorization extends StatelessWidget {
               Icons.arrow_back,
               color: Colors.black,
             ),
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
           ),
         ),
       ),
