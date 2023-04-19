@@ -5,46 +5,33 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class Layout extends StatelessWidget {
-  Widget child;
+  final Widget child;
 
-  Layout({
+  const Layout({
     super.key,
     required this.child,
   });
 
-  @override
-  Widget build(BuildContext context) => _Layout(child: child);
-}
-
-class _Layout extends StatefulWidget {
-  Widget child;
-
-  _Layout({required this.child});
-
-  @override
-  _LayoutState createState() => _LayoutState(child: child);
-}
-
-class _LayoutState extends State<_Layout> {
-  /// 子组件
-  Widget child;
-
-  /// 当前激活的底部下标
-  int _activateBottomNavigationIndex = 0;
-
-  _LayoutState({required this.child});
+  int _calculateSelectedIndex(BuildContext context) {
+    final String location = GoRouterState.of(context).location;
+    if (location.startsWith('/statistics')) {
+      return 1;
+    }
+    if (location.startsWith('/profile')) {
+      return 2;
+    }
+    return 0;
+  }
 
   _navigate({
     required int activateIndex,
     required BuildContext context,
     required bool isLoggedIn,
   }) {
-    print(activateIndex);
     // 路由切换
     switch (activateIndex) {
       case 0:
-        print("22222");
-        context.go('/sss');
+        context.go('/');
         break;
       case 1:
         context.go('/statistics');
@@ -54,15 +41,9 @@ class _LayoutState extends State<_Layout> {
           context.go('/profile');
           break;
         }
-
         context.go('/authorization');
         break;
     }
-
-    // 下标变更
-    setState(() {
-      _activateBottomNavigationIndex = activateIndex;
-    });
   }
 
   @override
@@ -72,7 +53,7 @@ class _LayoutState extends State<_Layout> {
 
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _activateBottomNavigationIndex,
+        currentIndex: _calculateSelectedIndex(context),
         onTap: (int activateIndex) => _navigate(
           activateIndex: activateIndex,
           context: context,

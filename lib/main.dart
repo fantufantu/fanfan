@@ -43,9 +43,6 @@ class App extends StatelessWidget {
     return [
       ShellRoute(
         builder: (context, state, child) {
-          print("child=======");
-          print(state.fullpath);
-          print(state.path);
           return Layout(child: child);
         },
         routes: [
@@ -55,11 +52,12 @@ class App extends StatelessWidget {
           ),
           GoRoute(
             path: '/profile',
-            pageBuilder: (context, state) => MaterialPage(child: Profile()),
+            pageBuilder: (context, state) =>
+                const MaterialPage(child: Profile()),
           ),
           GoRoute(
-            path: '/sss',
-            pageBuilder: (context, state) => MaterialPage(child: Home()),
+            path: '/',
+            pageBuilder: (context, state) => const MaterialPage(child: Home()),
           ),
         ],
       ),
@@ -70,20 +68,20 @@ class App extends StatelessWidget {
                 routes: [
                   GoRoute(
                     path: '/authorization',
-                    builder: (context, staet) {
-                      return const HowToAuthorize();
+                    pageBuilder: (context, staet) {
+                      return const MaterialPage(child: HowToAuthorize());
                     },
                     routes: [
                       GoRoute(
                         path: 'sign-in',
-                        builder: (context, state) {
-                          return const SignIn();
+                        pageBuilder: (context, staet) {
+                          return const MaterialPage(child: SignIn());
                         },
                       ),
                       GoRoute(
                         path: 'sign-up',
-                        builder: (context, state) {
-                          return const SignUp();
+                        pageBuilder: (context, staet) {
+                          return const MaterialPage(child: SignUp());
                         },
                       ),
                     ],
