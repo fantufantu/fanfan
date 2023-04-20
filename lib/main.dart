@@ -1,5 +1,6 @@
 import 'package:fanfan/pages/authorization/how_to_authorize.dart';
 import 'package:fanfan/pages/authorization/main.dart';
+import 'package:fanfan/pages/billings.dart';
 import 'package:fanfan/pages/home.dart';
 import 'package:fanfan/pages/layout.dart';
 import 'package:fanfan/pages/profile.dart';
@@ -54,6 +55,11 @@ class App extends StatelessWidget {
             path: '/profile',
             pageBuilder: (context, state) =>
                 const MaterialPage(child: Profile()),
+          ),
+          GoRoute(
+            path: '/billings',
+            pageBuilder: (context, state) =>
+                const MaterialPage(child: Billings()),
           ),
           GoRoute(
             path: '/',

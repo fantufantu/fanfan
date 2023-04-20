@@ -59,20 +59,33 @@ class Layout extends StatelessWidget {
           context: context,
           isLoggedIn: isLoggedIn,
         ),
+        type: BottomNavigationBarType.fixed,
+        unselectedIconTheme: IconThemeData(
+          color: Colors.grey.shade500,
+        ),
+        selectedIconTheme: IconThemeData(
+          color: Colors.blue.shade500,
+        ),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home),
-            label: "Home",
+            icon: Icon(CupertinoIcons.house),
+            activeIcon: Icon(CupertinoIcons.house_fill),
+            label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              CupertinoIcons.staroflife_fill,
-            ),
-            label: "Statistics",
+            icon: Icon(CupertinoIcons.chart_bar_square),
+            activeIcon: Icon(CupertinoIcons.chart_bar_square_fill),
+            label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_fill),
-            label: "Profile",
+            icon: Icon(CupertinoIcons.tickets),
+            activeIcon: Icon(CupertinoIcons.tickets_fill),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.person),
+            activeIcon: Icon(CupertinoIcons.person_fill),
+            label: '',
           ),
         ],
         elevation: 0,
