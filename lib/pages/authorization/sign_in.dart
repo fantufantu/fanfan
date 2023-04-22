@@ -78,7 +78,7 @@ class _SignInFormState extends State<_SignInForm> {
     if (!_isCompleted) return null;
 
     // 登录
-    return () => Authorization.login(
+    return () => login(
           who: _who,
           password: _password,
         ).then((token) {

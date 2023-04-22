@@ -79,7 +79,7 @@ class _SignUpFormState extends State<_SignUpForm> {
     if (!_isCompleted) return null;
 
     // 注册
-    return () => Authorization.register(
+    return () => register(
           emailAddress: _emailAddress,
           captcha: _captcha,
           password: _password,
@@ -116,7 +116,7 @@ class _SignUpFormState extends State<_SignUpForm> {
 
   /// 发送验证码，开启倒计时
   _onCaptchaSent(BuildContext context) async {
-    await Authorization.sendCaptcha(
+    await sendCaptcha(
       to: _emailAddress,
       type: describeEnum(VerificationType.Email),
     ).catchError((error) {
