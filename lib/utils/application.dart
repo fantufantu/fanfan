@@ -10,9 +10,11 @@ initialize() async {
   // 获取持久化缓存的实例
   final SharedPreferences storage = await SharedPreferences.getInstance();
   // 获取持久化存储的token
-  final token = storage.getString(describeEnum(StorageToken.token) + '2') ?? '';
+  final token = storage.getString(describeEnum(StorageToken.token)) ?? '';
   // token 不存在直接退出
   if (token.isEmpty) return;
+
+  print(token);
 
   final userProfile = UserProfile();
   // 设置token

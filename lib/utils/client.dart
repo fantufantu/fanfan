@@ -11,7 +11,8 @@ class Client extends GraphQLClient {
         getToken: () => 'Bearer ${UserProfile().token}',
       ).concat(
         HttpLink(
-          'https://api.fantufantu.com/',
+          'http://localhost:3900/graphql/',
+          // 'https://api.fantufantu.com/',
         ),
       ),
       cache: GraphQLCache(),
