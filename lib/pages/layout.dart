@@ -17,19 +17,22 @@ class Layout extends StatelessWidget {
     if (location.startsWith('/statistics')) {
       return 1;
     }
-    if (location.startsWith('/profile')) {
+    if (location.startsWith('/billings')) {
       return 2;
+    }
+    if (location.startsWith('/profile')) {
+      return 3;
     }
     return 0;
   }
 
   _navigate({
-    required int activateIndex,
+    required int activeIndex,
     required BuildContext context,
     required bool isLoggedIn,
   }) {
     // 路由切换
-    switch (activateIndex) {
+    switch (activeIndex) {
       case 0:
         context.go('/');
         break;
@@ -37,6 +40,9 @@ class Layout extends StatelessWidget {
         context.go('/statistics');
         break;
       case 2:
+        context.go('/billings');
+        break;
+      case 3:
         if (isLoggedIn) {
           context.go('/profile');
           break;
@@ -54,8 +60,8 @@ class Layout extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _calculateSelectedIndex(context),
-        onTap: (int activateIndex) => _navigate(
-          activateIndex: activateIndex,
+        onTap: (int activeIndex) => _navigate(
+          activeIndex: activeIndex,
           context: context,
           isLoggedIn: isLoggedIn,
         ),

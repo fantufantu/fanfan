@@ -1,5 +1,6 @@
 import 'package:fanfan/service/api/authorization.dart';
 import 'package:fanfan/store/user_profile.dart';
+import 'package:fanfan/utils/application.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -47,73 +48,67 @@ class _SignInFormState extends State<_SignInForm> {
     });
   }
 
+  /// 展示正在跳转的弹窗
+  _loadingForNavigating(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.run_circle,
+                size: 80,
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                child: const Text("登录成功，正在跳转..."),
+              ),
+            ],
+          ),
+        );
+      },
+      barrierDismissible: false,
+    );
+  }
+
   /// 登录触发器
   _useLogin(BuildContext context) {
     if (!_isCompleted) return null;
 
-    // store 中的用户模块
-    final userProfile = context.read<UserProfile>();
-
-    // 展示 loading
-    showLoading() => showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
+    // 登录
+    return () => Authorization.login(
+          who: _who,
+          password: _password,
+        ).then((token) {
+          // 显示对话框正在登录
+          _loadingForNavigating(context);
+          // 尝试重新初始化应用
+          reinitialize(token).then((_) {
+            // 跳转到首页
+            context.go('/');
+          });
+        }).catchError((error) {
+          // 展示异常信息
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              dismissDirection: DismissDirection.up,
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.run_circle,
-                    size: 80,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 12),
-                    child: const Text("登录成功，正在跳转..."),
+                  Text(
+                    error.message,
+                    style: TextStyle(
+                      color: Colors.redAccent.shade200,
+                    ),
                   ),
                 ],
               ),
-            );
-          },
-          barrierDismissible: false,
-        );
-
-    // 登录
-    return () async {
-      final signedIn = await Authorization.login(who: _who, password: _password)
-          .catchError((error) {
-        // 展示异常信息
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  error.message,
-                  style: TextStyle(
-                    color: Colors.redAccent.shade200,
-                  ),
-                ),
-              ],
+              backgroundColor: Colors.grey.shade50,
             ),
-            backgroundColor: Colors.grey.shade50,
-          ),
-        );
-
-        throw error;
-      });
-
-      // 显示对话框正在登录
-      showLoading();
-
-      // 设置 token
-      userProfile.setToken(signedIn);
-      // 换取用户信息
-      await userProfile.authorize();
-
-      // 跳转到首页
-      // ignore: use_build_context_synchronously
-      context.go('/');
-    };
+          );
+        });
   }
 
   @override

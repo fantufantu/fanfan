@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:fanfan/service/api/authorization.dart';
 import 'package:fanfan/store/user_profile.dart';
+import 'package:fanfan/utils/application.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -48,43 +49,67 @@ class _SignUpFormState extends State<_SignUpForm> {
         _captcha.isNotEmpty;
   }
 
+  /// 展示正在跳转的弹窗
+  _loadingForNavigating(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.run_circle,
+                size: 80,
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                child: const Text("注册成功，正在跳转..."),
+              ),
+            ],
+          ),
+        );
+      },
+      barrierDismissible: false,
+    );
+  }
+
   /// 注册
   _useRegister(BuildContext context) {
     if (!_isCompleted) return null;
 
-    final userProfile = context.read<UserProfile>();
-
     // 注册
-    return () async {
-      final registered = await Authorization.register(
-              emailAddress: _emailAddress,
-              captcha: _captcha,
-              password: _password)
-          .catchError((error) {
-        // 展示异常信息
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  error.message,
-                  style: TextStyle(
-                    color: Colors.redAccent.shade200,
+    return () => Authorization.register(
+          emailAddress: _emailAddress,
+          captcha: _captcha,
+          password: _password,
+        ).then((token) {
+          // 显示对话框正在登录
+          _loadingForNavigating(context);
+          // 尝试重新初始化应用
+          reinitialize(token).then((_) {
+            // 跳转到首页
+            context.go('/');
+          });
+        }).catchError((error) {
+          // 展示异常信息
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    error.message,
+                    style: TextStyle(
+                      color: Colors.redAccent.shade200,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
+              backgroundColor: Colors.grey.shade50,
             ),
-            backgroundColor: Colors.grey.shade50,
-          ),
-        );
-
-        throw error;
-      });
-
-      // 设置 token
-      userProfile.setToken(registered);
-    };
+          );
+        });
   }
 
   final _formKey = GlobalKey<FormState>();

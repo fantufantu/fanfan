@@ -13,7 +13,7 @@ class Home extends StatelessWidget {
         ServiceEntry(
           color: Colors.amber,
           label: '我的账本',
-          icon: CupertinoIcons.bolt_fill,
+          icon: CupertinoIcons.tickets_fill,
         ),
         null,
         null,

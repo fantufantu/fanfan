@@ -5,6 +5,7 @@ import 'package:fanfan/pages/home.dart';
 import 'package:fanfan/pages/layout.dart';
 import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/pages/statistics.dart';
+import 'package:fanfan/utils/application.dart';
 import 'package:fanfan/utils/client.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
@@ -19,17 +20,22 @@ void main() async {
   // 禁用http请求获取远程字体
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => UserProfile()),
-    ],
-    child: GraphQLProvider(
-      client: ValueNotifier(
-        Client(),
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProfile()),
+      ],
+      child: GraphQLProvider(
+        client: ValueNotifier(
+          Client(),
+        ),
+        child: const App(),
       ),
-      child: const App(),
     ),
-  ));
+  );
+
+  // 应用初始化
+  initialize();
 }
 
 class App extends StatelessWidget {
@@ -37,10 +43,6 @@ class App extends StatelessWidget {
 
   /// 路由
   List<RouteBase> _buildRoutes(BuildContext context) {
-    // 是否认证
-    bool isLoggedIn =
-        context.select((UserProfile userProfile) => userProfile.isLoggedIn);
-
     return [
       ShellRoute(
         builder: (context, state, child) {
@@ -67,35 +69,31 @@ class App extends StatelessWidget {
           ),
         ],
       ),
-      ...(!isLoggedIn
-          ? [
-              ShellRoute(
-                builder: (context, state, child) => Authorization(child: child),
-                routes: [
-                  GoRoute(
-                    path: '/authorization',
-                    pageBuilder: (context, staet) {
-                      return const MaterialPage(child: HowToAuthorize());
-                    },
-                    routes: [
-                      GoRoute(
-                        path: 'sign-in',
-                        pageBuilder: (context, staet) {
-                          return const MaterialPage(child: SignIn());
-                        },
-                      ),
-                      GoRoute(
-                        path: 'sign-up',
-                        pageBuilder: (context, staet) {
-                          return const MaterialPage(child: SignUp());
-                        },
-                      ),
-                    ],
-                  ),
-                ],
+      ShellRoute(
+        builder: (context, state, child) => Authorization(child: child),
+        routes: [
+          GoRoute(
+            path: '/authorization',
+            pageBuilder: (context, staet) {
+              return const MaterialPage(child: HowToAuthorize());
+            },
+            routes: [
+              GoRoute(
+                path: 'sign-in',
+                pageBuilder: (context, staet) {
+                  return const MaterialPage(child: SignIn());
+                },
               ),
-            ]
-          : []),
+              GoRoute(
+                path: 'sign-up',
+                pageBuilder: (context, staet) {
+                  return const MaterialPage(child: SignUp());
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
     ];
   }
 
@@ -103,7 +101,7 @@ class App extends StatelessWidget {
   Widget build(context) {
     return MaterialApp.router(
       routerConfig: GoRouter(
-        initialLocation: '/',
+        initialLocation: '/billings',
         routes: _buildRoutes(context),
         redirect: (context, state) {
           return null;
