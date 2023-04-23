@@ -1,4 +1,4 @@
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:graphql/client.dart';
 
 final BILLINGS = gql('''
   query Billings {
@@ -7,6 +7,14 @@ final BILLINGS = gql('''
         id
       }
       total
+    }
+  }
+''');
+
+final CREATE_BILLING = gql('''
+  mutation CreateBilling(\$createBillingBy: CreateBillingBy!) {
+    createBilling(createBillingBy: \$createBillingBy) {
+      id
     }
   }
 ''');

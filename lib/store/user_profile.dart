@@ -1,8 +1,9 @@
 import 'package:fanfan/utils/client.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/schemas/user.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:fanfan/service/entities/who_am_i.dart';
+import 'package:graphql/client.dart';
+import 'package:uuid/uuid.dart';
 
 class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   /// 单例
@@ -63,5 +64,14 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
 
     // 消息触达
     notifyListeners();
+  }
+
+  /// 用户名简称
+  get userAlias {
+    if (whoAmI == null) return '';
+    final username = whoAmI!.username;
+    final isUuid = Uuid.isValidUUID(fromString: username);
+    if (isUuid) return '用户 ${username.substring(0, 6)}';
+    return username;
   }
 }

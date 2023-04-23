@@ -2,6 +2,7 @@ import 'package:fanfan/components/service_entry.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
@@ -14,8 +15,14 @@ class Home extends StatelessWidget {
           color: Colors.amber,
           label: '我的账本',
           icon: CupertinoIcons.tickets_fill,
+          onPressed: () => context.go('/billings'),
         ),
-        null,
+        ServiceEntry(
+          color: Colors.cyan,
+          label: '新建账本',
+          icon: CupertinoIcons.ticket_fill,
+          onPressed: () => context.go('/billing/editable'),
+        ),
         null,
         null
       ],
@@ -48,6 +55,9 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final username =
+        context.select((UserProfile userProfile) => userProfile.userAlias);
+
     return CustomScrollView(
       slivers: [
         SliverList(
@@ -72,10 +82,12 @@ class Home extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Good morning 👋🏻"),
-                          Text("Murukal Hu",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                              )),
+                          Text(
+                            username,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -94,13 +106,26 @@ class Home extends StatelessWidget {
             childCount: 1,
             (context, index) {
               return Container(
-                margin: EdgeInsets.only(top: 20),
-                width: double.infinity,
-                height: 200,
-                decoration: BoxDecoration(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Container(
+                  margin: EdgeInsets.only(top: 20),
+                  padding: EdgeInsets.all(32),
+                  width: double.infinity,
+                  height: 200,
+                  decoration: BoxDecoration(
                     color: Colors.blue.shade200,
                     boxShadow: kElevationToShadow[3],
-                    borderRadius: BorderRadius.all(Radius.circular(24))),
+                    borderRadius: BorderRadius.all(Radius.circular(24)),
+                    image: DecorationImage(
+                      image: AssetImage('images/billing/background/blue.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Text("data",
+                      style: TextStyle(
+                        color: Colors.white,
+                      )),
+                ),
               );
             },
           ),

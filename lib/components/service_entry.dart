@@ -9,11 +9,13 @@ class ServiceEntry extends StatelessWidget {
     required this.color,
     required this.icon,
     required this.label,
+    required this.onPressed,
   });
 
   final MaterialColor color;
   final IconData icon;
   final String label;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +32,7 @@ class ServiceEntry extends StatelessWidget {
             width: _radius * 2,
             height: _radius * 2,
             child: IconButton(
-              onPressed: () {
-                context.go('/billings');
-              },
+              onPressed: onPressed,
               color: color.shade300,
               icon: Icon(
                 icon,

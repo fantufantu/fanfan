@@ -1,5 +1,5 @@
 import 'package:fanfan/store/user_profile.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:graphql/client.dart';
 
 class Client extends GraphQLClient {
   /// 单例

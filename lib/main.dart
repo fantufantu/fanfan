@@ -1,16 +1,15 @@
 import 'package:fanfan/pages/authorization/how_to_authorize.dart';
 import 'package:fanfan/pages/authorization/main.dart';
+import 'package:fanfan/pages/billing/main.dart' as billing;
 import 'package:fanfan/pages/billings.dart';
 import 'package:fanfan/pages/home.dart';
 import 'package:fanfan/pages/layout.dart';
 import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/pages/statistics.dart';
 import 'package:fanfan/utils/application.dart';
-import 'package:fanfan/utils/client.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/pages/authorization/sign_in.dart';
 import 'package:fanfan/pages/authorization/sign_up.dart';
@@ -25,12 +24,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProfile()),
       ],
-      child: GraphQLProvider(
-        client: ValueNotifier(
-          Client(),
-        ),
-        child: const App(),
-      ),
+      child: const App(),
     ),
   );
 
@@ -91,6 +85,20 @@ class App extends StatelessWidget {
                 },
               ),
             ],
+          ),
+        ],
+      ),
+      ShellRoute(
+        pageBuilder: (context, state, child) =>
+            MaterialPage(child: billing.Layout(child: child)),
+        routes: [
+          GoRoute(
+            path: '/billing/editable',
+            builder: (context, state) => billing.Editable(),
+          ),
+          GoRoute(
+            path: '/billing/:id',
+            builder: (context, state) => billing.Billing(),
           ),
         ],
       ),
