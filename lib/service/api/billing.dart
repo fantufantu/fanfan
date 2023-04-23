@@ -10,5 +10,10 @@ Future<List<Billing>> queryBillings() async {
     ),
   );
 
+  if (response.hasException || response.data == null) {
+    throw response.exception?.graphqlErrors.single ??
+        const GraphQLError(message: '获取账本失败');
+  }
+
   return [];
 }
