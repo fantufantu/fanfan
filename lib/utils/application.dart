@@ -1,3 +1,4 @@
+import 'package:fanfan/store/application.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,10 +18,13 @@ initialize() async {
   print(token);
 
   final userProfile = UserProfile();
+  final application = Application();
   // 设置token
   userProfile.setToken(token);
   // 换用户信息
-  userProfile.authorize();
+  await userProfile.authorize();
+  // 应用初始化完成
+  application.ready();
 }
 
 Future<void> reinitialize(String? token) async {

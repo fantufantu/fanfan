@@ -13,7 +13,7 @@ class PaginatedBillings {
       PaginatedBillings(
         total: json["total"],
         items: List<Billing>.from(
-          json["instructions"].map(
+          json["items"].map(
             (item) => Billing.fromJson(item),
           ),
         ),

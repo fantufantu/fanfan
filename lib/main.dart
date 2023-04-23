@@ -4,8 +4,10 @@ import 'package:fanfan/pages/billing/main.dart' as billing;
 import 'package:fanfan/pages/billings.dart';
 import 'package:fanfan/pages/home.dart';
 import 'package:fanfan/pages/layout.dart';
+import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/pages/statistics.dart';
+import 'package:fanfan/store/application.dart';
 import 'package:fanfan/utils/application.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +25,14 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProfile()),
+        ChangeNotifierProvider(create: (_) => Application()),
       ],
       child: const App(),
     ),
   );
 
   // 应用初始化
-  initialize();
+  await initialize();
 }
 
 class App extends StatelessWidget {
@@ -37,6 +40,19 @@ class App extends StatelessWidget {
 
   /// 路由
   List<RouteBase> _buildRoutes(BuildContext context) {
+    final isReady =
+        context.select((Application application) => application.isReady);
+
+    // 应用未初始化完成时，返回一个loading页
+    if (!isReady) {
+      return [
+        GoRoute(
+          path: '/',
+          pageBuilder: (context, state) => MaterialPage(child: Loading()),
+        )
+      ];
+    }
+
     return [
       ShellRoute(
         builder: (context, state, child) {
@@ -109,11 +125,12 @@ class App extends StatelessWidget {
   Widget build(context) {
     return MaterialApp.router(
       routerConfig: GoRouter(
-        initialLocation: '/billings',
+        initialLocation: '/',
         routes: _buildRoutes(context),
         redirect: (context, state) {
           return null;
         },
+        errorBuilder: (context, state) => Loading(),
       ),
       theme: ThemeData(
         splashColor: Colors.transparent,

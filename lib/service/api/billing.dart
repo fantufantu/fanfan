@@ -1,9 +1,10 @@
 import 'package:fanfan/service/entities/billing.dart';
+import 'package:fanfan/service/entities/paginated_billings.dart';
 import 'package:fanfan/service/schemas/billing.dart';
 import 'package:fanfan/utils/client.dart';
 import 'package:graphql/client.dart';
 
-Future<List<Billing>> queryBillings() async {
+Future<PaginatedBillings> queryBillings() async {
   final response = await Client().query(
     QueryOptions(
       document: BILLINGS,
@@ -15,7 +16,7 @@ Future<List<Billing>> queryBillings() async {
         const GraphQLError(message: '获取账本失败！');
   }
 
-  return [];
+  return PaginatedBillings.fromJson(response.data!['billings']);
 }
 
 Future<Billing> createBilling({required String name}) async {
