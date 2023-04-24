@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:fanfan/components/billing/card.dart' as billing;
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -106,26 +107,8 @@ class Home extends StatelessWidget {
             childCount: 1,
             (context, index) {
               return Container(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: Container(
-                  margin: EdgeInsets.only(top: 20),
-                  padding: EdgeInsets.all(32),
-                  width: double.infinity,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade200,
-                    boxShadow: kElevationToShadow[3],
-                    borderRadius: BorderRadius.all(Radius.circular(24)),
-                    image: DecorationImage(
-                      image: AssetImage('images/billing/background/blue.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Text("data",
-                      style: TextStyle(
-                        color: Colors.white,
-                      )),
-                ),
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: billing.Card(),
               );
             },
           ),
