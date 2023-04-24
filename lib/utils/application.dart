@@ -12,17 +12,18 @@ initialize() async {
   final SharedPreferences storage = await SharedPreferences.getInstance();
   // 获取持久化存储的token
   final token = storage.getString(describeEnum(StorageToken.token)) ?? '';
-  // token 不存在直接退出
-  if (token.isEmpty) return;
 
-  print(token);
+  // token 换用户信息
+  if (token.isNotEmpty) {
+    final userProfile = UserProfile();
+    // 设置token
+    userProfile.setToken(token);
+    // 换用户信息
+    await userProfile.authorize();
+  }
 
-  final userProfile = UserProfile();
+  // 应用层逻辑
   final application = Application();
-  // 设置token
-  userProfile.setToken(token);
-  // 换用户信息
-  await userProfile.authorize();
   // 应用初始化完成
   application.ready();
 }

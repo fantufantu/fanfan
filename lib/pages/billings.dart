@@ -56,7 +56,7 @@ class _State extends State {
         ),
         ...(_billings.map((e) {
           return Container(
-            child: Text((e.id ?? '').toString()),
+            child: Text((e.id).toString()),
           );
         }))
       ],

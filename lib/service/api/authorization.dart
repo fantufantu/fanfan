@@ -1,5 +1,5 @@
 import 'package:fanfan/service/schemas/authorization.dart';
-import 'package:fanfan/utils/client.dart';
+import 'package:fanfan/utils/service.dart';
 import 'package:graphql/client.dart';
 
 enum VerificationType { Email, Phone }
@@ -28,8 +28,10 @@ Future<String> register({
   );
 
   if (response.hasException || response.data == null) {
-    throw response.exception?.graphqlErrors.single ??
-        const GraphQLError(message: '注册失败，请稍后重试！');
+    reject([
+      ...(response.exception?.graphqlErrors ?? []),
+      const GraphQLError(message: '注册失败，请稍后重试！')
+    ]);
   }
 
   return response.data!['register'];
@@ -54,8 +56,10 @@ Future<DateTime> sendCaptcha({required String to, required String type}) async {
   );
 
   if (response.hasException || response.data == null) {
-    throw response.exception?.graphqlErrors.single ??
-        const GraphQLError(message: '发送验证码异常，请稍后重试！');
+    reject([
+      ...(response.exception?.graphqlErrors ?? []),
+      const GraphQLError(message: '发送验证码异常，请稍后重试！')
+    ]);
   }
 
   return DateTime.parse(response.data!['sendCaptcha']);
@@ -80,8 +84,10 @@ Future<String> login({required String who, required String password}) async {
   );
 
   if (response.hasException || response.data == null) {
-    throw response.exception?.graphqlErrors.single ??
-        const GraphQLError(message: '登录失败，请稍后重试！');
+    reject([
+      ...(response.exception?.graphqlErrors ?? []),
+      const GraphQLError(message: '登录失败，请稍后重试！')
+    ]);
   }
 
   return response.data!['login'];

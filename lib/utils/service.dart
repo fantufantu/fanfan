@@ -24,3 +24,14 @@ class Client extends GraphQLClient {
     required super.cache,
   });
 }
+
+/// 异常抛出
+reject(
+  List<GraphQLError>? errors,
+) {
+  if ((errors ?? []).isEmpty) {
+    throw const GraphQLError(message: '未知异常！');
+  }
+
+  throw errors!.single;
+}
