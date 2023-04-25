@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Avatars extends StatelessWidget {
   double _size = 20;
-
+  double _borderWidth = 3;
   int _limit = 3;
 
   List<String> _avatars = ['JACK', 'fanfan', 'tutu', '...'];
@@ -11,7 +10,7 @@ class Avatars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: _size * (_limit + 2),
+      width: _size * (_limit + 2) + _borderWidth * 2,
       child: Stack(
         children: [
           ...(_avatars.asMap().entries.map(
@@ -20,13 +19,13 @@ class Avatars extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Colors.transparent,
-                        width: 2,
+                        color: Colors.white,
+                        width: _borderWidth,
                       ),
-                      borderRadius: BorderRadius.circular(_size * 2),
+                      borderRadius: BorderRadius.circular(_size + _borderWidth),
                     ),
                     child: CircleAvatar(
-                      child: Text(item.value),
+                      backgroundImage: AssetImage('images/user/preset.png'),
                       radius: _size,
                     ),
                   ),
