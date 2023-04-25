@@ -55,7 +55,10 @@ class Card extends StatelessWidget {
                   fontSize: 20,
                 ),
               ),
-              Avatars()
+              Avatars(
+                avatars: ['', '', '', '', ''],
+                limit: 3,
+              )
             ],
           ),
           Container(

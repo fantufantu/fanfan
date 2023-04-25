@@ -30,27 +30,25 @@ class Home extends StatelessWidget {
     ];
 
     return Wrap(
-      children: [
-        ...(serviceEntryGroups.map(
-          (serviceEntries) => Container(
-            margin: EdgeInsets.only(top: 20),
-            child: Row(
-              children: [
-                ...serviceEntries.map((entry) {
-                  if (entry == null) {
-                    return Spacer();
-                  }
+      children: (serviceEntryGroups.map(
+        (serviceEntries) => Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Row(
+            children: [
+              ...serviceEntries.map((entry) {
+                if (entry == null) {
+                  return Spacer();
+                }
 
-                  return Expanded(
-                    flex: 1,
-                    child: entry,
-                  );
-                })
-              ],
-            ),
+                return Expanded(
+                  flex: 1,
+                  child: entry,
+                );
+              })
+            ],
           ),
-        )),
-      ],
+        ),
+      )).toList(),
     );
   }
 
