@@ -65,13 +65,4 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
     // 消息触达
     notifyListeners();
   }
-
-  /// 用户名简称
-  get userAlias {
-    if (whoAmI == null) return '';
-    final username = whoAmI!.username;
-    final isUuid = Uuid.isValidUUID(fromString: username);
-    if (isUuid) return '用户 ${username.substring(0, 6)}';
-    return username;
-  }
 }

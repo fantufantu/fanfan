@@ -11,8 +11,8 @@ class Client extends GraphQLClient {
         getToken: () => 'Bearer ${UserProfile().token}',
       ).concat(
         HttpLink(
-          'http://localhost:3900/graphql/',
-          // 'https://api.fantufantu.com/',
+          // 'http://localhost:3900/graphql/',
+          'https://api.fantufantu.com/',
         ),
       ),
       cache: GraphQLCache(),
@@ -27,11 +27,11 @@ class Client extends GraphQLClient {
 
 /// 异常抛出
 reject(
-  List<GraphQLError>? errors,
+  List<GraphQLError> errors,
 ) {
-  if ((errors ?? []).isEmpty) {
+  if ((errors).isEmpty) {
     throw const GraphQLError(message: '未知异常！');
   }
 
-  throw errors!.single;
+  throw errors.single;
 }

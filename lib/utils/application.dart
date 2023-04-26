@@ -13,6 +13,8 @@ initialize() async {
   // 获取持久化存储的token
   final token = storage.getString(describeEnum(StorageToken.token)) ?? '';
 
+  print(token);
+
   // token 换用户信息
   if (token.isNotEmpty) {
     final userProfile = UserProfile();

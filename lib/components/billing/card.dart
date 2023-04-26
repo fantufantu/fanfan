@@ -14,18 +14,12 @@ class Card extends StatelessWidget {
 
   static final _background = _backgrounds[_random];
 
-  final Billing _billing = Billing(
-    id: 1,
-    name: "测试",
-    createdBy: WhoAmI(
-      id: 2,
-      username: 'tutu',
-      emailAddress: 'tutu@fantufantu.com',
-    ),
-    createdAt: DateTime.parse("2023-03-14 12:00:00"),
-  );
+  final Billing billing;
 
-  Card({super.key});
+  Card({
+    super.key,
+    required this.billing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +43,7 @@ class Card extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                _billing.name,
+                billing.name,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
@@ -69,47 +63,47 @@ class Card extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       '持有人',
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8),
+                      margin: const EdgeInsets.only(top: 8),
                       child: Text(
-                        _billing.createdBy.username,
-                        style: TextStyle(
+                        billing.createdBy.nickname,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
-                        strutStyle: StrutStyle(forceStrutHeight: true),
+                        strutStyle: const StrutStyle(forceStrutHeight: true),
                       ),
                     )
                   ],
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 40),
+                  margin: const EdgeInsets.only(left: 40),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         '创建于',
                         style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 8),
+                        margin: const EdgeInsets.only(top: 8),
                         child: Text(
-                          _billing.name,
-                          style: TextStyle(
+                          billing.createdAt.timeZoneName,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
-                          strutStyle: StrutStyle(forceStrutHeight: true),
+                          strutStyle: const StrutStyle(forceStrutHeight: true),
                         ),
                       )
                     ],

@@ -24,4 +24,9 @@ class WhoAmI {
         "emailAddress": emailAddress,
         "avatar": avatar,
       };
+
+  /// 用户名简称
+  get nickname {
+    return '用户 ${username.substring(0, 6)}';
+  }
 }

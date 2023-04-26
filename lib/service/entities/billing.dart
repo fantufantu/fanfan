@@ -31,6 +31,6 @@ class Billing {
         "id": id,
         "name": name,
         "createdBy": createdBy.toJson(),
-        "createdAt": createdAt
+        "createdAt": createdAt.toString(),
       };
 }

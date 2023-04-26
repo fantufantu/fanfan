@@ -5,6 +5,14 @@ final BILLINGS = gql('''
     billings {
       items {
         id
+        name
+        createdBy {
+          id
+          username
+          emailAddress
+          avatar
+        }
+        createdAt
       }
       total
     }

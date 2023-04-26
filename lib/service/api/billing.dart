@@ -11,6 +11,8 @@ Future<PaginatedBillings> queryBillings() async {
     ),
   );
 
+  print(response);
+
   if (response.hasException || response.data == null) {
     reject([
       ...(response.exception?.graphqlErrors ?? []),

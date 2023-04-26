@@ -54,8 +54,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final username =
-        context.select((UserProfile userProfile) => userProfile.userAlias);
+    final nickname = context
+        .select((UserProfile userProfile) => userProfile.whoAmI?.nickname);
 
     return CustomScrollView(
       slivers: [
@@ -82,7 +82,7 @@ class Home extends StatelessWidget {
                         children: [
                           Text("Good morning 👋🏻"),
                           Text(
-                            username,
+                            nickname,
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                             ),
@@ -106,7 +106,7 @@ class Home extends StatelessWidget {
             (context, index) {
               return Container(
                 padding: const EdgeInsets.only(left: 10, right: 10),
-                child: billing.Card(),
+                // child: billing.Card(),
               );
             },
           ),

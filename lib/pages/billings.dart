@@ -14,28 +14,7 @@ class Billings extends StatefulWidget {
 }
 
 class _State extends State {
-  List<Billing> _billings = [
-    Billing(
-        id: 1,
-        name: '1',
-        createdBy: WhoAmI(id: 1, username: "2", emailAddress: "3"),
-        createdAt: DateTime(2022)),
-    Billing(
-        id: 1,
-        name: '1',
-        createdBy: WhoAmI(id: 1, username: "2", emailAddress: "3"),
-        createdAt: DateTime(2022)),
-    Billing(
-        id: 1,
-        name: '1',
-        createdBy: WhoAmI(id: 1, username: "2", emailAddress: "3"),
-        createdAt: DateTime(2022)),
-    Billing(
-        id: 1,
-        name: '1',
-        createdBy: WhoAmI(id: 1, username: "2", emailAddress: "3"),
-        createdAt: DateTime(2022))
-  ];
+  List<Billing> _billings = [];
 
   @override
   void initState() {
@@ -57,7 +36,7 @@ class _State extends State {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.only(bottom: 12),
+          margin: const EdgeInsets.only(bottom: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,7 +83,9 @@ class _State extends State {
                             Row(
                               children: [Text('')],
                             ),
-                            components.Card(),
+                            components.Card(
+                              billing: billing,
+                            ),
                           ],
                         ),
                       ),
