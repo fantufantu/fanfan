@@ -14,7 +14,7 @@ class Card extends StatelessWidget {
 
   static final _background = _backgrounds[_random];
 
-  Billing _billing = Billing(
+  final Billing _billing = Billing(
     id: 1,
     name: "测试",
     createdBy: WhoAmI(
@@ -46,6 +46,7 @@ class Card extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 _billing.name,
@@ -58,7 +59,7 @@ class Card extends StatelessWidget {
               Avatars(
                 avatars: ['', '', '', '', ''],
                 limit: 3,
-              )
+              ),
             ],
           ),
           Container(
@@ -83,6 +84,7 @@ class Card extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
+                        strutStyle: StrutStyle(forceStrutHeight: true),
                       ),
                     )
                   ],
@@ -101,12 +103,13 @@ class Card extends StatelessWidget {
                       Container(
                         margin: EdgeInsets.only(top: 8),
                         child: Text(
-                          _billing.createdBy.username,
+                          _billing.name,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
+                          strutStyle: StrutStyle(forceStrutHeight: true),
                         ),
                       )
                     ],
