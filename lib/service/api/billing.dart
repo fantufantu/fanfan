@@ -11,8 +11,6 @@ Future<PaginatedBillings> queryBillings() async {
     ),
   );
 
-  print(response);
-
   if (response.hasException || response.data == null) {
     reject([
       ...(response.exception?.graphqlErrors ?? []),
@@ -43,4 +41,43 @@ Future<Billing> createBilling({required String name}) async {
   }
 
   return Billing.fromJson(response.data!['createBilling']);
+}
+
+Future<Billing> queryBilling(int id) async {
+  final response = await Client().query(
+    QueryOptions(
+      document: BILLING,
+      variables: Map.from({"id": id}),
+    ),
+  );
+
+  if (response.hasException || response.data == null) {
+    reject([
+      ...(response.exception?.graphqlErrors ?? []),
+      const GraphQLError(message: '查询账本信息失！')
+    ]);
+  }
+
+  return Billing.fromJson(response.data!['billing']);
+}
+
+Future<bool> setDefault({
+  required int id,
+  required bool isDefault,
+}) async {
+  final response = await Client().mutate(MutationOptions(
+    document: SET_DEFAULT,
+    variables: Map.from({
+      "setDefaultBillingBy": Map.from({"id": id, "isDefault": isDefault})
+    }),
+  ));
+
+  if (response.hasException || response.data == null) {
+    reject([
+      ...(response.exception?.graphqlErrors ?? []),
+      const GraphQLError(message: '设置默认账本失败！')
+    ]);
+  }
+
+  return response.data!['setDefaultBilling'];
 }

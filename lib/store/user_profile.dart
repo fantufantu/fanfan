@@ -1,3 +1,4 @@
+import 'package:fanfan/service/entities/billing.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/schemas/user.dart';
@@ -61,6 +62,22 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   /// 设置 token
   setToken(String token) {
     _token = token;
+
+    // 消息触达
+    notifyListeners();
+  }
+
+  /// 刷新默认账本信息
+  refreshDefaultBilling() async {
+    final response = await _client.query<WhoAmI>(QueryOptions(
+      document: DEFAULT_BILLING,
+      fetchPolicy: FetchPolicy.noCache,
+    ));
+
+    final defaultBilling = response.data?['whoAmI']['defaultBilling'];
+
+    _whoAmI!.defaultBilling =
+        defaultBilling != null ? Billing.fromJson(defaultBilling) : null;
 
     // 消息触达
     notifyListeners();

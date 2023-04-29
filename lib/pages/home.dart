@@ -24,7 +24,12 @@ class Home extends StatelessWidget {
           icon: CupertinoIcons.ticket_fill,
           onPressed: () => context.go('/billing/editable'),
         ),
-        null,
+        ServiceEntry(
+          color: Colors.deepOrange,
+          label: '记一笔',
+          icon: CupertinoIcons.money_dollar,
+          onPressed: () => context.go('/transaction/editable'),
+        ),
         null
       ],
     ];
@@ -52,10 +57,26 @@ class Home extends StatelessWidget {
     );
   }
 
+  /// 问候语
+  List<Widget> _buildGreetings(String? nickname) {
+    final List<Widget> greetings = [const Text("Good morning 👋🏻")];
+    if (nickname != null) {
+      greetings.add(Text(
+        nickname,
+        style: const TextStyle(
+          fontWeight: FontWeight.w700,
+        ),
+      ));
+    }
+    return greetings;
+  }
+
   @override
   Widget build(BuildContext context) {
     final nickname = context
         .select((UserProfile userProfile) => userProfile.whoAmI?.nickname);
+    final defaultBilling = context.select(
+        (UserProfile userProfile) => userProfile.whoAmI?.defaultBilling);
 
     return CustomScrollView(
       slivers: [
@@ -79,18 +100,10 @@ class Home extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Good morning 👋🏻"),
-                          Text(
-                            nickname,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
+                        children: _buildGreetings(nickname),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Container(
                       child: Text("1"),
                     ),
@@ -106,7 +119,9 @@ class Home extends StatelessWidget {
             (context, index) {
               return Container(
                 padding: const EdgeInsets.only(left: 10, right: 10),
-                // child: billing.Card(),
+                child: defaultBilling == null
+                    ? null
+                    : billing.Card(billing: defaultBilling),
               );
             },
           ),
@@ -124,7 +139,7 @@ class Home extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "Services",
                           style: TextStyle(
                             fontWeight: FontWeight.w700,

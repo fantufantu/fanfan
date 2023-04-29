@@ -10,6 +10,31 @@ final WHO_AM_I = gql('''
       defaultBilling {
         id
         name
+        createdBy {
+          id
+          username
+          emailAddress
+          avatar
+        }
+        createdAt
+      }
+    }
+  }
+''');
+
+final DEFAULT_BILLING = gql('''
+  query WhoAmI {
+    whoAmI {
+      defaultBilling {
+        id
+        name
+        createdBy {
+          id
+          username
+          emailAddress
+          avatar
+        }
+        createdAt
       }
     }
   }

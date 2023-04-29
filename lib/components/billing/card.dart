@@ -1,25 +1,37 @@
 import 'dart:math';
 import 'package:fanfan/components/avatars.dart';
 import 'package:fanfan/service/entities/billing.dart';
-import 'package:fanfan/service/entities/who_am_i.dart';
 import 'package:flutter/material.dart';
 
 class Card extends StatelessWidget {
+  /// 背景图
   static const List<String> _backgrounds = [
     'images/billing/background/blue.png',
     // 'images/billing/background/red.png',
   ];
 
+  /// 背景图选中随机值
   static final int _random = Random().nextInt(_backgrounds.length);
 
+  /// 随机的背景图
   static final _background = _backgrounds[_random];
 
+  /// 账本信息
   final Billing billing;
 
-  Card({
+  /// 阴影值
+  final int? elevation;
+
+  const Card({
     super.key,
     required this.billing,
+    this.elevation,
   });
+
+  int get _elevation {
+    if (elevation == null) return 3;
+    return elevation!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +41,7 @@ class Card extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.blue.shade200,
-        boxShadow: kElevationToShadow[3],
+        boxShadow: kElevationToShadow[_elevation],
         borderRadius: const BorderRadius.all(Radius.circular(24)),
         image: DecorationImage(
           image: AssetImage(_background),
@@ -97,7 +109,7 @@ class Card extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.only(top: 8),
                         child: Text(
-                          billing.createdAt.timeZoneName,
+                          billing.createdAt.toString().substring(0, 10),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,

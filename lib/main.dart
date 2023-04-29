@@ -1,6 +1,7 @@
 import 'package:fanfan/pages/authorization/how_to_authorize.dart';
 import 'package:fanfan/pages/authorization/main.dart';
 import 'package:fanfan/pages/billing/main.dart' as billing;
+import 'package:fanfan/pages/transaction/editable.dart' as transaction;
 import 'package:fanfan/pages/billings.dart';
 import 'package:fanfan/pages/home.dart';
 import 'package:fanfan/pages/layout.dart';
@@ -104,19 +105,19 @@ class App extends StatelessWidget {
           ),
         ],
       ),
-      ShellRoute(
-        pageBuilder: (context, state, child) =>
-            MaterialPage(child: billing.Layout(child: child)),
-        routes: [
-          GoRoute(
-            path: '/billing/editable',
-            builder: (context, state) => billing.Editable(),
-          ),
-          GoRoute(
-            path: '/billing/:id',
-            builder: (context, state) => billing.Billing(),
-          ),
-        ],
+      GoRoute(
+        path: '/billing/editable',
+        builder: (context, state) => billing.Editable(),
+      ),
+      GoRoute(
+        path: '/billing/:id',
+        builder: (context, state) => billing.Billing(
+          id: int.parse(state.params['id']!),
+        ),
+      ),
+      GoRoute(
+        path: '/transaction/editable',
+        builder: (context, state) => transaction.Editable(),
       ),
     ];
   }
