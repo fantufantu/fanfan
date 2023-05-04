@@ -1,9 +1,7 @@
 import 'package:fanfan/service/api/authorization.dart';
-import 'package:fanfan/store/user_profile.dart';
 import 'package:fanfan/utils/application.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class SignIn extends StatelessWidget {
   const SignIn({super.key});

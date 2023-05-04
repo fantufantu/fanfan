@@ -18,26 +18,19 @@ class Billing extends StatefulWidget {
   });
 
   @override
-  State<Billing> createState() => _State(id: id);
+  State<Billing> createState() => _State();
 }
 
 class _State extends State<Billing> {
-  /// 账本id
-  final int id;
-
   /// 账本信息
   entities.Billing? _billing;
-
-  _State({
-    required this.id,
-  });
 
   @override
   void initState() {
     super.initState();
 
     (() async {
-      final billing = (await queryBilling(id));
+      final billing = (await queryBilling(widget.id));
 
       setState(() {
         _billing = billing;

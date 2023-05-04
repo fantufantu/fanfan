@@ -1,3 +1,4 @@
+import 'package:fanfan/components/bottom_select_sheet_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -74,7 +75,24 @@ class _State extends State<Editable> {
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 12),
-                              child: TextFormField(),
+                              child: BottomSelectSheetButton(
+                                options: [
+                                  SelectOption(
+                                      value: "1",
+                                      label: "测试1",
+                                      children: [
+                                        SelectOption(
+                                            value: "2", label: "label"),
+                                        SelectOption(
+                                            value: "2", label: "label"),
+                                        SelectOption(
+                                            value: "2", label: "label"),
+                                      ]),
+                                  SelectOption(value: "2", label: "测试2"),
+                                  SelectOption(value: "3", label: "测试3"),
+                                  SelectOption(value: "4", label: "测试4"),
+                                ],
+                              ),
                             ),
                             Container(
                               width: double.infinity,

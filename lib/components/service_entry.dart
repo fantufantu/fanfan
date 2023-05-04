@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ServiceEntry extends StatelessWidget {
   final double _radius = 30;

@@ -1,6 +1,5 @@
 import 'package:fanfan/service/api/billing.dart';
 import 'package:fanfan/service/entities/billing.dart';
-import 'package:fanfan/service/entities/who_am_i.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fanfan/components/billing/card.dart' as components;
