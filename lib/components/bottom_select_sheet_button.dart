@@ -7,9 +7,12 @@ class BottomSelectSheetButton<T> extends StatefulWidget {
 
   final List<SelectOption<T>> options;
 
+  final double itemExtent;
+
   const BottomSelectSheetButton({
     super.key,
     required this.options,
+    this.itemExtent = 48,
     this.onChanged,
   });
 
@@ -23,7 +26,7 @@ class _BottomSelectSheetButtomButtonState<T>
   /// 焦点
   final FocusNode _focusNode = FocusNode();
 
-  /// 下拉结果
+  /// 选择结果下标
   List<int> _selected = [];
 
   @override
@@ -67,20 +70,21 @@ class _BottomSelectSheetButtomButtonState<T>
         .fold<
             List<
                 Tuple2<List<_SelectOptionWithoutChildren<T>>,
-                    List<SelectOption<T>>?>>>([], (previous, element) {
+                    List<SelectOption<T>>?>>>([], (prev, element) {
           final cascade = element.key;
           final index = element.value;
 
           final currentCascadeOptions = (cascade == 0
                   ? widget.options
-                  : previous.elementAt(cascade - 1).item2) ??
+                  : prev.elementAt(cascade - 1).item2) ??
               [];
 
+          // 无下拉层级，不展现
           if (currentCascadeOptions.isEmpty) {
-            return previous..add(const Tuple2([], []));
+            return prev;
           }
 
-          return previous
+          return prev
             ..add(Tuple2(
                 currentCascadeOptions
                     .map((e) => _SelectOptionWithoutChildren(
@@ -92,43 +96,94 @@ class _BottomSelectSheetButtomButtonState<T>
         .toList();
   }
 
+  /// 选择结果下标转换为选择项
+  List<_SelectOptionWithoutChildren> get _selectedOptions => _selected
+      .asMap()
+      .entries
+      .map((e) => _options.elementAt(e.key).elementAt(e.value))
+      .toList();
+
   /// 点击事件
   _open(BuildContext context) {
+    // 焦点置于输入框
     _focusNode.requestFocus();
 
     // 唤起底部抽屉
     showModalBottomSheet(
-        context: context,
-        builder: (context) => StatefulBuilder(
-            builder: (context, setState) => SafeArea(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => SafeArea(
+          child: SizedBox(
+            height: widget.itemExtent * 6,
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 12, right: 12),
                   child: Row(
-                    children: _options
-                        .asMap()
-                        .entries
-                        .map(
-                          (e) => Expanded(
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.only(left: 16, right: 16),
-                              child: CupertinoPicker(
-                                itemExtent: 48,
-                                onSelectedItemChanged: (index) =>
-                                    _onSelectedItemChanged(
-                                        e.key, index, setState),
-                                children: e.value
-                                    .map(
-                                      (e) => Center(
-                                        child: Text(e.label),
-                                      ),
-                                    )
-                                    .toList(),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('取消')),
+                      TextButton(
+                          onPressed: () {
+                            widget.onChanged?.call(
+                              _selectedOptions.last.value,
+                            );
+                            Navigator.pop(context);
+                          },
+                          child: const Text('确定')),
+                    ],
+                  ),
+                ),
+                const Divider(
+                  height: 0,
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Row(
+                      children: _options
+                          .asMap()
+                          .entries
+                          .map(
+                            (e) => Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: CupertinoPicker(
+                                  itemExtent: widget.itemExtent,
+                                  onSelectedItemChanged: (index) =>
+                                      _onSelectedItemChanged(
+                                          e.key, index, setState),
+                                  children: e.value
+                                      .map(
+                                        (e) => Center(
+                                          child: Text(
+                                            e.label,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                        .toList(),
+                          )
+                          .toList(),
+                    ),
                   ),
-                )));
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void _onFocusChanged() {
@@ -142,8 +197,9 @@ class _BottomSelectSheetButtomButtonState<T>
       onTap: () => _open(context),
       child: InputDecorator(
         isFocused: _focusNode.hasFocus,
-        decoration: InputDecoration()
+        decoration: const InputDecoration()
             .applyDefaults(Theme.of(context).inputDecorationTheme),
+        child: Text(_selectedOptions.last.label),
       ),
     );
   }

@@ -77,17 +77,7 @@ class _State extends State<Editable> {
                               margin: const EdgeInsets.only(top: 12),
                               child: BottomSelectSheetButton(
                                 options: [
-                                  SelectOption(
-                                      value: "1",
-                                      label: "测试1",
-                                      children: [
-                                        SelectOption(
-                                            value: "2", label: "label"),
-                                        SelectOption(
-                                            value: "2", label: "label"),
-                                        SelectOption(
-                                            value: "2", label: "label"),
-                                      ]),
+                                  SelectOption(value: "1", label: "测试1"),
                                   SelectOption(value: "2", label: "测试2"),
                                   SelectOption(value: "3", label: "测试3"),
                                   SelectOption(value: "4", label: "测试4"),
