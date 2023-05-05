@@ -8,7 +8,7 @@ class Billing {
     required this.createdAt,
   });
 
-  /// 账本 id
+  /// 账本id
   int id;
 
   /// 账本名称
