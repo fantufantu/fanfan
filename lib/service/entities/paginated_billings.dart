@@ -12,7 +12,7 @@ class PaginatedBillings {
   factory PaginatedBillings.fromJson(Map<String, dynamic> json) =>
       PaginatedBillings(
         total: json["total"],
-        items: (json["items"] as List<Map<String, dynamic>>)
+        items: (json["items"] as List<dynamic>)
             .map((item) => Billing.fromJson(item))
             .toList(),
       );

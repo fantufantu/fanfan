@@ -2,17 +2,17 @@ import 'package:fanfan/service/entities/category.dart';
 
 class PaginatedCategories {
   PaginatedCategories({
-    required this.total,
+    this.total,
     required this.items,
   });
 
-  int total;
+  int? total;
   List<Category> items;
 
   factory PaginatedCategories.fromJson(Map<String, dynamic> json) =>
       PaginatedCategories(
         total: json["total"],
-        items: (json["items"] as List<Map<String, dynamic>>)
+        items: (json["items"] as List<dynamic>)
             .map((item) => Category.fromJson(item))
             .toList(),
       );

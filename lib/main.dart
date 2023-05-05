@@ -9,6 +9,7 @@ import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/pages/statistics.dart';
 import 'package:fanfan/store/application.dart';
+import 'package:fanfan/store/category.dart';
 import 'package:fanfan/utils/application.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProfile()),
         ChangeNotifierProvider(create: (_) => Application()),
+        ChangeNotifierProvider(create: (_) => Category()),
       ],
       child: const App(),
     ),

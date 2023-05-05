@@ -6,6 +6,7 @@ final CATEGORIES = gql('''
       items {
         id
         name
+        icon
       }
     }
   }
