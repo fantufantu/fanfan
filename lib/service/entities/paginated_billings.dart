@@ -1,13 +1,11 @@
 import 'package:fanfan/service/entities/billing.dart';
+import 'package:fanfan/service/factories/paginated.dart';
 
-class PaginatedBillings {
+class PaginatedBillings extends Paginated<Billing> {
   PaginatedBillings({
-    required this.total,
-    required this.items,
+    required super.total,
+    required super.items,
   });
-
-  int total;
-  List<Billing> items;
 
   factory PaginatedBillings.fromJson(Map<String, dynamic> json) =>
       PaginatedBillings(
@@ -16,9 +14,4 @@ class PaginatedBillings {
             .map((item) => Billing.fromJson(item))
             .toList(),
       );
-
-  Map<String, dynamic> toJson() => {
-        "total": total,
-        "items": items.map((billing) => billing.toJson()).toList(),
-      };
 }

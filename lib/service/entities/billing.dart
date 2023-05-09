@@ -1,6 +1,7 @@
 import 'package:fanfan/service/entities/who_am_i.dart';
+import 'package:fanfan/service/factories/entity.dart';
 
-class Billing {
+class Billing extends Entity {
   Billing({
     required this.id,
     required this.name,
@@ -27,6 +28,7 @@ class Billing {
         createdAt: DateTime.parse(json['createdAt']),
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,

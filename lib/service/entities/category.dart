@@ -1,4 +1,6 @@
-class Category {
+import 'package:fanfan/service/factories/entity.dart';
+
+class Category implements Entity {
   Category({
     required this.id,
     required this.name,
@@ -20,6 +22,7 @@ class Category {
         icon: json["icon"],
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,

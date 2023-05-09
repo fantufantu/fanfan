@@ -1,6 +1,7 @@
 import 'package:fanfan/service/entities/billing.dart';
+import 'package:fanfan/service/factories/entity.dart';
 
-class WhoAmI {
+class WhoAmI implements Entity {
   WhoAmI({
     required this.id,
     required this.username,
@@ -34,6 +35,7 @@ class WhoAmI {
             : Billing.fromJson(json['defaultBilling']),
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         "id": id,
         "username": username,
