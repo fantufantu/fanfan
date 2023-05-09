@@ -64,12 +64,8 @@ class _State extends State<Billing> {
           billing: _billing!,
           elevation: 0,
         ),
-        Container(
-          margin: const EdgeInsets.only(
-            top: 20,
-            bottom: 12,
-          ),
-          child: const Divider(),
+        const Divider(
+          height: 32,
         ),
         SizedBox(
           child: Card(
@@ -88,7 +84,7 @@ class _State extends State<Billing> {
                       Text(_billing!.name),
                     ],
                   ),
-                  Divider(),
+                  const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -101,12 +97,8 @@ class _State extends State<Billing> {
             ),
           ),
         ),
-        Container(
-          margin: const EdgeInsets.only(
-            top: 16,
-            bottom: 16,
-          ),
-          child: const Divider(),
+        const Divider(
+          height: 40,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,12 +110,8 @@ class _State extends State<Billing> {
             )
           ],
         ),
-        Container(
-          margin: const EdgeInsets.only(
-            top: 16,
-            bottom: 16,
-          ),
-          child: const Divider(),
+        const Divider(
+          height: 40,
         ),
         Row(
           children: [

@@ -136,68 +136,70 @@ class App extends StatelessWidget {
         errorBuilder: (context, state) => Loading(),
       ),
       theme: ThemeData(
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
-        textTheme: GoogleFonts.josefinSansTextTheme(),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.grey.shade100,
-          focusColor: Colors.deepOrange,
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(12),
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Colors.white,
+          textTheme: GoogleFonts.josefinSansTextTheme(),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.grey.shade100,
+            focusColor: Colors.deepOrange,
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(12),
+              ),
+              borderSide: BorderSide.none,
             ),
-            borderSide: BorderSide.none,
+            enabledBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(12),
+              ),
+              borderSide: BorderSide.none,
+            ),
+            errorBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(12),
+              ),
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(12),
+              ),
+              borderSide: BorderSide(
+                color: Colors.blue,
+              ),
+            ),
+            focusedErrorBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(12),
+              ),
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            ),
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            labelStyle: const TextStyle(
+              fontSize: 14,
+            ),
           ),
-          enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(12),
+          checkboxTheme: const CheckboxThemeData(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(6),
+              ),
             ),
-            borderSide: BorderSide.none,
-          ),
-          errorBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(12),
-            ),
-            borderSide: BorderSide(
-              color: Colors.red,
-            ),
-          ),
-          focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(12),
-            ),
-            borderSide: BorderSide(
+            side: BorderSide(
               color: Colors.blue,
+              width: 2,
             ),
           ),
-          focusedErrorBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(12),
-            ),
-            borderSide: BorderSide(
-              color: Colors.red,
-            ),
-          ),
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          labelStyle: const TextStyle(
-            fontSize: 14,
-          ),
-        ),
-        checkboxTheme: const CheckboxThemeData(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(6),
-            ),
-          ),
-          side: BorderSide(
-            color: Colors.blue,
-            width: 2,
-          ),
-        ),
-      ),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.white,
+          )),
     );
   }
 }

@@ -1,8 +1,10 @@
 import 'package:fanfan/components/bottom_select_sheet_button.dart';
 import 'package:fanfan/store/category.dart';
+import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:fanfan/components/billing/card.dart' as components;
 
 class Editable extends StatefulWidget {
   const Editable({super.key});
@@ -22,11 +24,13 @@ class _State extends State<Editable> {
         .select((Category category) => category.categories)
         .map((e) => SelectOption(value: e.id, label: e.name))
         .toList();
-    // final categories = [SelectOption(value: 1, label: '2')];
+
+    /// 默认账本
+    final billing = context.select(
+        (UserProfile userProfile) => userProfile.whoAmI?.defaultBilling);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade50,
         elevation: 0,
         leading: Container(
           padding: const EdgeInsets.only(left: 20),
@@ -48,6 +52,26 @@ class _State extends State<Editable> {
           child: SafeArea(
             child: CustomScrollView(
               slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    childCount: 1,
+                    (context, index) {
+                      return Column(
+                        children: [
+                          billing != null
+                              ? components.Card(
+                                  billing: billing,
+                                  elevation: 0,
+                                )
+                              : const Text("请选择账本"),
+                          const Divider(
+                            height: 32,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {

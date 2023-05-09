@@ -87,29 +87,25 @@ class _State extends State<Editable> {
                 child: const Text(
                     '账本用于记录你的生活中的点点滴滴，番番记账从这里出发 🎉 🎉 🎉，给它取个好听的名字吧！'),
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                child: const Divider(),
+              const Divider(
+                height: 40,
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                child: Form(
-                  key: _formKey,
-                  child: TextFormField(
-                    initialValue: _name,
-                    decoration: const InputDecoration(
-                      label: Text("账本名称"),
-                    ),
-                    validator: (value) {
-                      // 不能为空
-                      if ((value ?? '').isEmpty) return '请输入账本名称！';
-                      return null;
-                    },
-                    onSaved: (changedValue) => _name = changedValue ?? '',
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                  initialValue: _name,
+                  decoration: const InputDecoration(
+                    label: Text("账本名称"),
                   ),
+                  validator: (value) {
+                    // 不能为空
+                    if ((value ?? '').isEmpty) return '请输入账本名称！';
+                    return null;
+                  },
+                  onSaved: (changedValue) => _name = changedValue ?? '',
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.only(bottom: 8),
