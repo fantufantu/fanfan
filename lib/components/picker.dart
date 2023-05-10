@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
-class BottomSelectSheetButton<T> extends StatefulWidget {
+class Picker<T> extends StatefulWidget {
   final ValueChanged<T>? onChanged;
 
   final List<SelectOption<T>> options;
 
   final double itemExtent;
 
-  const BottomSelectSheetButton({
+  const Picker({
     super.key,
     required this.options,
     this.itemExtent = 48,
@@ -17,12 +17,10 @@ class BottomSelectSheetButton<T> extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() =>
-      _BottomSelectSheetButtomButtonState<T>();
+  State<StatefulWidget> createState() => _State<T>();
 }
 
-class _BottomSelectSheetButtomButtonState<T>
-    extends State<BottomSelectSheetButton<T>> {
+class _State<T> extends State<Picker<T>> {
   /// 焦点
   final FocusNode _focusNode = FocusNode();
 

@@ -1,4 +1,4 @@
-import 'package:fanfan/components/bottom_select_sheet_button.dart';
+import 'package:fanfan/components/picker.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/material.dart';
@@ -104,12 +104,25 @@ class _State extends State<Editable> {
                             Container(
                               width: double.infinity,
                               margin: const EdgeInsets.only(top: 20),
+                              child: const Text("发生时间"),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 12),
+                              child: categories.isNotEmpty
+                                  ? Picker(
+                                      options: categories,
+                                    )
+                                  : null,
+                            ),
+                            Container(
+                              width: double.infinity,
+                              margin: const EdgeInsets.only(top: 20),
                               child: const Text("选择分类"),
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 12),
                               child: categories.isNotEmpty
-                                  ? BottomSelectSheetButton(
+                                  ? Picker(
                                       options: categories,
                                     )
                                   : null,
