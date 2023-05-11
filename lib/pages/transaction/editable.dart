@@ -1,3 +1,4 @@
+import 'package:fanfan/components/date_picker.dart';
 import 'package:fanfan/components/picker.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
@@ -16,6 +17,9 @@ class Editable extends StatefulWidget {
 class _State extends State<Editable> {
   /// 表单唯一
   final _formKey = GlobalKey<FormState>();
+
+  /// 发生时间
+  DateTime? _happenedAt;
 
   @override
   Widget build(BuildContext context) {
@@ -104,35 +108,52 @@ class _State extends State<Editable> {
                             Container(
                               width: double.infinity,
                               margin: const EdgeInsets.only(top: 20),
-                              child: const Text("发生时间"),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 12),
-                              child: categories.isNotEmpty
-                                  ? Picker(options: categories)
-                                  : null,
-                            ),
-                            Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.only(top: 20),
-                              child: const Text("选择分类"),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 12),
-                              child: categories.isNotEmpty
-                                  ? Picker(options: categories)
-                                  : null,
+                              child: Row(
+                                children: [
+                                  const Flexible(
+                                      fit: FlexFit.tight, child: Text("发生时间：")),
+                                  Expanded(
+                                    flex: 3,
+                                    child: DatePicker(
+                                      initialDateTime: _happenedAt,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                             Container(
                               width: double.infinity,
                               margin: const EdgeInsets.only(top: 20),
-                              child: const Text("备注"),
+                              child: Row(
+                                children: [
+                                  const Flexible(
+                                      fit: FlexFit.tight, child: Text("选择分类：")),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Container(
+                                      child: categories.isNotEmpty
+                                          ? Picker(options: categories)
+                                          : null,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                             Container(
-                              margin: const EdgeInsets.only(top: 12),
-                              child: TextFormField(
-                                minLines: 3,
-                                maxLines: 8,
+                              width: double.infinity,
+                              margin: const EdgeInsets.only(top: 20),
+                              child: Row(
+                                children: [
+                                  const Flexible(
+                                      fit: FlexFit.tight, child: Text("备注：")),
+                                  Expanded(
+                                    flex: 3,
+                                    child: TextFormField(
+                                      minLines: 3,
+                                      maxLines: 8,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],

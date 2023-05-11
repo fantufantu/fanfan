@@ -51,56 +51,54 @@ class _State<T> extends State<Picker<T>> {
     // 唤起底部抽屉
     showModalBottomSheet(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => SafeArea(
-          child: SizedBox(
-            height: widget.itemExtent * 6,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 12, right: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('取消')),
-                      TextButton(
-                          onPressed: () {
-                            widget.onChanged
-                                ?.call(_scrollController.selectedItem);
-                            Navigator.pop(context);
-                          },
-                          child: const Text('确定')),
-                    ],
-                  ),
+      builder: (context) => SafeArea(
+        child: SizedBox(
+          height: widget.itemExtent * 6,
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(left: 12, right: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('取消')),
+                    TextButton(
+                        onPressed: () {
+                          widget.onChanged
+                              ?.call(_scrollController.selectedItem);
+                          Navigator.pop(context);
+                        },
+                        child: const Text('确定')),
+                  ],
                 ),
-                const Divider(height: 0),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: CupertinoPicker(
-                      itemExtent: widget.itemExtent,
-                      onSelectedItemChanged: null,
-                      scrollController: _scrollController,
-                      children: widget.options
-                          .map(
-                            (option) => Center(
-                              child: Text(
-                                option.label,
-                                style: const TextStyle(fontSize: 14),
-                              ),
+              ),
+              const Divider(height: 0),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: CupertinoPicker(
+                    itemExtent: widget.itemExtent,
+                    onSelectedItemChanged: null,
+                    scrollController: _scrollController,
+                    children: widget.options
+                        .map(
+                          (option) => Center(
+                            child: Text(
+                              option.label,
+                              style: const TextStyle(fontSize: 14),
                             ),
-                          )
-                          .toList(),
-                    ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -111,18 +109,26 @@ class _State<T> extends State<Picker<T>> {
     setState(() {});
   }
 
+  int get selectedItem {
+    try {
+      return _scrollController.selectedItem;
+    } catch (e) {
+      return widget.initialItem;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       focusNode: _focusNode,
       onTap: () => _open(context),
       child: InputDecorator(
-        isFocused: _focusNode.hasFocus,
-        decoration: const InputDecoration()
-            .applyDefaults(Theme.of(context).inputDecorationTheme),
-        child: Text(
-            widget.options.elementAt(_scrollController.selectedItem).label),
-      ),
+          isFocused: _focusNode.hasFocus,
+          decoration: const InputDecoration()
+              .applyDefaults(Theme.of(context).inputDecorationTheme),
+          child: Text(
+            widget.options.elementAt(selectedItem).label,
+          )),
     );
   }
 }
