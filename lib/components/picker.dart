@@ -1,19 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tuple/tuple.dart';
 
 class Picker<T> extends StatefulWidget {
-  final ValueChanged<T>? onChanged;
+  /// 用户选择item之后的回调函数
+  final ValueChanged<int>? onChanged;
 
+  /// 预置选项，提供给用户选择用
   final List<SelectOption<T>> options;
 
+  /// item的渲染高度
   final double itemExtent;
+
+  /// 默认选中下标
+  final int initialAt;
 
   const Picker({
     super.key,
     required this.options,
     this.itemExtent = 48,
     this.onChanged,
+    this.initialAt = 0,
   });
 
   @override
@@ -25,81 +31,16 @@ class _State<T> extends State<Picker<T>> {
   final FocusNode _focusNode = FocusNode();
 
   /// 选择结果下标
-  List<int> _selected = [];
+  late int _selectedAt;
 
   @override
   initState() {
     super.initState();
-
     // 监听聚焦节点
     _focusNode.addListener(_onFocusChanged);
-
     // 初始化默认值
-    _initialSelectedItems(widget.options, _selected);
+    _selectedAt = widget.initialAt;
   }
-
-  /// 计算默认的选中项
-  _initialSelectedItems(List<SelectOption>? options, List<int> selected) {
-    if (options == null || options.isEmpty) return;
-    _initialSelectedItems(options.elementAt(0).children, selected..add(0));
-  }
-
-  /// 选中选项后的回调
-  _onSelectedItemChanged(int cascade, int index, StateSetter setState) {
-    final changedSelected = _selected.sublist(0, cascade)..add(index);
-    final children = changedSelected.fold<List<SelectOption<T>>?>(
-        widget.options,
-        (parents, element) => parents?.elementAt(element).children);
-
-    // 子项的默认值
-    _initialSelectedItems(children, changedSelected);
-
-    // 更改状态值
-    setState(() {
-      _selected = changedSelected;
-    });
-  }
-
-  /// 转换下拉选项
-  List<List<_SelectOptionWithoutChildren<T>>> get _options {
-    return _selected
-        .asMap()
-        .entries
-        .fold<
-            List<
-                Tuple2<List<_SelectOptionWithoutChildren<T>>,
-                    List<SelectOption<T>>?>>>([], (prev, element) {
-          final cascade = element.key;
-          final index = element.value;
-
-          final currentCascadeOptions = (cascade == 0
-                  ? widget.options
-                  : prev.elementAt(cascade - 1).item2) ??
-              [];
-
-          // 无下拉层级，不展现
-          if (currentCascadeOptions.isEmpty) {
-            return prev;
-          }
-
-          return prev
-            ..add(Tuple2(
-                currentCascadeOptions
-                    .map((e) => _SelectOptionWithoutChildren(
-                        value: e.value, label: e.label))
-                    .toList(),
-                currentCascadeOptions.elementAt(index).children));
-        })
-        .map((e) => e.item1)
-        .toList();
-  }
-
-  /// 选择结果下标转换为选择项
-  List<_SelectOptionWithoutChildren> get _selectedOptions => _selected
-      .asMap()
-      .entries
-      .map((e) => _options.elementAt(e.key).elementAt(e.value))
-      .toList();
 
   /// 点击事件
   _open(BuildContext context) {
@@ -128,9 +69,7 @@ class _State<T> extends State<Picker<T>> {
                           child: const Text('取消')),
                       TextButton(
                           onPressed: () {
-                            widget.onChanged?.call(
-                              _selectedOptions.last.value,
-                            );
+                            widget.onChanged?.call(_selectedAt);
                             Navigator.pop(context);
                           },
                           child: const Text('确定')),
@@ -143,31 +82,16 @@ class _State<T> extends State<Picker<T>> {
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      children: _options
-                          .asMap()
-                          .entries
+                    child: CupertinoPicker(
+                      itemExtent: widget.itemExtent,
+                      onSelectedItemChanged: widget.onChanged,
+                      children: widget.options
                           .map(
-                            (e) => Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: CupertinoPicker(
-                                  itemExtent: widget.itemExtent,
-                                  onSelectedItemChanged: (index) =>
-                                      _onSelectedItemChanged(
-                                          e.key, index, setState),
-                                  children: e.value
-                                      .map(
-                                        (e) => Center(
-                                          child: Text(
-                                            e.label,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
+                            (option) => Center(
+                              child: Text(
+                                option.label,
+                                style: const TextStyle(
+                                  fontSize: 14,
                                 ),
                               ),
                             ),
@@ -197,28 +121,18 @@ class _State<T> extends State<Picker<T>> {
         isFocused: _focusNode.hasFocus,
         decoration: const InputDecoration()
             .applyDefaults(Theme.of(context).inputDecorationTheme),
-        child: Text(_selectedOptions.last.label),
+        child: Text(widget.options.elementAt(_selectedAt).label),
       ),
     );
   }
 }
 
-class SelectOption<T> extends _SelectOptionWithoutChildren<T> {
-  List<SelectOption<T>>? children;
-
-  SelectOption({
-    required super.value,
-    required super.label,
-    this.children,
-  });
-}
-
-class _SelectOptionWithoutChildren<T> {
+class SelectOption<T> {
   T value;
 
   String label;
 
-  _SelectOptionWithoutChildren({
+  SelectOption({
     required this.value,
     required this.label,
   });
