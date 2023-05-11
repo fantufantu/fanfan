@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/schemas/user.dart';
 import 'package:fanfan/service/entities/who_am_i.dart';
 import 'package:graphql/client.dart';
-import 'package:uuid/uuid.dart';
 
 class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   /// 单例

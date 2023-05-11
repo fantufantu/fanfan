@@ -114,7 +114,7 @@ class App extends StatelessWidget {
       GoRoute(
         path: '/billing/:id',
         builder: (context, state) => billing.Billing(
-          id: int.parse(state.params['id']!),
+          id: int.parse(state.pathParameters['id']!),
         ),
       ),
       GoRoute(

@@ -12,14 +12,14 @@ class Picker<T> extends StatefulWidget {
   final double itemExtent;
 
   /// 默认选中下标
-  final int initialAt;
+  final int initialItem;
 
   const Picker({
     super.key,
     required this.options,
     this.itemExtent = 48,
     this.onChanged,
-    this.initialAt = 0,
+    this.initialItem = 0,
   });
 
   @override
@@ -30,16 +30,17 @@ class _State<T> extends State<Picker<T>> {
   /// 焦点
   final FocusNode _focusNode = FocusNode();
 
-  /// 选择结果下标
-  late int _selectedAt;
+  /// 下标选择器
+  late final FixedExtentScrollController _scrollController;
 
   @override
   initState() {
     super.initState();
     // 监听聚焦节点
     _focusNode.addListener(_onFocusChanged);
-    // 初始化默认值
-    _selectedAt = widget.initialAt;
+    // 初始化默认选中值
+    _scrollController =
+        FixedExtentScrollController(initialItem: widget.initialItem);
   }
 
   /// 点击事件
@@ -69,30 +70,28 @@ class _State<T> extends State<Picker<T>> {
                           child: const Text('取消')),
                       TextButton(
                           onPressed: () {
-                            widget.onChanged?.call(_selectedAt);
+                            widget.onChanged
+                                ?.call(_scrollController.selectedItem);
                             Navigator.pop(context);
                           },
                           child: const Text('确定')),
                     ],
                   ),
                 ),
-                const Divider(
-                  height: 0,
-                ),
+                const Divider(height: 0),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.only(right: 20),
                     child: CupertinoPicker(
                       itemExtent: widget.itemExtent,
-                      onSelectedItemChanged: widget.onChanged,
+                      onSelectedItemChanged: null,
+                      scrollController: _scrollController,
                       children: widget.options
                           .map(
                             (option) => Center(
                               child: Text(
                                 option.label,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                ),
+                                style: const TextStyle(fontSize: 14),
                               ),
                             ),
                           )
@@ -121,7 +120,8 @@ class _State<T> extends State<Picker<T>> {
         isFocused: _focusNode.hasFocus,
         decoration: const InputDecoration()
             .applyDefaults(Theme.of(context).inputDecorationTheme),
-        child: Text(widget.options.elementAt(_selectedAt).label),
+        child: Text(
+            widget.options.elementAt(_scrollController.selectedItem).label),
       ),
     );
   }

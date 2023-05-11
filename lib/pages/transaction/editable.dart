@@ -108,7 +108,9 @@ class _State extends State<Editable> {
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 12),
-                              child: Picker(options: categories),
+                              child: categories.isNotEmpty
+                                  ? Picker(options: categories)
+                                  : null,
                             ),
                             Container(
                               width: double.infinity,
@@ -118,9 +120,7 @@ class _State extends State<Editable> {
                             Container(
                               margin: const EdgeInsets.only(top: 12),
                               child: categories.isNotEmpty
-                                  ? Picker(
-                                      options: categories,
-                                    )
+                                  ? Picker(options: categories)
                                   : null,
                             ),
                             Container(
