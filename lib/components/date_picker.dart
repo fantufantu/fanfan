@@ -63,6 +63,9 @@ class _State<T> extends State<DatePicker> {
                         children: [
                           TextButton(
                               onPressed: () {
+                                setState(() {
+                                  _selectedDateTime = widget._dateTime;
+                                });
                                 Navigator.pop(context);
                               },
                               child: const Text('取消')),
@@ -109,7 +112,6 @@ class _State<T> extends State<DatePicker> {
             .applyDefaults(Theme.of(context).inputDecorationTheme),
         child: Text(
           formattedDateTime,
-          textAlign: TextAlign.right,
           style: const TextStyle(
             fontSize: 16,
           ),

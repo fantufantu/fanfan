@@ -4,9 +4,12 @@ import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:fanfan/components/billing/card.dart' as components;
+import 'package:fanfan/components/billing/card.dart' as billing_components
+    show Card;
+import 'package:fanfan/components/switch.dart' as components;
 
 class Editable extends StatefulWidget {
   const Editable({super.key});
@@ -64,11 +67,18 @@ class _State extends State<Editable> {
                       return Column(
                         children: [
                           billing != null
-                              ? components.Card(
+                              ? billing_components.Card(
                                   billing: billing,
                                   elevation: 0,
                                 )
-                              : const Text("请选择账本"),
+                              : ElevatedButton(
+                                  onPressed: () {},
+                                  style: ButtonStyle(
+                                      shape: MaterialStatePropertyAll(
+                                          RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ))),
+                                  child: const Text("请选择")),
                           const Divider(height: 32),
                         ],
                       );
@@ -82,6 +92,7 @@ class _State extends State<Editable> {
                         key: _formKey,
                         child: Column(
                           children: [
+                            components.Switch(),
                             Row(
                               children: [
                                 const Flexible(
@@ -90,6 +101,9 @@ class _State extends State<Editable> {
                                   flex: 3,
                                   child: TextFormField(
                                     textAlign: TextAlign.end,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.fromLTRB(
@@ -131,7 +145,7 @@ class _State extends State<Editable> {
                                         });
                                       },
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
