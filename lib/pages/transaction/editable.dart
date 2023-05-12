@@ -2,6 +2,7 @@ import 'package:fanfan/components/date_picker.dart';
 import 'package:fanfan/components/picker.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -68,9 +69,7 @@ class _State extends State<Editable> {
                                   elevation: 0,
                                 )
                               : const Text("请选择账本"),
-                          const Divider(
-                            height: 32,
-                          ),
+                          const Divider(height: 32),
                         ],
                       );
                     },
@@ -83,27 +82,36 @@ class _State extends State<Editable> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            TextFormField(
-                              initialValue: "0",
-                              textAlign: TextAlign.end,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.fromLTRB(24, 12, 24, 12),
-                                prefix: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade100,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  padding: const EdgeInsets.all(8),
-                                  child: const Text(
-                                    "CNY",
-                                    style: TextStyle(
-                                      fontSize: 12,
+                            Row(
+                              children: [
+                                const Flexible(
+                                    fit: FlexFit.tight, child: Text("花了多少：")),
+                                Expanded(
+                                  flex: 3,
+                                  child: TextFormField(
+                                    textAlign: TextAlign.end,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.fromLTRB(
+                                          24, 12, 24, 12),
+                                      prefix: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue.shade100,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        padding: const EdgeInsets.all(8),
+                                        child: const Text(
+                                          "CNY",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                             Container(
                               width: double.infinity,
@@ -115,7 +123,13 @@ class _State extends State<Editable> {
                                   Expanded(
                                     flex: 3,
                                     child: DatePicker(
-                                      initialDateTime: _happenedAt,
+                                      dateTime: _happenedAt,
+                                      mode: CupertinoDatePickerMode.date,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _happenedAt = value;
+                                        });
+                                      },
                                     ),
                                   )
                                 ],

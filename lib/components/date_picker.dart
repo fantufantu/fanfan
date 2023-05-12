@@ -1,19 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/// 受控组件
 class DatePicker extends StatefulWidget {
   /// 初始值
-  late final DateTime _initialDateTime;
+  late final DateTime _dateTime;
 
   /// 值变更回调函数
   final ValueChanged<DateTime>? onChanged;
 
+  /// 日历模式
+  final CupertinoDatePickerMode mode;
+
+  /// 日历顺序
+  final DatePickerDateOrder dateOrder;
+
   DatePicker({
     super.key,
-    initialDateTime,
+    dateTime,
     this.onChanged,
+    this.mode = CupertinoDatePickerMode.dateAndTime,
+    this.dateOrder = DatePickerDateOrder.ymd,
   }) {
-    _initialDateTime = initialDateTime ?? DateTime.now();
+    _dateTime = dateTime ?? DateTime.now();
   }
 
   @override
@@ -31,7 +40,7 @@ class _State<T> extends State<DatePicker> {
   @override
   initState() {
     super.initState();
-    _selectedDateTime = widget._initialDateTime;
+    _selectedDateTime = widget._dateTime;
   }
 
   /// 打开选择器
@@ -69,6 +78,9 @@ class _State<T> extends State<DatePicker> {
                     const Divider(height: 0),
                     Flexible(
                       child: CupertinoDatePicker(
+                        initialDateTime: _selectedDateTime,
+                        mode: widget.mode,
+                        dateOrder: widget.dateOrder,
                         onDateTimeChanged: (value) {
                           setState(() {
                             _selectedDateTime = value;
@@ -82,6 +94,10 @@ class _State<T> extends State<DatePicker> {
             }));
   }
 
+  String get formattedDateTime {
+    return '${widget._dateTime.year}-${widget._dateTime.month}-${widget._dateTime.day}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -91,7 +107,13 @@ class _State<T> extends State<DatePicker> {
         isFocused: _focusNode.hasFocus,
         decoration: const InputDecoration()
             .applyDefaults(Theme.of(context).inputDecorationTheme),
-        child: Text(_selectedDateTime.toString()),
+        child: Text(
+          formattedDateTime,
+          textAlign: TextAlign.right,
+          style: const TextStyle(
+            fontSize: 16,
+          ),
+        ),
       ),
     );
   }
