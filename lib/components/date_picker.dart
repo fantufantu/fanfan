@@ -17,7 +17,7 @@ class DatePicker extends StatefulWidget {
 
   DatePicker({
     super.key,
-    dateTime,
+    DateTime? dateTime,
     this.onChanged,
     this.mode = CupertinoDatePickerMode.dateAndTime,
     this.dateOrder = DatePickerDateOrder.ymd,

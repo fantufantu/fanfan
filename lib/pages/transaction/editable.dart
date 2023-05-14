@@ -1,4 +1,5 @@
-import 'package:fanfan/components/date_picker.dart';
+import 'package:fanfan/components/form/date_picker_form_field.dart';
+import 'package:fanfan/components/form/switch_form_field.dart';
 import 'package:fanfan/components/picker.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
@@ -7,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:fanfan/components/billing/card.dart' as billing_components
-    show Card;
-import 'package:fanfan/components/switch.dart' as components;
+import 'package:fanfan/components/billing/card.dart' as components show Card;
+import 'package:tuple/tuple.dart';
+import 'package:fanfan/service/entities/transaction.dart' as entities
+    show Transaction, Direction;
 
 class Editable extends StatefulWidget {
   const Editable({super.key});
@@ -22,8 +24,14 @@ class _State extends State<Editable> {
   /// 表单唯一
   final _formKey = GlobalKey<FormState>();
 
-  /// 发生时间
-  DateTime? _happenedAt;
+  /// 交易实体
+  entities.Transaction transaction = entities.Transaction.initialize();
+
+  /// 交易方向
+  List<entities.Direction> directions = [
+    entities.Direction.Out,
+    entities.Direction.In,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +75,7 @@ class _State extends State<Editable> {
                       return Column(
                         children: [
                           billing != null
-                              ? billing_components.Card(
+                              ? components.Card(
                                   billing: billing,
                                   elevation: 0,
                                 )
@@ -92,43 +100,59 @@ class _State extends State<Editable> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            components.Switch(),
-                            Row(
-                              children: [
-                                const Flexible(
-                                    fit: FlexFit.tight, child: Text("花了多少：")),
-                                Expanded(
-                                  flex: 3,
-                                  child: TextFormField(
-                                    textAlign: TextAlign.end,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly
-                                    ],
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.fromLTRB(
-                                          24, 12, 24, 12),
-                                      prefix: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue.shade100,
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        padding: const EdgeInsets.all(8),
-                                        child: const Text(
-                                          "CNY",
-                                          style: TextStyle(
-                                            fontSize: 12,
+                            SwitchFormField(
+                              initialValue:
+                                  directions.indexOf(transaction.direction!),
+                              children: const Tuple2("支出", "收入"),
+                              onSaved: (value) {
+                                transaction.direction =
+                                    directions.elementAt(value!);
+                              },
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 20),
+                              child: Row(
+                                children: [
+                                  const Flexible(
+                                      fit: FlexFit.tight, child: Text("金额：")),
+                                  Expanded(
+                                    flex: 3,
+                                    child: TextFormField(
+                                      initialValue: transaction.remark,
+                                      textAlign: TextAlign.end,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
+                                      keyboardType: TextInputType.number,
+                                      onSaved: (value) {
+                                        transaction.amount =
+                                            double.tryParse(value!);
+                                      },
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.fromLTRB(
+                                                24, 12, 24, 12),
+                                        prefix: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue.shade100,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          padding: const EdgeInsets.all(8),
+                                          child: const Text(
+                                            "CNY",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             Container(
-                              width: double.infinity,
                               margin: const EdgeInsets.only(top: 20),
                               child: Row(
                                 children: [
@@ -136,13 +160,11 @@ class _State extends State<Editable> {
                                       fit: FlexFit.tight, child: Text("发生时间：")),
                                   Expanded(
                                     flex: 3,
-                                    child: DatePicker(
-                                      dateTime: _happenedAt,
+                                    child: DatePickerFormField(
+                                      initialValue: transaction.happenedAt,
                                       mode: CupertinoDatePickerMode.date,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _happenedAt = value;
-                                        });
+                                      onSaved: (value) {
+                                        transaction.happenedAt = value;
                                       },
                                     ),
                                   ),
@@ -150,7 +172,6 @@ class _State extends State<Editable> {
                               ),
                             ),
                             Container(
-                              width: double.infinity,
                               margin: const EdgeInsets.only(top: 20),
                               child: Row(
                                 children: [
@@ -168,7 +189,6 @@ class _State extends State<Editable> {
                               ),
                             ),
                             Container(
-                              width: double.infinity,
                               margin: const EdgeInsets.only(top: 20),
                               child: Row(
                                 children: [
@@ -179,6 +199,9 @@ class _State extends State<Editable> {
                                     child: TextFormField(
                                       minLines: 3,
                                       maxLines: 8,
+                                      onSaved: (value) {
+                                        transaction.remark = value;
+                                      },
                                     ),
                                   ),
                                 ],
@@ -198,9 +221,13 @@ class _State extends State<Editable> {
                     children: [
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.only(bottom: 12, top: 20),
+                        padding: const EdgeInsets.all(20),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _formKey.currentState?.save();
+
+                            print(transaction.toJson());
+                          },
                           style: ButtonStyle(
                               padding: const MaterialStatePropertyAll(
                                   EdgeInsets.all(16)),
