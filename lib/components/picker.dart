@@ -12,14 +12,14 @@ class Picker<T> extends StatefulWidget {
   final double itemExtent;
 
   /// 默认选中下标
-  final int initialItem;
+  final int? value;
 
   const Picker({
     super.key,
     required this.options,
     this.itemExtent = 48,
     this.onChanged,
-    this.initialItem = 0,
+    this.value,
   });
 
   @override
@@ -40,7 +40,7 @@ class _State<T> extends State<Picker<T>> {
     _focusNode.addListener(_onFocusChanged);
     // 初始化默认选中值
     _scrollController =
-        FixedExtentScrollController(initialItem: widget.initialItem);
+        FixedExtentScrollController(initialItem: widget.value ?? 0);
   }
 
   /// 点击事件
@@ -69,6 +69,7 @@ class _State<T> extends State<Picker<T>> {
                         child: const Text('取消')),
                     TextButton(
                         onPressed: () {
+                          print(_scrollController.selectedItem);
                           widget.onChanged
                               ?.call(_scrollController.selectedItem);
                           Navigator.pop(context);
@@ -113,7 +114,7 @@ class _State<T> extends State<Picker<T>> {
     try {
       return _scrollController.selectedItem;
     } catch (e) {
-      return widget.initialItem;
+      return widget.value ?? 0;
     }
   }
 

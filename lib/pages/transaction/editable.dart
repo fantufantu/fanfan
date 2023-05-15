@@ -1,6 +1,8 @@
 import 'package:fanfan/components/form/date_picker_form_field.dart';
+import 'package:fanfan/components/form/picker_form_field.dart';
 import 'package:fanfan/components/form/switch_form_field.dart';
 import 'package:fanfan/components/picker.dart';
+import 'package:fanfan/service/entities/billing.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,13 +27,26 @@ class _State extends State<Editable> {
   final _formKey = GlobalKey<FormState>();
 
   /// 交易实体
-  entities.Transaction transaction = entities.Transaction.initialize();
+  late entities.Transaction _transaction;
+
+  /// 交易所属账本
+  Billing? _belongTo;
 
   /// 交易方向
-  List<entities.Direction> directions = [
+  final List<entities.Direction> _directions = [
     entities.Direction.Out,
     entities.Direction.In,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 默认交易
+    _transaction = entities.Transaction.initialize();
+    // 默认账本
+    _belongTo = context.read<UserProfile>().whoAmI?.defaultBilling;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +55,6 @@ class _State extends State<Editable> {
         .select((Category category) => category.categories)
         .map((e) => SelectOption(value: e.id, label: e.name))
         .toList();
-
-    /// 默认账本
-    final billing = context.select(
-        (UserProfile userProfile) => userProfile.whoAmI?.defaultBilling);
 
     return Scaffold(
       appBar: AppBar(
@@ -74,9 +85,9 @@ class _State extends State<Editable> {
                     (context, index) {
                       return Column(
                         children: [
-                          billing != null
+                          _belongTo != null
                               ? components.Card(
-                                  billing: billing,
+                                  billing: _belongTo!,
                                   elevation: 0,
                                 )
                               : ElevatedButton(
@@ -102,11 +113,11 @@ class _State extends State<Editable> {
                           children: [
                             SwitchFormField(
                               initialValue:
-                                  directions.indexOf(transaction.direction!),
+                                  _directions.indexOf(_transaction.direction!),
                               children: const Tuple2("支出", "收入"),
                               onSaved: (value) {
-                                transaction.direction =
-                                    directions.elementAt(value!);
+                                _transaction.direction =
+                                    _directions.elementAt(value!);
                               },
                             ),
                             Container(
@@ -118,14 +129,14 @@ class _State extends State<Editable> {
                                   Expanded(
                                     flex: 3,
                                     child: TextFormField(
-                                      initialValue: transaction.remark,
+                                      initialValue: _transaction.remark,
                                       textAlign: TextAlign.end,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.digitsOnly
                                       ],
                                       keyboardType: TextInputType.number,
                                       onSaved: (value) {
-                                        transaction.amount =
+                                        _transaction.amount =
                                             double.tryParse(value!);
                                       },
                                       decoration: InputDecoration(
@@ -161,10 +172,10 @@ class _State extends State<Editable> {
                                   Expanded(
                                     flex: 3,
                                     child: DatePickerFormField(
-                                      initialValue: transaction.happenedAt,
+                                      initialValue: _transaction.happenedAt,
                                       mode: CupertinoDatePickerMode.date,
                                       onSaved: (value) {
-                                        transaction.happenedAt = value;
+                                        _transaction.happenedAt = value;
                                       },
                                     ),
                                   ),
@@ -181,7 +192,18 @@ class _State extends State<Editable> {
                                     flex: 3,
                                     child: Container(
                                       child: categories.isNotEmpty
-                                          ? Picker(options: categories)
+                                          ? PickerFormField(
+                                              options: categories,
+                                              onSaved: (value) {
+                                                print(value);
+                                                _transaction.categoryId =
+                                                    value == null
+                                                        ? null
+                                                        : categories
+                                                            .elementAt(value)
+                                                            .value;
+                                              },
+                                            )
                                           : null,
                                     ),
                                   )
@@ -200,7 +222,7 @@ class _State extends State<Editable> {
                                       minLines: 3,
                                       maxLines: 8,
                                       onSaved: (value) {
-                                        transaction.remark = value;
+                                        _transaction.remark = value;
                                       },
                                     ),
                                   ),
@@ -226,7 +248,7 @@ class _State extends State<Editable> {
                           onPressed: () {
                             _formKey.currentState?.save();
 
-                            print(transaction.toJson());
+                            print(_transaction.toJson());
                           },
                           style: ButtonStyle(
                               padding: const MaterialStatePropertyAll(
