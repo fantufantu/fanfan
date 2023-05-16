@@ -30,13 +30,18 @@ class _State extends State<Editable> {
   late entities.Transaction _transaction;
 
   /// 交易所属账本
-  Billing? _belongTo;
+  Billing? _billing;
 
   /// 交易方向
   final List<entities.Direction> _directions = [
     entities.Direction.Out,
     entities.Direction.In,
   ];
+
+  _belongTo(Billing? billing) {
+    _billing = billing;
+    _transaction.billingId = billing?.id;
+  }
 
   @override
   void initState() {
@@ -45,7 +50,7 @@ class _State extends State<Editable> {
     // 默认交易
     _transaction = entities.Transaction.initialize();
     // 默认账本
-    _belongTo = context.read<UserProfile>().whoAmI?.defaultBilling;
+    _belongTo(context.read<UserProfile>().whoAmI?.defaultBilling);
   }
 
   @override
@@ -85,9 +90,9 @@ class _State extends State<Editable> {
                     (context, index) {
                       return Column(
                         children: [
-                          _belongTo != null
+                          _billing != null
                               ? components.Card(
-                                  billing: _belongTo!,
+                                  billing: _billing!,
                                   elevation: 0,
                                 )
                               : ElevatedButton(

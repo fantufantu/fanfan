@@ -33,12 +33,16 @@ class _State<T> extends State<Picker<T>> {
   /// 下标选择器
   late final FixedExtentScrollController _scrollController;
 
+  /// 选中的选项
+  int? _selectedItem;
+
   @override
   initState() {
     super.initState();
     // 监听聚焦节点
     _focusNode.addListener(_onFocusChanged);
     // 初始化默认选中值
+    _selectedItem = widget.value;
     _scrollController =
         FixedExtentScrollController(initialItem: widget.value ?? 0);
   }
@@ -69,7 +73,11 @@ class _State<T> extends State<Picker<T>> {
                         child: const Text('取消')),
                     TextButton(
                         onPressed: () {
-                          print(_scrollController.selectedItem);
+                          // 更新状态
+                          setState(() {
+                            _selectedItem = _scrollController.selectedItem;
+                          });
+                          // 回调函数
                           widget.onChanged
                               ?.call(_scrollController.selectedItem);
                           Navigator.pop(context);
@@ -110,14 +118,6 @@ class _State<T> extends State<Picker<T>> {
     setState(() {});
   }
 
-  int get selectedItem {
-    try {
-      return _scrollController.selectedItem;
-    } catch (e) {
-      return widget.value ?? 0;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -127,9 +127,11 @@ class _State<T> extends State<Picker<T>> {
           isFocused: _focusNode.hasFocus,
           decoration: const InputDecoration()
               .applyDefaults(Theme.of(context).inputDecorationTheme),
-          child: Text(
-            widget.options.elementAt(selectedItem).label,
-          )),
+          child: _selectedItem == null
+              ? null
+              : Text(
+                  widget.options.elementAt(_selectedItem!).label,
+                )),
     );
   }
 }
