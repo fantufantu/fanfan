@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:fanfan/components/avatars.dart';
 import 'package:fanfan/service/entities/billing.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Card extends StatelessWidget {
   /// 背景图
@@ -109,7 +110,7 @@ class Card extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.only(top: 8),
                         child: Text(
-                          billing.createdAt.toString().substring(0, 10),
+                          DateFormat.yMd().format(billing.createdAt),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,

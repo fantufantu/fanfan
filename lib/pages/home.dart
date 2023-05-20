@@ -4,56 +4,42 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:fanfan/components/billing/card.dart' as billing;
+import 'package:fanfan/components/billing/card.dart' as components show Card;
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
   _buildServiceEntries(BuildContext context) {
-    final serviceEntryGroups = [
-      [
-        ServiceEntry(
-          color: Colors.amber,
-          label: '我的账本',
-          icon: CupertinoIcons.tickets_fill,
-          onPressed: () => context.go('/billings'),
-        ),
-        ServiceEntry(
-          color: Colors.cyan,
-          label: '新建账本',
-          icon: CupertinoIcons.ticket_fill,
-          onPressed: () => context.go('/billing/editable'),
-        ),
-        ServiceEntry(
-          color: Colors.deepOrange,
-          label: '记一笔',
-          icon: CupertinoIcons.money_dollar,
-          onPressed: () => context.go('/transaction/editable'),
-        ),
-        null
-      ],
+    final serviceEntries = [
+      ServiceEntry(
+        color: Colors.amber,
+        label: '我的账本',
+        icon: CupertinoIcons.tickets_fill,
+        onPressed: () => context.go('/billings'),
+      ),
+      ServiceEntry(
+        color: Colors.cyan,
+        label: '新建账本',
+        icon: CupertinoIcons.ticket_fill,
+        onPressed: () => context.go('/billing/editable'),
+      ),
+      ServiceEntry(
+        color: Colors.deepOrange,
+        label: '记一笔',
+        icon: CupertinoIcons.money_dollar,
+        onPressed: () => context.go('/transaction/editable'),
+      ),
     ];
 
-    return Wrap(
-      children: (serviceEntryGroups.map(
-        (serviceEntries) => Container(
-          margin: EdgeInsets.only(top: 20),
-          child: Row(
-            children: [
-              ...serviceEntries.map((entry) {
-                if (entry == null) {
-                  return Spacer();
-                }
+    const double SPACING = 24;
 
-                return Expanded(
-                  flex: 1,
-                  child: entry,
-                );
-              })
-            ],
-          ),
-        ),
-      )).toList(),
+    return Padding(
+      padding: const EdgeInsets.all(SPACING),
+      child: Wrap(
+        spacing: SPACING,
+        runSpacing: SPACING,
+        children: serviceEntries,
+      ),
     );
   }
 
@@ -77,6 +63,8 @@ class Home extends StatelessWidget {
         .select((UserProfile userProfile) => userProfile.whoAmI?.nickname);
     final defaultBilling = context.select(
         (UserProfile userProfile) => userProfile.whoAmI?.defaultBilling);
+    final avatar =
+        context.select((UserProfile userProfile) => userProfile.whoAmI?.avatar);
 
     return CustomScrollView(
       slivers: [
@@ -89,14 +77,16 @@ class Home extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 6, bottom: 6),
+                      padding: const EdgeInsets.only(top: 6, bottom: 6),
                       child: CircleAvatar(
-                        child: Text("data"),
-                        radius: 22,
+                        radius: 24,
+                        backgroundImage:
+                            avatar != null ? NetworkImage(avatar) : null,
+                        child: const Icon(CupertinoIcons.person),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 16),
+                      margin: const EdgeInsets.only(left: 16),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,9 +94,12 @@ class Home extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
+                    Icon(CupertinoIcons.bell, color: Colors.grey.shade600),
                     Container(
-                      child: Text("1"),
-                    ),
+                      margin: const EdgeInsets.only(left: 16),
+                      child: Icon(CupertinoIcons.ellipsis_circle,
+                          color: Colors.grey.shade600),
+                    )
                   ],
                 ),
               );
@@ -121,7 +114,7 @@ class Home extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 10, right: 10),
                 child: defaultBilling == null
                     ? null
-                    : billing.Card(billing: defaultBilling),
+                    : components.Card(billing: defaultBilling),
               );
             },
           ),
@@ -131,8 +124,7 @@ class Home extends StatelessWidget {
             childCount: 1,
             (context, index) {
               return Container(
-                margin: EdgeInsets.only(top: 24),
-                width: double.infinity,
+                padding: const EdgeInsets.only(top: 24),
                 child: Column(
                   children: [
                     Row(
@@ -159,7 +151,12 @@ class Home extends StatelessWidget {
                         )
                       ],
                     ),
-                    _buildServiceEntries(context),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        _buildServiceEntries(context),
+                      ],
+                    ),
                   ],
                 ),
               );
