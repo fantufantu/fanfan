@@ -2,7 +2,7 @@ import 'package:fanfan/components/form/date_picker_form_field.dart';
 import 'package:fanfan/components/form/picker_form_field.dart';
 import 'package:fanfan/components/form/switch_form_field.dart';
 import 'package:fanfan/components/picker.dart';
-import 'package:fanfan/service/entities/billing.dart';
+import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,11 +12,15 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/components/billing/card.dart' as components show Card;
 import 'package:tuple/tuple.dart';
-import 'package:fanfan/service/entities/transaction.dart' as entities
-    show Transaction, Direction;
+import 'package:fanfan/service/entities/transaction/main.dart' as entities
+    show Direction;
+import 'package:fanfan/service/entities/transaction/editable.dart' as entities
+    show Editable;
 
 class Editable extends StatefulWidget {
-  const Editable({super.key});
+  const Editable({
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => _State();
@@ -27,10 +31,7 @@ class _State extends State<Editable> {
   final _formKey = GlobalKey<FormState>();
 
   /// 交易实体
-  late entities.Transaction _transaction;
-
-  /// 交易所属账本
-  Billing? _billing;
+  late entities.Editable _transaction;
 
   /// 交易方向
   final List<entities.Direction> _directions = [
@@ -38,19 +39,49 @@ class _State extends State<Editable> {
     entities.Direction.In,
   ];
 
-  _belongTo(Billing? billing) {
-    _billing = billing;
-    _transaction.billingId = billing?.id;
-  }
-
   @override
   void initState() {
     super.initState();
 
-    // 默认交易
-    _transaction = entities.Transaction.initialize();
-    // 默认账本
-    _belongTo(context.read<UserProfile>().whoAmI?.defaultBilling);
+    // 页面入参没有id时，初始化默认的编辑数据
+    _transaction = entities.Editable(
+      amount: 0,
+      billing: context.read<UserProfile>().whoAmI?.defaultBilling,
+      direction: entities.Direction.Out,
+      happenedAt: DateTime.now(),
+      remark: "",
+      categoryId: null,
+    );
+
+    // 页面传入id，请求服务端获取对应的交易数据
+  }
+
+  /// 渲染交易归属账本
+  Widget _buildBelongTo() {
+    // 没有选择账本时，展现一个选择账本的入口
+    if (_transaction.billing == null) {
+      return ElevatedButton(
+          onPressed: () {},
+          style: ButtonStyle(
+              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ))),
+          child: const Text("请选择"));
+    }
+
+    // 利用卡片组件展现账本的简要信息
+    return components.Card(
+      billing: _transaction.billing!,
+      elevation: 0,
+    );
+  }
+
+  _submit() async {
+    // 保存表单数据
+    _formKey.currentState?.save();
+
+    // 向服务端请求
+    await createTransaction(editable: _transaction);
   }
 
   @override
@@ -90,19 +121,7 @@ class _State extends State<Editable> {
                     (context, index) {
                       return Column(
                         children: [
-                          _billing != null
-                              ? components.Card(
-                                  billing: _billing!,
-                                  elevation: 0,
-                                )
-                              : ElevatedButton(
-                                  onPressed: () {},
-                                  style: ButtonStyle(
-                                      shape: MaterialStatePropertyAll(
-                                          RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ))),
-                                  child: const Text("请选择")),
+                          _buildBelongTo(),
                           const Divider(height: 32),
                         ],
                       );
@@ -134,7 +153,8 @@ class _State extends State<Editable> {
                                   Expanded(
                                     flex: 3,
                                     child: TextFormField(
-                                      initialValue: _transaction.remark,
+                                      initialValue:
+                                          _transaction.amount.toString(),
                                       textAlign: TextAlign.end,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.digitsOnly
@@ -200,7 +220,6 @@ class _State extends State<Editable> {
                                           ? PickerFormField(
                                               options: categories,
                                               onSaved: (value) {
-                                                print(value);
                                                 _transaction.categoryId =
                                                     value == null
                                                         ? null
@@ -250,11 +269,7 @@ class _State extends State<Editable> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         child: ElevatedButton(
-                          onPressed: () {
-                            _formKey.currentState?.save();
-
-                            print(_transaction.toJson());
-                          },
+                          onPressed: _submit,
                           style: ButtonStyle(
                               padding: const MaterialStatePropertyAll(
                                   EdgeInsets.all(16)),

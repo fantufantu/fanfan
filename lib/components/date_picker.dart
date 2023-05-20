@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// 受控组件
 class DatePicker extends StatefulWidget {
@@ -97,10 +98,6 @@ class _State<T> extends State<DatePicker> {
             }));
   }
 
-  String get formattedDateTime {
-    return '${widget._dateTime.year}-${widget._dateTime.month}-${widget._dateTime.day}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -111,7 +108,7 @@ class _State<T> extends State<DatePicker> {
         decoration: const InputDecoration()
             .applyDefaults(Theme.of(context).inputDecorationTheme),
         child: Text(
-          formattedDateTime,
+          DateFormat.yMEd().format(widget._dateTime),
           style: const TextStyle(
             fontSize: 16,
           ),

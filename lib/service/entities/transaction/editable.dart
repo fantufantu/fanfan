@@ -1,14 +1,10 @@
 import 'package:fanfan/service/factories/entity.dart';
+import 'package:fanfan/service/entities/transaction/main.dart' show Direction;
+import 'package:fanfan/service/entities/billing.dart' show Billing;
 
-enum Direction {
-  Out,
-  In,
-}
-
-class Transaction extends Entity {
-  Transaction({
-    this.id,
-    this.billingId,
+class Editable extends Entity {
+  Editable({
+    this.billing,
     this.categoryId,
     this.direction,
     this.amount,
@@ -16,11 +12,8 @@ class Transaction extends Entity {
     this.remark,
   });
 
-  /// 交易id
-  int? id;
-
-  /// 交易归属的账本id
-  int? billingId;
+  /// 交易归属的账本
+  Billing? billing;
 
   /// 交易所属分类id
   int? categoryId;
@@ -37,25 +30,13 @@ class Transaction extends Entity {
   /// 交易备注
   String? remark;
 
-  factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
-        id: json["id"],
-      );
-
   @override
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "billingId": billingId,
+        "billingId": billing?.id,
         "categoryId": categoryId,
         "direction": direction?.name,
         "amount": amount,
         "happenedAt": happenedAt?.toString(),
         "remark": remark
       };
-
-  factory Transaction.initialize() => Transaction(
-        direction: Direction.Out,
-        happenedAt: DateTime.now(),
-        amount: 0,
-        remark: "",
-      );
 }
