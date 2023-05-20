@@ -20,8 +20,8 @@ final BILLINGS = gql('''
 ''');
 
 final CREATE_BILLING = gql('''
-  mutation CreateBilling(\$createBillingBy: CreateBillingBy!) {
-    createBilling(createBillingBy: \$createBillingBy) {
+  mutation CreateBilling(\$createBy: CreateBillingBy!) {
+    createBilling(createBy: \$createBy) {
       id
     }
   }

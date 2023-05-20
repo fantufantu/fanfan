@@ -1,12 +1,11 @@
-import 'package:fanfan/service/api/billing.dart';
-import 'package:fanfan/service/entities/billing.dart';
+import 'package:fanfan/service/api/transaction.dart';
+import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fanfan/components/billing/card.dart' as components;
 import 'package:go_router/go_router.dart';
 
-class Billings extends StatefulWidget {
-  const Billings({
+class Transactions extends StatefulWidget {
+  const Transactions({
     super.key,
   });
 
@@ -15,13 +14,13 @@ class Billings extends StatefulWidget {
 }
 
 class _State extends State {
-  List<Billing> _billings = [];
+  List<Transaction> _billings = [];
 
   @override
   void initState() {
     (() async {
       // 请求账本
-      final paginatedBillings = await queryBillings();
+      final paginatedBillings = await queryTransaction();
 
       setState(() {
         // 账本列表
@@ -78,16 +77,6 @@ class _State extends State {
                           left: 12,
                           right: 12,
                           bottom: 12,
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [Text('')],
-                            ),
-                            components.Card(
-                              billing: billing,
-                            ),
-                          ],
                         ),
                       ),
                     );

@@ -29,9 +29,21 @@ class Home extends StatelessWidget {
         icon: CupertinoIcons.money_dollar,
         onPressed: () => context.go('/transaction/editable'),
       ),
+      ServiceEntry(
+        color: Colors.purple,
+        label: '交易记录',
+        icon: CupertinoIcons.bitcoin,
+        onPressed: () => context.go('/transaction/editable'),
+      ),
+      ServiceEntry(
+        color: Colors.red,
+        label: '心愿单',
+        icon: CupertinoIcons.heart_fill,
+        onPressed: () => context.go('/transaction/editable'),
+      ),
     ];
 
-    const double SPACING = 24;
+    const double SPACING = 20;
 
     return Padding(
       padding: const EdgeInsets.all(SPACING),
@@ -151,12 +163,7 @@ class Home extends StatelessWidget {
                         )
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        _buildServiceEntries(context),
-                      ],
-                    ),
+                    _buildServiceEntries(context),
                   ],
                 ),
               );

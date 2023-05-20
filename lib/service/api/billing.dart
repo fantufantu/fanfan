@@ -26,7 +26,7 @@ Future<Billing> createBilling({required String name}) async {
     document: CREATE_BILLING,
     variables: Map.from(
       {
-        "createBillingBy": Map.from(
+        "createBy": Map.from(
           {"name": name},
         )
       },
