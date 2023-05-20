@@ -14,17 +14,15 @@ class Transactions extends StatefulWidget {
 }
 
 class _State extends State {
-  List<Transaction> _billings = [];
+  List<Transaction> _transactions = [];
 
   @override
   void initState() {
     (() async {
-      // 请求账本
-      final paginatedBillings = await queryTransaction();
-
+      // 请求服务端获取交易列表
+      final paginatedTransactions = await queryTransaction();
       setState(() {
-        // 账本列表
-        _billings = paginatedBillings.items;
+        _transactions = paginatedTransactions.items;
       });
     })();
 
@@ -66,22 +64,15 @@ class _State extends State {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    final billing = _billings[index];
-
-                    return InkWell(
-                      onTap: () {
-                        context.go('/billing/${billing.id.toString()}');
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                          left: 12,
-                          right: 12,
-                          bottom: 12,
-                        ),
+                    return Container(
+                      margin: const EdgeInsets.only(
+                        left: 12,
+                        right: 12,
+                        bottom: 12,
                       ),
                     );
                   },
-                  childCount: _billings.length,
+                  childCount: _transactions.length,
                 ),
               )
             ],
