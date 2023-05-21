@@ -18,6 +18,7 @@ final TRANSACTIONS = gql('''
         billingId
         categoryId
         happenedAt
+        direction
       }
     }
   }

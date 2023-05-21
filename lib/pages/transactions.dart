@@ -77,40 +77,58 @@ class _State extends State {
                       (context, index) {
                         final transaction = _transactions.elementAt(index);
 
+                        print(transaction.direction);
+
                         return Container(
                           padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(CupertinoIcons.alarm),
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(transaction.id.toString()),
-                                      Text(DateFormat.yMd()
-                                          .format(transaction.happenedAt!))
-                                    ],
+                          child: IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(CupertinoIcons.alarm),
+                                Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 20, right: 20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(transaction.id.toString()),
+                                        Text(DateFormat.yMd()
+                                            .format(transaction.happenedAt!))
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(transaction.id.toString()),
-                                  Text(DateFormat.yMd()
-                                      .format(transaction.happenedAt!))
-                                ],
-                              ),
-                            ],
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text('￥${transaction.amount.toString()}'),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          CupertinoIcons.arrow_up_square,
+                                          color: Colors.red,
+                                          size: 20,
+                                        ),
+                                        Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 4),
+                                          child: const Text("Expense"),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
