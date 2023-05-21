@@ -33,7 +33,7 @@ class Home extends StatelessWidget {
         color: Colors.purple,
         label: '交易记录',
         icon: CupertinoIcons.bitcoin,
-        onPressed: () => context.go('/transaction/editable'),
+        onPressed: () => context.go('/transactions'),
       ),
       ServiceEntry(
         color: Colors.red,

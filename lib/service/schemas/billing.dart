@@ -44,7 +44,7 @@ final BILLING = gql('''
 ''');
 
 final SET_DEFAULT = gql('''
-  mutation SetDefaultBilling(\$setDefaultBillingBy: SetDefaultBillingBy!) {
-    setDefaultBilling(setDefaultBillingBy: \$setDefaultBillingBy)
+  mutation SetDefaultBilling(\$setBy: SetDefaultBillingBy!) {
+    setDefaultBilling(setBy: \$setBy)
   }
 ''');

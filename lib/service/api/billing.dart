@@ -1,5 +1,5 @@
-import 'package:fanfan/service/entities/billing.dart';
-import 'package:fanfan/service/entities/paginated_billings.dart';
+import 'package:fanfan/service/entities/billing/main.dart';
+import 'package:fanfan/service/entities/billing/paginated_billings.dart';
 import 'package:fanfan/service/schemas/billing.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:graphql/client.dart';
@@ -12,10 +12,8 @@ Future<PaginatedBillings> queryBillings() async {
   );
 
   if (response.hasException || response.data == null) {
-    reject([
-      ...(response.exception?.graphqlErrors ?? []),
-      const GraphQLError(message: '获取失败！')
-    ]);
+    reject(List.from(response.exception?.graphqlErrors ?? [])
+      ..add(const GraphQLError(message: '获取失败！')));
   }
 
   return PaginatedBillings.fromJson(response.data!['billings']);
@@ -34,10 +32,8 @@ Future<Billing> createBilling({required String name}) async {
   ));
 
   if (response.hasException || response.data == null) {
-    reject([
-      ...(response.exception?.graphqlErrors ?? []),
-      const GraphQLError(message: '创建失败！')
-    ]);
+    reject(List.from(response.exception?.graphqlErrors ?? [])
+      ..add(const GraphQLError(message: '创建失败！')));
   }
 
   return Billing.fromJson(response.data!['createBilling']);
@@ -52,10 +48,8 @@ Future<Billing> queryBilling(int id) async {
   );
 
   if (response.hasException || response.data == null) {
-    reject([
-      ...(response.exception?.graphqlErrors ?? []),
-      const GraphQLError(message: '查询账本信息失！')
-    ]);
+    reject(List.from(response.exception?.graphqlErrors ?? [])
+      ..add(const GraphQLError(message: '查询账本信息失败！')));
   }
 
   return Billing.fromJson(response.data!['billing']);
@@ -68,15 +62,16 @@ Future<bool> setDefault({
   final response = await Client().mutate(MutationOptions(
     document: SET_DEFAULT,
     variables: Map.from({
-      "setDefaultBillingBy": Map.from({"id": id, "isDefault": isDefault})
+      "setBy": Map.from({
+        "id": id,
+        "isDefault": isDefault,
+      })
     }),
   ));
 
   if (response.hasException || response.data == null) {
-    reject([
-      ...(response.exception?.graphqlErrors ?? []),
-      const GraphQLError(message: '设置默认账本失败！')
-    ]);
+    reject(List.from(response.exception?.graphqlErrors ?? [])
+      ..add(const GraphQLError(message: '设置默认账本失败！')));
   }
 
   return response.data!['setDefaultBilling'];

@@ -1,4 +1,4 @@
-import 'package:fanfan/service/entities/billing.dart';
+import 'package:fanfan/service/entities/billing/main.dart';
 import 'package:fanfan/service/factories/paginated.dart';
 
 class PaginatedBillings extends Paginated<Billing> {

@@ -1,4 +1,4 @@
-import 'package:fanfan/service/entities/billing.dart';
+import 'package:fanfan/service/entities/billing/main.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/schemas/user.dart';

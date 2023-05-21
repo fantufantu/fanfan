@@ -11,10 +11,8 @@ Future<PaginatedCategories> queryCategories() async {
   );
 
   if (response.hasException || response.data == null) {
-    reject([
-      ...(response.exception?.graphqlErrors ?? []),
-      const GraphQLError(message: '获取失败！')
-    ]);
+    reject(List.from(response.exception?.graphqlErrors ?? [])
+      ..add(const GraphQLError(message: '获取失败！')));
   }
 
   return PaginatedCategories.fromJson(response.data!['categories']);

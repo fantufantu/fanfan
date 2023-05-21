@@ -1,6 +1,6 @@
 import 'package:fanfan/service/factories/entity.dart';
 import 'package:fanfan/service/entities/transaction/main.dart' show Direction;
-import 'package:fanfan/service/entities/billing.dart' show Billing;
+import 'package:fanfan/service/entities/billing/main.dart' show Billing;
 
 class Editable extends Entity {
   Editable({

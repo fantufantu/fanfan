@@ -8,6 +8,7 @@ import 'package:fanfan/pages/layout.dart';
 import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/pages/statistics.dart';
+import 'package:fanfan/pages/transactions.dart';
 import 'package:fanfan/store/application.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/utils/application.dart';
@@ -120,6 +121,10 @@ class App extends StatelessWidget {
       GoRoute(
         path: '/transaction/editable',
         builder: (context, state) => transaction.Editable(),
+      ),
+      GoRoute(
+        path: '/transactions',
+        builder: (context, state) => Transactions(),
       ),
     ];
   }

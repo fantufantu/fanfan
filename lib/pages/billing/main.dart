@@ -2,8 +2,9 @@ import 'package:fanfan/service/api/billing.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fanfan/service/entities/billing.dart' as entities;
-import 'package:fanfan/components/billing/card.dart' as components;
+import 'package:fanfan/service/entities/billing/main.dart' as entities
+    show Billing;
+import 'package:fanfan/components/billing/card.dart' as components show Card;
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 

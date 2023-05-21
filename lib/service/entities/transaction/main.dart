@@ -39,6 +39,12 @@ class Transaction extends Entity {
 
   factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
         id: json["id"],
+        billingId: json['billingId'],
+        categoryId: json['categoryId'],
+        direction: Direction.values.asNameMap()[json['direction']],
+        amount: (json['amount'] as int?)?.toDouble(),
+        happenedAt: DateTime.tryParse((json['happenedAt'] as String?) ?? ''),
+        remark: json['remark'],
       );
 
   @override

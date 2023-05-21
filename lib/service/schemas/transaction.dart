@@ -13,6 +13,11 @@ final TRANSACTIONS = gql('''
     transactions(filterBy: \$filterBy) {
       items {
         id
+        amount
+        remark
+        billingId
+        categoryId
+        happenedAt
       }
     }
   }

@@ -25,19 +25,26 @@ Future<Transaction> createTransaction({
   return Transaction.fromJson(response.data!['createTransaction']);
 }
 
-Future<PaginatedTransactions> queryTransaction() async {
+Future<PaginatedTransactions> queryTransaction({
+  required int billingId,
+  required String direction,
+}) async {
   final response = await Client().query(
     QueryOptions(
       document: TRANSACTIONS,
+      variables: {
+        "filterBy": {
+          "billingId": billingId,
+          "directions": [direction],
+        },
+      },
     ),
   );
 
   if (response.hasException || response.data == null) {
-    reject([
-      ...(response.exception?.graphqlErrors ?? []),
-      const GraphQLError(message: '获取失败！')
-    ]);
+    reject(List.from(response.exception?.graphqlErrors ?? [])
+      ..add(const GraphQLError(message: '获取失败！')));
   }
 
-  return PaginatedTransactions.fromJson(response.data!['billings']);
+  return PaginatedTransactions.fromJson(response.data!['transactions']);
 }

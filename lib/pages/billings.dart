@@ -1,8 +1,8 @@
 import 'package:fanfan/service/api/billing.dart';
-import 'package:fanfan/service/entities/billing.dart';
+import 'package:fanfan/service/entities/billing/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fanfan/components/billing/card.dart' as components;
+import 'package:fanfan/components/billing/card.dart' as components show Card;
 import 'package:go_router/go_router.dart';
 
 class Billings extends StatefulWidget {
@@ -33,7 +33,7 @@ class _State extends State {
   }
 
   @override
-  Widget build(Object context) {
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Container(

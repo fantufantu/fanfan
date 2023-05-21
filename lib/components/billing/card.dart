@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:fanfan/components/avatars.dart';
-import 'package:fanfan/service/entities/billing.dart';
+import 'package:fanfan/service/entities/billing/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
