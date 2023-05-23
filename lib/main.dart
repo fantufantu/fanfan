@@ -13,10 +13,8 @@ import 'package:fanfan/store/application.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/utils/application.dart';
 import 'package:fanfan/store/user_profile.dart';
-import 'package:fanfan/utils/service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/pages/authorization/sign_in.dart';
 import 'package:fanfan/pages/authorization/sign_up.dart';
@@ -33,10 +31,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => Application()),
         ChangeNotifierProvider(create: (_) => Category()),
       ],
-      child: GraphQLProvider(
-        client: ValueNotifier(Client()),
-        child: const App(),
-      ),
+      child: const App(),
     ),
   );
 

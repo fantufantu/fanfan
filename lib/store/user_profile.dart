@@ -3,7 +3,7 @@ import 'package:fanfan/utils/service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/schemas/user.dart';
 import 'package:fanfan/service/entities/who_am_i.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:graphql/client.dart';
 
 class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   /// 单例

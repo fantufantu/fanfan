@@ -17,20 +17,36 @@ class Transactions extends StatefulWidget {
 class _State extends State {
   List<Transaction> _transactions = [];
 
+  /// 滚动控制器
+  late ScrollController _scrollController;
+
+  _fetchMore() async {
+    // 请求服务端获取交易列表
+    final paginatedTransactions = await queryTransactions(
+      billingId: 2,
+      direction: Direction.Out.name,
+    );
+    setState(() {
+      _transactions = [
+        ..._transactions,
+        ...paginatedTransactions.items,
+      ];
+    });
+  }
+
   @override
   void initState() {
-    (() async {
-      // 请求服务端获取交易列表
-      final paginatedTransactions = await queryTransaction(
-        billingId: 2,
-        direction: Direction.Out.name,
-      );
-      setState(() {
-        _transactions = paginatedTransactions.items;
-      });
-    })();
-
     super.initState();
+
+    _fetchMore();
+
+    _scrollController = ScrollController()
+      ..addListener(() {
+        if (_scrollController.position.pixels >
+            _scrollController.position.maxScrollExtent - 30) {
+          _fetchMore();
+        }
+      });
   }
 
   @override
@@ -71,13 +87,12 @@ class _State extends State {
           children: [
             Expanded(
               child: CustomScrollView(
+                controller: _scrollController,
                 slivers: [
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final transaction = _transactions.elementAt(index);
-
-                        print(transaction.direction);
 
                         return Container(
                           padding: EdgeInsets.all(12),
@@ -90,6 +105,7 @@ class _State extends State {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Icon(CupertinoIcons.alarm),
+                                Text(index.toString()),
                                 Expanded(
                                   child: Container(
                                     margin: const EdgeInsets.only(

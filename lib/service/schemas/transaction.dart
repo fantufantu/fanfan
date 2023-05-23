@@ -1,4 +1,4 @@
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:graphql/client.dart';
 
 final CREATE_TRANSACTION = gql('''
   mutation CreateTransaction(\$createBy: CreateTransactionBy!) {
