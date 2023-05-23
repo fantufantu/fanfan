@@ -37,9 +37,9 @@ class _State extends State {
   @override
   void initState() {
     super.initState();
-
+    // 初始化请求列表数据
     _fetchMore();
-
+    // 监听滚动器，滚动到下方时，请求下一页数据
     _scrollController = ScrollController()
       ..addListener(() {
         if (_scrollController.position.pixels >
@@ -95,7 +95,7 @@ class _State extends State {
                         final transaction = _transactions.elementAt(index);
 
                         return Container(
-                          padding: EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
