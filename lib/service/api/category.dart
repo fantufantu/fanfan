@@ -1,7 +1,7 @@
 import 'package:fanfan/service/entities/paginated_categories.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:fanfan/service/schemas/category.dart';
-import 'package:graphql/client.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 Future<PaginatedCategories> queryCategories() async {
   final response = await Client().query(

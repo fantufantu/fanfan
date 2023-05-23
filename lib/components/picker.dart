@@ -124,14 +124,15 @@ class _State<T> extends State<Picker<T>> {
       focusNode: _focusNode,
       onTap: () => _open(context),
       child: InputDecorator(
-          isFocused: _focusNode.hasFocus,
-          decoration: const InputDecoration()
-              .applyDefaults(Theme.of(context).inputDecorationTheme),
-          child: _selectedItem == null
-              ? null
-              : Text(
-                  widget.options.elementAt(_selectedItem!).label,
-                )),
+        isFocused: _focusNode.hasFocus,
+        decoration: const InputDecoration()
+            .applyDefaults(Theme.of(context).inputDecorationTheme),
+        child: _selectedItem == null
+            ? null
+            : Text(
+                widget.options.elementAt(_selectedItem!).label,
+              ),
+      ),
     );
   }
 }

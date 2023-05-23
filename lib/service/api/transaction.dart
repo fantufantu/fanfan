@@ -3,7 +3,7 @@ import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/entities/transaction/paginated_transactions.dart';
 import 'package:fanfan/service/schemas/transaction.dart';
 import 'package:fanfan/utils/service.dart';
-import 'package:graphql/client.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 Future<Transaction> createTransaction({
   required Editable editable,

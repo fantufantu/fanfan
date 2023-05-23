@@ -1,4 +1,4 @@
-import 'package:graphql/client.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 final REGISTER = gql('''
   mutation Register(\$registerBy: RegisterBy!) {

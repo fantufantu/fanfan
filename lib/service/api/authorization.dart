@@ -1,6 +1,6 @@
 import 'package:fanfan/service/schemas/authorization.dart';
 import 'package:fanfan/utils/service.dart';
-import 'package:graphql/client.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 enum VerificationType { Email, Phone }
 

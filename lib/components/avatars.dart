@@ -10,7 +10,10 @@ class Avatars extends StatelessWidget {
   /// 头像列表
   List<String> avatars;
 
-  Avatars({required this.avatars, required this.limit}) {
+  Avatars({
+    required this.avatars,
+    required this.limit,
+  }) {
     assert(avatars.length >= limit);
   }
 

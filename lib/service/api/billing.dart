@@ -2,7 +2,7 @@ import 'package:fanfan/service/entities/billing/main.dart';
 import 'package:fanfan/service/entities/billing/paginated_billings.dart';
 import 'package:fanfan/service/schemas/billing.dart';
 import 'package:fanfan/utils/service.dart';
-import 'package:graphql/client.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 Future<PaginatedBillings> queryBillings() async {
   final response = await Client().query(
