@@ -82,79 +82,83 @@ class _State extends State {
         decoration: BoxDecoration(
           color: Colors.grey.shade50,
         ),
-        padding: const EdgeInsets.only(left: 40, right: 40),
-        child: Column(
-          children: [
-            Expanded(
-              child: CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final transaction = _transactions.elementAt(index);
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final transaction = _transactions.elementAt(index);
 
-                        return Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: IntrinsicHeight(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(CupertinoIcons.alarm),
-                                Text(index.toString()),
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 20, right: 20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(transaction.id.toString()),
-                                        Text(DateFormat.yMd()
-                                            .format(transaction.happenedAt!))
-                                      ],
+                          return Container(
+                            margin: const EdgeInsets.only(top: 16),
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: kElevationToShadow[1],
+                            ),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(CupertinoIcons.alarm),
+                                  Text(index.toString()),
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text(transaction.id.toString()),
+                                          Text(DateFormat.yMMMEd()
+                                              .format(transaction.happenedAt!))
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text('￥${transaction.amount.toString()}'),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          CupertinoIcons.arrow_up_square,
-                                          color: Colors.red,
-                                          size: 20,
-                                        ),
-                                        Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 4),
-                                          child: const Text("Expense"),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text('￥${transaction.amount.toString()}'),
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            CupertinoIcons.arrow_up_square,
+                                            color: Colors.red,
+                                            size: 20,
+                                          ),
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(left: 4),
+                                            child: const Text("Expense"),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      childCount: _transactions.length,
-                    ),
-                  )
-                ],
+                          );
+                        },
+                        childCount: _transactions.length,
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
