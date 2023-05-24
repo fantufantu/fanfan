@@ -3,7 +3,7 @@ import 'package:fanfan/pages/billing/main.dart' as billing;
 import 'package:fanfan/pages/transaction/editable.dart' as transaction;
 import 'package:fanfan/pages/billings.dart';
 import 'package:fanfan/pages/home.dart';
-import 'package:fanfan/pages/layout.dart';
+import 'package:fanfan/layout/main.dart';
 import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/pages/statistics.dart';

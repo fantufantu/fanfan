@@ -1,3 +1,4 @@
+import 'package:fanfan/router/main.dart' as router show NamedRoute;
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,13 @@ import 'package:provider/provider.dart';
 class Layout extends StatelessWidget {
   final Widget child;
 
-  const Layout({
+  Layout({
     super.key,
     required this.child,
   });
+
+  /// 路由名称的索引表
+  final routeNameMaps = router.NamedRoute.values.asNameMap();
 
   int _calculateSelectedIndex(BuildContext context) {
     final String location = GoRouterState.of(context).location;
@@ -57,7 +61,7 @@ class Layout extends StatelessWidget {
     final isLoggedIn =
         context.select((UserProfile userProfile) => userProfile.isLoggedIn);
 
-    print(GoRouter.of(context).location);
+    print(GoRouterState.of(context).name);
 
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
@@ -99,6 +103,7 @@ class Layout extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
       ),
+      appBar: AppBar(),
       body: Container(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
         child: SafeArea(
