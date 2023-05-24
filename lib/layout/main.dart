@@ -1,4 +1,5 @@
-import 'package:fanfan/router/main.dart' as router show NamedRoute;
+import 'package:fanfan/router/main.dart' as router
+    show NamedRoute, configurations;
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,49 +62,73 @@ class Layout extends StatelessWidget {
     final isLoggedIn =
         context.select((UserProfile userProfile) => userProfile.isLoggedIn);
 
-    print(GoRouterState.of(context).name);
+    final routeState = GoRouterState.of(context);
+    final goRouter = GoRouter.of(context);
+
+    print(routeState.namedLocation(router.NamedRoute.Home.name));
+
+    final routeName = routeNameMaps[GoRouterState.of(context).name];
+    final routeConfiguration = router.configurations[routeName];
 
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _calculateSelectedIndex(context),
-        onTap: (int activeIndex) => _navigate(
-          activeIndex: activeIndex,
-          context: context,
-          isLoggedIn: isLoggedIn,
-        ),
-        type: BottomNavigationBarType.fixed,
-        unselectedIconTheme: IconThemeData(
-          color: Colors.grey.shade500,
-        ),
-        selectedIconTheme: IconThemeData(
-          color: Colors.blue.shade500,
-        ),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.house),
-            activeIcon: Icon(CupertinoIcons.house_fill),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.chart_bar_square),
-            activeIcon: Icon(CupertinoIcons.chart_bar_square_fill),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.tickets),
-            activeIcon: Icon(CupertinoIcons.tickets_fill),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person),
-            activeIcon: Icon(CupertinoIcons.person_fill),
-            label: '',
-          ),
-        ],
-        elevation: 0,
-        backgroundColor: Colors.white,
-      ),
-      appBar: AppBar(),
+      bottomNavigationBar: (routeConfiguration?.bottomNavigationBar ?? false)
+          ? BottomNavigationBar(
+              currentIndex: _calculateSelectedIndex(context),
+              onTap: (int activeIndex) => _navigate(
+                activeIndex: activeIndex,
+                context: context,
+                isLoggedIn: isLoggedIn,
+              ),
+              type: BottomNavigationBarType.fixed,
+              unselectedIconTheme: IconThemeData(
+                color: Colors.grey.shade500,
+              ),
+              selectedIconTheme: IconThemeData(
+                color: Colors.blue.shade500,
+              ),
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.house),
+                  activeIcon: Icon(CupertinoIcons.house_fill),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.chart_bar_square),
+                  activeIcon: Icon(CupertinoIcons.chart_bar_square_fill),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.tickets),
+                  activeIcon: Icon(CupertinoIcons.tickets_fill),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.person),
+                  activeIcon: Icon(CupertinoIcons.person_fill),
+                  label: '',
+                ),
+              ],
+              elevation: 0,
+              backgroundColor: Colors.white,
+            )
+          : null,
+      appBar: routeConfiguration?.appBar != null
+          ? AppBar(
+              elevation: 0,
+              leading: context.canPop()
+                  ? Container(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () => context.pop(),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
+                        ),
+                      ),
+                    )
+                  : null,
+            )
+          : null,
       body: Container(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
         child: SafeArea(

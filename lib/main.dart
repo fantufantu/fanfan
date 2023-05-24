@@ -60,6 +60,8 @@ class App extends StatelessWidget {
     return [
       ShellRoute(
         builder: (context, state, child) {
+          print("shell");
+          print(state.name);
           return Layout(child: child);
         },
         routes: [
@@ -71,58 +73,68 @@ class App extends StatelessWidget {
           ),
           GoRoute(
             path: '/profile',
+            name: NamedRoute.Profile.name,
             pageBuilder: (context, state) =>
                 const MaterialPage(child: Profile()),
           ),
           GoRoute(
             path: '/billings',
+            name: NamedRoute.Billings.name,
             pageBuilder: (context, state) =>
                 const MaterialPage(child: Billings()),
           ),
           GoRoute(
-            path: '/',
-            pageBuilder: (context, state) => const MaterialPage(child: Home()),
-          ),
-          GoRoute(
             path: '/authorization',
+            name: NamedRoute.Authorization.name,
             pageBuilder: (context, staet) {
               return const MaterialPage(child: HowToAuthorize());
             },
             routes: [
               GoRoute(
                 path: 'sign-in',
+                name: NamedRoute.SignIn.name,
                 pageBuilder: (context, staet) {
                   return const MaterialPage(child: SignIn());
                 },
               ),
               GoRoute(
                 path: 'sign-up',
+                name: NamedRoute.SignUp.name,
                 pageBuilder: (context, staet) {
                   return const MaterialPage(child: SignUp());
                 },
               ),
             ],
           ),
+          GoRoute(
+            path: '/',
+            name: NamedRoute.Home.name,
+            builder: (_, state) {
+              print(state.name);
+              return Home();
+            },
+            // pageBuilder: (context, state) => const MaterialPage(child: Home()),
+          ),
         ],
       ),
-      GoRoute(
-        path: '/billing/editable',
-        builder: (context, state) => billing.Editable(),
-      ),
-      GoRoute(
-        path: '/billing/:id',
-        builder: (context, state) => billing.Billing(
-          id: int.parse(state.pathParameters['id']!),
-        ),
-      ),
-      GoRoute(
-        path: '/transaction/editable',
-        builder: (context, state) => transaction.Editable(),
-      ),
-      GoRoute(
-        path: '/transactions',
-        builder: (context, state) => Transactions(),
-      ),
+      // GoRoute(
+      //   path: '/billing/editable',
+      //   builder: (context, state) => billing.Editable(),
+      // ),
+      // GoRoute(
+      //   path: '/billing/:id',
+      //   builder: (context, state) => billing.Billing(
+      //     id: int.parse(state.pathParameters['id']!),
+      //   ),
+      // ),
+      // GoRoute(
+      //   path: '/transaction/editable',
+      //   builder: (context, state) => transaction.Editable(),
+      // ),
+      // GoRoute(
+      //   path: '/transactions',
+      //   builder: (context, state) => Transactions(),
+      // ),
     ];
   }
 
@@ -130,12 +142,7 @@ class App extends StatelessWidget {
   Widget build(context) {
     return MaterialApp.router(
       routerConfig: GoRouter(
-        initialLocation: '/',
         routes: _buildRoutes(context),
-        redirect: (context, state) {
-          return null;
-        },
-        errorBuilder: (context, state) => Loading(),
       ),
       theme: ThemeData(
           splashColor: Colors.transparent,
