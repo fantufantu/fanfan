@@ -1,5 +1,4 @@
 import 'package:fanfan/pages/authorization/how_to_authorize.dart';
-import 'package:fanfan/pages/authorization/main.dart';
 import 'package:fanfan/pages/billing/main.dart' as billing;
 import 'package:fanfan/pages/transaction/editable.dart' as transaction;
 import 'package:fanfan/pages/billings.dart';
@@ -9,6 +8,7 @@ import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/pages/statistics.dart';
 import 'package:fanfan/pages/transactions.dart';
+import 'package:fanfan/router/main.dart';
 import 'package:fanfan/store/application.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/utils/application.dart';
@@ -65,7 +65,9 @@ class App extends StatelessWidget {
         routes: [
           GoRoute(
             path: "/statistics",
-            pageBuilder: (context, state) => MaterialPage(child: Statistics()),
+            name: NamedRoute.Statistics.name,
+            pageBuilder: (context, state) =>
+                const MaterialPage(child: Statistics()),
           ),
           GoRoute(
             path: '/profile',
@@ -81,11 +83,6 @@ class App extends StatelessWidget {
             path: '/',
             pageBuilder: (context, state) => const MaterialPage(child: Home()),
           ),
-        ],
-      ),
-      ShellRoute(
-        builder: (context, state, child) => Authorization(child: child),
-        routes: [
           GoRoute(
             path: '/authorization',
             pageBuilder: (context, staet) {

@@ -57,6 +57,8 @@ class Layout extends StatelessWidget {
     final isLoggedIn =
         context.select((UserProfile userProfile) => userProfile.isLoggedIn);
 
+    print(GoRouter.of(context).location);
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _calculateSelectedIndex(context),

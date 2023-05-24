@@ -1,5 +1,6 @@
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
+import 'package:fanfan/service/factories/paginate_by.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,15 +19,35 @@ class _State extends State {
   List<Transaction> _transactions = [];
 
   /// 滚动控制器
-  late ScrollController _scrollController;
+  final ScrollController _scrollController = ScrollController();
+
+  /// 当前对应的页码
+  int _page = 0;
+
+  /// 总数
+  int _total = 0;
 
   _fetchMore() async {
+    // 条目数 >= 总数，不再请求
+    if (_transactions.length >= _total) {
+      return;
+    }
+    // 需要查询的页码
+    final page = _page + 1;
+
     // 请求服务端获取交易列表
     final paginatedTransactions = await queryTransactions(
-      billingId: 2,
-      direction: Direction.Out.name,
-    );
+        billingId: 2,
+        direction: Direction.Out.name,
+        paginateBy: PaginateBy(
+          page: page,
+          pageSize: 20,
+        ));
+
+    // 请求成功，更新页面数据
     setState(() {
+      _total = paginatedTransactions.total ?? 0;
+      _page = page;
       _transactions = [
         ..._transactions,
         ...paginatedTransactions.items,
@@ -37,16 +58,17 @@ class _State extends State {
   @override
   void initState() {
     super.initState();
-    // 初始化请求列表数据
+
+    // 初始化请求列表数据，请求第一页数据
     _fetchMore();
+
     // 监听滚动器，滚动到下方时，请求下一页数据
-    _scrollController = ScrollController()
-      ..addListener(() {
-        if (_scrollController.position.pixels >
-            _scrollController.position.maxScrollExtent - 30) {
-          _fetchMore();
-        }
-      });
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >
+          _scrollController.position.maxScrollExtent - 30) {
+        _fetchMore();
+      }
+    });
   }
 
   @override
@@ -75,7 +97,6 @@ class _State extends State {
             letterSpacing: 2,
             color: Colors.black,
           ),
-          // strutStyle: const StrutStyle(forceStrutHeight: true),
         ),
       ),
       body: Container(
@@ -108,7 +129,6 @@ class _State extends State {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Icon(CupertinoIcons.alarm),
-                                  Text(index.toString()),
                                   Expanded(
                                     child: Container(
                                       margin: const EdgeInsets.only(
@@ -120,14 +140,22 @@ class _State extends State {
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           Text(transaction.id.toString()),
-                                          Text(DateFormat.yMMMEd()
-                                              .format(transaction.happenedAt!))
+                                          Text(
+                                            DateFormat('yyyy-MM-dd | HH:mm:ss')
+                                                .format(
+                                                    transaction.happenedAt!),
+                                            style: const TextStyle(
+                                              letterSpacing: 1.2,
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text('￥${transaction.amount.toString()}'),
                                       Row(

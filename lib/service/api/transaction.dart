@@ -1,6 +1,7 @@
 import 'package:fanfan/service/entities/transaction/editable.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/entities/transaction/paginated_transactions.dart';
+import 'package:fanfan/service/factories/paginate_by.dart';
 import 'package:fanfan/service/schemas/transaction.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:graphql/client.dart';
@@ -28,6 +29,7 @@ Future<Transaction> createTransaction({
 Future<PaginatedTransactions> queryTransactions({
   required int billingId,
   required String direction,
+  required PaginateBy paginateBy,
 }) async {
   final response = await Client().query(
     QueryOptions(
@@ -37,6 +39,7 @@ Future<PaginatedTransactions> queryTransactions({
           "billingId": billingId,
           "directions": [direction],
         },
+        "paginateBy": paginateBy.toJson(),
       },
     ),
   );

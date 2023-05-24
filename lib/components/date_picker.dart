@@ -108,9 +108,10 @@ class _State<T> extends State<DatePicker> {
         decoration: const InputDecoration()
             .applyDefaults(Theme.of(context).inputDecorationTheme),
         child: Text(
-          DateFormat.yMEd().format(widget._dateTime),
+          DateFormat('yyyy-MM-dd').format(widget._dateTime),
           style: const TextStyle(
             fontSize: 16,
+            letterSpacing: 1.5,
           ),
         ),
       ),
