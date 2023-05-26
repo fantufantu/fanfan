@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class HowToAuthorize extends StatelessWidget {
-  const HowToAuthorize({super.key});
+class Authorization extends StatelessWidget {
+  const Authorization({super.key});
 
   @override
   Widget build(context) {

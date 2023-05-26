@@ -1,4 +1,5 @@
 import 'package:fanfan/components/service_entry.dart';
+import 'package:fanfan/router/main.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class Home extends StatelessWidget {
         color: Colors.cyan,
         label: '新建账本',
         icon: CupertinoIcons.ticket_fill,
-        onPressed: () => context.go('/billing/editable'),
+        onPressed: () => context.goNamed(NamedRoute.EditableBilling.name),
       ),
       ServiceEntry(
         color: Colors.deepOrange,
