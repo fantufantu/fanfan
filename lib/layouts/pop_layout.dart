@@ -1,3 +1,4 @@
+import 'package:fanfan/router/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,7 +19,9 @@ class PopLayout extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.only(left: 24),
           child: IconButton(
-            onPressed: () => context.pop(),
+            onPressed: () => context.canPop()
+                ? context.pop()
+                : context.goNamed(NamedRoute.Home.name),
             icon: const Icon(
               Icons.arrow_back,
               color: Colors.black,

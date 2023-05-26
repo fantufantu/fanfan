@@ -16,31 +16,31 @@ class Home extends StatelessWidget {
         color: Colors.amber,
         label: '我的账本',
         icon: CupertinoIcons.tickets_fill,
-        onPressed: () => context.go('/billings'),
+        onPressed: () => context.pushNamed(NamedRoute.Billings.name),
       ),
       ServiceEntry(
         color: Colors.cyan,
         label: '新建账本',
         icon: CupertinoIcons.ticket_fill,
-        onPressed: () => context.goNamed(NamedRoute.EditableBilling.name),
+        onPressed: () => context.pushNamed(NamedRoute.EditableBilling.name),
       ),
       ServiceEntry(
         color: Colors.deepOrange,
         label: '记一笔',
         icon: CupertinoIcons.money_dollar,
-        onPressed: () => context.go('/transaction/editable'),
+        onPressed: () => context.pushNamed(NamedRoute.EditableTransaction.name),
       ),
       ServiceEntry(
         color: Colors.purple,
         label: '交易记录',
         icon: CupertinoIcons.bitcoin,
-        onPressed: () => context.go('/transactions'),
+        onPressed: () => context.pushNamed(NamedRoute.Transactions.name),
       ),
       ServiceEntry(
         color: Colors.red,
         label: '心愿单',
         icon: CupertinoIcons.heart_fill,
-        onPressed: () => context.go('/transaction/editable'),
+        onPressed: () => context.pushNamed(NamedRoute.EditableTransaction.name),
       ),
     ];
 

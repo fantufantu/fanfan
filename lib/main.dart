@@ -1,7 +1,7 @@
 import 'package:fanfan/pages/authorization/how_to_authorize.dart';
 import 'package:fanfan/pages/billings.dart';
 import 'package:fanfan/pages/home.dart';
-import 'package:fanfan/layouts/main.dart';
+import 'package:fanfan/layouts/main.dart' show NavigationLayout, PopLayout;
 import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/pages/statistics.dart';
@@ -58,80 +58,76 @@ class App extends StatelessWidget {
     }
 
     return [
-      ShellRoute(
-        builder: (context, state, child) {
-          return NavigationLayout(child: child);
-        },
+      GoRoute(
+        path: "/statistics",
+        name: NamedRoute.Statistics.name,
+        pageBuilder: (context, state) =>
+            MaterialPage(child: NavigationLayout(child: const Statistics())),
+      ),
+      GoRoute(
+        path: '/profile',
+        name: NamedRoute.Profile.name,
+        pageBuilder: (context, state) =>
+            MaterialPage(child: NavigationLayout(child: const Profile())),
+      ),
+      GoRoute(
+        path: '/billings',
+        name: NamedRoute.Billings.name,
+        pageBuilder: (context, state) =>
+            MaterialPage(child: NavigationLayout(child: const Billings())),
+      ),
+      GoRoute(
+        path: '/',
+        name: NamedRoute.Home.name,
+        pageBuilder: (context, state) => MaterialPage(
+          child: NavigationLayout(
+            child: const Home(),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: '/authorization',
+        name: NamedRoute.Authorization.name,
+        pageBuilder: (context, staet) =>
+            const MaterialPage(child: Authorization()),
         routes: [
           GoRoute(
-            path: "/statistics",
-            name: NamedRoute.Statistics.name,
-            pageBuilder: (context, state) =>
-                const MaterialPage(child: Statistics()),
+            path: 'sign-in',
+            name: NamedRoute.SignIn.name,
+            pageBuilder: (context, staet) =>
+                const MaterialPage(child: SignIn()),
           ),
           GoRoute(
-            path: '/profile',
-            name: NamedRoute.Profile.name,
-            pageBuilder: (context, state) =>
-                const MaterialPage(child: Profile()),
-          ),
-          GoRoute(
-            path: '/billings',
-            name: NamedRoute.Billings.name,
-            pageBuilder: (context, state) =>
-                const MaterialPage(child: Billings()),
-          ),
-          GoRoute(
-            path: '/',
-            name: NamedRoute.Home.name,
-            pageBuilder: (context, state) => const MaterialPage(child: Home()),
+            path: 'sign-up',
+            name: NamedRoute.SignUp.name,
+            pageBuilder: (context, staet) =>
+                const MaterialPage(child: SignUp()),
           ),
         ],
       ),
-      ShellRoute(
-          builder: (context, state, child) => PopLayout(child: child),
-          routes: [
-            GoRoute(
-              path: '/authorization',
-              name: NamedRoute.Authorization.name,
-              pageBuilder: (context, staet) =>
-                  const MaterialPage(child: Authorization()),
-              routes: [
-                GoRoute(
-                  path: 'sign-in',
-                  name: NamedRoute.SignIn.name,
-                  pageBuilder: (context, staet) =>
-                      const MaterialPage(child: SignIn()),
-                ),
-                GoRoute(
-                  path: 'sign-up',
-                  name: NamedRoute.SignUp.name,
-                  pageBuilder: (context, staet) =>
-                      const MaterialPage(child: SignUp()),
-                ),
-              ],
-            ),
-            GoRoute(
-              path: '/billing/editable',
-              name: NamedRoute.EditableBilling.name,
-              builder: (context, state) => billing.Editable(),
-            ),
-            GoRoute(
-              path: '/billing/:id',
-              builder: (context, state) => billing.Billing(
-                id: int.parse(state.pathParameters['id']!),
-              ),
-            ),
-            GoRoute(
-              path: '/transaction/editable',
-              builder: (context, state) => transaction.Editable(),
-            ),
-            GoRoute(
-              path: '/transactions',
-              pageBuilder: (context, state) =>
-                  const MaterialPage(child: Transactions()),
-            ),
-          ])
+      GoRoute(
+        path: '/billing/editable',
+        name: NamedRoute.EditableBilling.name,
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: PopLayout(child: billing.Editable())),
+      ),
+      GoRoute(
+        path: '/billing/:id',
+        builder: (context, state) => billing.Billing(
+          id: int.parse(state.pathParameters['id']!),
+        ),
+      ),
+      GoRoute(
+        path: '/transactions',
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: Transactions()),
+      ),
+      GoRoute(
+        path: '/transaction/editable',
+        name: NamedRoute.EditableTransaction.name,
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: transaction.Editable()),
+      ),
     ];
   }
 
