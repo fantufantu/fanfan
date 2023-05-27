@@ -42,9 +42,7 @@ class Authorization extends StatelessWidget {
               Row(
                 children: [
                   const Expanded(
-                    child: Divider(
-                      thickness: 1,
-                    ),
+                    child: Divider(thickness: 1),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 20, right: 20),
@@ -57,9 +55,7 @@ class Authorization extends StatelessWidget {
                     ),
                   ),
                   const Expanded(
-                    child: Divider(
-                      thickness: 1,
-                    ),
+                    child: Divider(thickness: 1),
                   ),
                 ],
               ),

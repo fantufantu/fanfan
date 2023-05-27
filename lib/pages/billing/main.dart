@@ -65,9 +65,7 @@ class _State extends State<Billing> {
           billing: _billing!,
           elevation: 0,
         ),
-        const Divider(
-          height: 32,
-        ),
+        const Divider(height: 32),
         SizedBox(
           child: Card(
             elevation: 0,
@@ -98,9 +96,7 @@ class _State extends State<Billing> {
             ),
           ),
         ),
-        const Divider(
-          height: 40,
-        ),
+        const Divider(height: 40),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -111,9 +107,7 @@ class _State extends State<Billing> {
             )
           ],
         ),
-        const Divider(
-          height: 40,
-        ),
+        const Divider(height: 40),
         Row(
           children: [
             Expanded(

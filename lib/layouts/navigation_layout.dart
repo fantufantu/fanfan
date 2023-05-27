@@ -7,10 +7,12 @@ import 'package:provider/provider.dart';
 
 class NavigationLayout extends StatelessWidget {
   final Widget child;
+  final PreferredSizeWidget? appBar;
 
   NavigationLayout({
     super.key,
     required this.child,
+    this.appBar,
   });
 
   final _navigationItems = [
@@ -80,7 +82,7 @@ class NavigationLayout extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
       ),
-      appBar: null,
+      appBar: appBar,
       body: Container(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
         child: SafeArea(

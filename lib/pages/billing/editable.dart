@@ -62,9 +62,7 @@ class _State extends State<Editable> {
           margin: const EdgeInsets.only(top: 40),
           child: const Text('账本用于记录你的生活中的点点滴滴，番番记账从这里出发 🎉 🎉 🎉，给它取个好听的名字吧！'),
         ),
-        const Divider(
-          height: 40,
-        ),
+        const Divider(height: 40),
         Form(
           key: _formKey,
           child: TextFormField(

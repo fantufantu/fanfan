@@ -67,8 +67,7 @@ class App extends StatelessWidget {
       GoRoute(
         path: '/profile',
         name: NamedRoute.Profile.name,
-        pageBuilder: (context, state) =>
-            MaterialPage(child: NavigationLayout(child: const Profile())),
+        pageBuilder: (context, state) => const MaterialPage(child: Profile()),
       ),
       GoRoute(
         path: '/billings',
@@ -113,12 +112,14 @@ class App extends StatelessWidget {
       ),
       GoRoute(
         path: '/billing/:id',
+        name: NamedRoute.Billing.name,
         builder: (context, state) => billing.Billing(
           id: int.parse(state.pathParameters['id']!),
         ),
       ),
       GoRoute(
         path: '/transactions',
+        name: NamedRoute.Transactions.name,
         pageBuilder: (context, state) =>
             const MaterialPage(child: Transactions()),
       ),
