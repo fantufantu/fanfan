@@ -79,99 +79,102 @@ class Home extends StatelessWidget {
     final avatar =
         context.select((UserProfile userProfile) => userProfile.whoAmI?.avatar);
 
-    return CustomScrollView(
-      slivers: [
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            childCount: 1,
-            (context, index) {
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6, bottom: 6),
-                      child: CircleAvatar(
-                        radius: 24,
-                        backgroundImage:
-                            avatar != null ? NetworkImage(avatar) : null,
-                        child: const Icon(CupertinoIcons.person),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _buildGreetings(nickname),
-                      ),
-                    ),
-                    const Spacer(),
-                    Icon(CupertinoIcons.bell, color: Colors.grey.shade600),
-                    Container(
-                      margin: const EdgeInsets.only(left: 16),
-                      child: Icon(CupertinoIcons.ellipsis_circle,
-                          color: Colors.grey.shade600),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            childCount: 1,
-            (context, index) {
-              return Container(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: defaultBilling == null
-                    ? null
-                    : components.Card(billing: defaultBilling),
-              );
-            },
-          ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            childCount: 1,
-            (context, index) {
-              return Container(
-                padding: const EdgeInsets.only(top: 24),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Services",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 18,
-                          ),
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+      child: CustomScrollView(
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              childCount: 1,
+              (context, index) {
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6, bottom: 6),
+                        child: CircleAvatar(
+                          radius: 24,
+                          backgroundImage:
+                              avatar != null ? NetworkImage(avatar) : null,
+                          child: const Icon(CupertinoIcons.person),
                         ),
-                        InkWell(
-                          onTap: () {},
-                          child: Text(
-                            "See All",
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 16),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _buildGreetings(nickname),
+                        ),
+                      ),
+                      const Spacer(),
+                      Icon(CupertinoIcons.bell, color: Colors.grey.shade600),
+                      Container(
+                        margin: const EdgeInsets.only(left: 16),
+                        child: Icon(CupertinoIcons.ellipsis_circle,
+                            color: Colors.grey.shade600),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              childCount: 1,
+              (context, index) {
+                return Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: defaultBilling == null
+                      ? null
+                      : components.Card(billing: defaultBilling),
+                );
+              },
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              childCount: 1,
+              (context, index) {
+                return Container(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Services",
                             style: TextStyle(
-                              color: Colors.blue.shade600,
                               fontWeight: FontWeight.w700,
-                              fontSize: 16,
+                              fontSize: 18,
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                    _buildServiceEntries(context),
-                  ],
-                ),
-              );
-            },
+                          InkWell(
+                            onTap: () {},
+                            child: Text(
+                              "See All",
+                              style: TextStyle(
+                                color: Colors.blue.shade600,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      _buildServiceEntries(context),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

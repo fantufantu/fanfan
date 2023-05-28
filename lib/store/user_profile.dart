@@ -1,9 +1,11 @@
 import 'package:fanfan/service/entities/billing/main.dart';
+import 'package:fanfan/utils/application.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/schemas/user.dart';
 import 'package:fanfan/service/entities/who_am_i.dart';
 import 'package:graphql/client.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   /// 单例
@@ -17,8 +19,6 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
 
   /// 用户信息
   WhoAmI? _whoAmI;
-
-  final _count = 0;
 
   UserProfile._internal() {
     _client = Client();
@@ -36,10 +36,6 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
 
   bool get isLoggedIn {
     return _whoAmI != null;
-  }
-
-  int get count {
-    return _count;
   }
 
   /// 交换用户信息
@@ -80,5 +76,19 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
 
     // 消息触达
     notifyListeners();
+  }
+
+  /// 登出
+  Future<bool> logout() async {
+    // 获取持久化缓存的实例
+    final SharedPreferences storage = await SharedPreferences.getInstance();
+    final isRemoved = await storage.remove(describeEnum(StorageToken.token));
+
+    if (!isRemoved) return false;
+    _whoAmI = null;
+    _token = "";
+    // 消息触达
+    notifyListeners();
+    return true;
   }
 }

@@ -1,4 +1,4 @@
-import 'package:fanfan/pages/authorization/how_to_authorize.dart';
+import 'package:fanfan/pages/authorization/main.dart';
 import 'package:fanfan/pages/billings.dart';
 import 'package:fanfan/pages/home.dart';
 import 'package:fanfan/layouts/main.dart' show NavigationLayout, PopLayout;
@@ -72,8 +72,7 @@ class App extends StatelessWidget {
       GoRoute(
         path: '/billings',
         name: NamedRoute.Billings.name,
-        pageBuilder: (context, state) =>
-            MaterialPage(child: NavigationLayout(child: const Billings())),
+        pageBuilder: (context, state) => MaterialPage(child: const Billings()),
       ),
       GoRoute(
         path: '/',

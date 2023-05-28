@@ -52,8 +52,8 @@ class NavigationLayout extends StatelessWidget {
     required int activeIndex,
   }) {
     final isLoggedIn = context.read<UserProfile>().isLoggedIn;
-    context
-        .goNamed(_navigationItems.elementAt(activeIndex).to(isLoggedIn).name);
+    final navigate = activeIndex == 0 ? context.goNamed : context.pushNamed;
+    navigate(_navigationItems.elementAt(activeIndex).to(isLoggedIn).name);
   }
 
   @override
@@ -83,11 +83,8 @@ class NavigationLayout extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       appBar: appBar,
-      body: Container(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-        child: SafeArea(
-          child: SizedBox.expand(child: child),
-        ),
+      body: SafeArea(
+        child: SizedBox.expand(child: child),
       ),
     );
   }
