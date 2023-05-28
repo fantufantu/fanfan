@@ -14,42 +14,50 @@ class _State extends State<ExpenseRatio> {
   int touchedIndex = -1;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: Row(
-        children: [
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: PieChart(
-                PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          touchedIndex = -1;
-                          return;
-                        }
-                        touchedIndex = pieTouchResponse
-                            .touchedSection!.touchedSectionIndex;
-                      });
-                    },
-                  ),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: 40,
-                  sections: showingSections(),
+    return Row(
+      children: [
+        Expanded(
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: PieChart(
+              PieChartData(
+                pieTouchData: PieTouchData(
+                  touchCallback: (
+                    FlTouchEvent event,
+                    pieTouchResponse,
+                  ) {
+                    print(event.isInterestedForInteractions);
+                    print(pieTouchResponse);
+
+                    setState(() {
+                      if (!event.isInterestedForInteractions ||
+                          pieTouchResponse == null ||
+                          pieTouchResponse.touchedSection == null) {
+                        touchedIndex = -1;
+                        return;
+                      }
+                      touchedIndex =
+                          pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    });
+                  },
                 ),
+                borderData: FlBorderData(
+                  show: false,
+                ),
+                sectionsSpace: 0,
+                centerSpaceRadius: 80,
+                sections: showingSections(),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

@@ -105,37 +105,43 @@ class Profile extends StatelessWidget {
         elevation: 0,
         centerTitle: false,
         title: const Text(
-          "Profile",
+          "关于我",
           style: TextStyle(
             color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            letterSpacing: 2,
           ),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const CircleAvatar(
-            backgroundImage: AssetImage('images/user/preset.png'),
-            radius: 60,
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 20),
-            child: Text(
-              whoAmI.nickname,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 32, right: 32, top: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const CircleAvatar(
+              backgroundImage: AssetImage('images/user/preset.png'),
+              radius: 60,
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              child: Text(
+                whoAmI.nickname,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 12),
-            child: Text(whoAmI.emailAddress),
-          ),
-          const Divider(height: 40),
-          // 服务列表
-          _buildServices(context, userProfile: userProfile),
-        ],
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              child: Text(whoAmI.emailAddress),
+            ),
+            const Divider(height: 40),
+            // 服务列表
+            _buildServices(context, userProfile: userProfile),
+          ],
+        ),
       ),
     );
   }

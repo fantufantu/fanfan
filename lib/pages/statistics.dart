@@ -13,20 +13,16 @@ class Statistics extends StatefulWidget {
 class _State extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CustomScrollView(
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return ExpenseRatio();
-                },
-                childCount: 1,
-              ),
-            ),
-          ],
-        )
+    return CustomScrollView(
+      slivers: [
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return ExpenseRatio();
+            },
+            childCount: 1,
+          ),
+        ),
       ],
     );
   }
