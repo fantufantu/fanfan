@@ -52,8 +52,8 @@ class NavigationLayout extends StatelessWidget {
     required int activeIndex,
   }) {
     final isLoggedIn = context.read<UserProfile>().isLoggedIn;
-    final navigate = activeIndex == 0 ? context.goNamed : context.pushNamed;
-    navigate(_navigationItems.elementAt(activeIndex).to(isLoggedIn).name);
+    context
+        .goNamed(_navigationItems.elementAt(activeIndex).to(isLoggedIn).name);
   }
 
   @override

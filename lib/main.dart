@@ -62,7 +62,7 @@ class App extends StatelessWidget {
         path: "/statistics",
         name: NamedRoute.Statistics.name,
         pageBuilder: (context, state) =>
-            MaterialPage(child: NavigationLayout(child: const Statistics())),
+            const MaterialPage(child: Statistics()),
       ),
       GoRoute(
         path: '/profile',

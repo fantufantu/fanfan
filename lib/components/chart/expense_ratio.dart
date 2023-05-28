@@ -32,9 +32,6 @@ class _State extends State<ExpenseRatio> {
                     FlTouchEvent event,
                     pieTouchResponse,
                   ) {
-                    print(event.isInterestedForInteractions);
-                    print(pieTouchResponse);
-
                     setState(() {
                       if (!event.isInterestedForInteractions ||
                           pieTouchResponse == null ||
