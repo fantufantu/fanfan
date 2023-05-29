@@ -1,7 +1,13 @@
 import 'package:fanfan/components/chart/expense_ratio.dart';
+import 'package:fanfan/components/transaction/thumbnail.dart';
 import 'package:fanfan/layouts/main.dart';
+import 'package:fanfan/router/main.dart';
+import 'package:fanfan/service/api/transaction.dart';
+import 'package:fanfan/service/entities/transaction/main.dart';
+import 'package:fanfan/service/factories/paginate_by.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({
@@ -14,12 +20,54 @@ class Statistics extends StatefulWidget {
 
 class _State extends State<Statistics> {
   int _duration = 7;
+  List<Transaction> _transactions = [];
 
   final _supportDurations = const {
     7: "This week",
     30: "This month",
     365: "This year",
   };
+
+  /// 当前对应的页码
+  int _page = 0;
+
+  /// 总数
+  int _total = 0;
+
+  _fetchMore() async {
+    // 条目数 >= 总数，不再请求
+    if (_transactions.length >= _total) {
+      return;
+    }
+    // 需要查询的页码
+    final page = _page + 1;
+
+    // 请求服务端获取交易列表
+    final paginatedTransactions = await queryTransactions(
+        billingId: 2,
+        direction: Direction.Out.name,
+        paginateBy: PaginateBy(
+          page: page,
+          pageSize: 20,
+        ));
+
+    // 请求成功，更新页面数据
+    setState(() {
+      _total = paginatedTransactions.total ?? 0;
+      _page = page;
+      _transactions = [
+        ..._transactions,
+        ...paginatedTransactions.items,
+      ];
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // 按着默认时间间隔请求交易列表
+    _fetchMore();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +131,7 @@ class _State extends State<Statistics> {
                                   color: Colors.blue,
                                   width: 2,
                                 ),
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(20),
                                 ),
                               ),
@@ -92,8 +140,8 @@ class _State extends State<Statistics> {
                                 children: [
                                   Text(_supportDurations[_duration]!),
                                   Container(
-                                    margin: EdgeInsets.only(left: 8),
-                                    child: Icon(
+                                    margin: const EdgeInsets.only(left: 8),
+                                    child: const Icon(
                                       CupertinoIcons.chevron_down,
                                       color: Colors.blue,
                                       size: 16,
@@ -105,15 +153,20 @@ class _State extends State<Statistics> {
                           ),
                         ],
                       ),
-                      ExpenseRatio(),
+                      const ExpenseRatio(),
                       Container(
-                        margin: EdgeInsets.only(top: 20),
+                        margin: const EdgeInsets.only(top: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text("Transactions"),
-                            TextButton(onPressed: () {}, child: Text("See All"))
+                            const Text("Transactions"),
+                            TextButton(
+                                onPressed: () {
+                                  context
+                                      .pushNamed(NamedRoute.Transactions.name);
+                                },
+                                child: const Text("See All"))
                           ],
                         ),
                       )
@@ -123,6 +176,15 @@ class _State extends State<Statistics> {
                 childCount: 1,
               ),
             ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: Thumbnail(transaction: _transactions.elementAt(index)),
+                ),
+                childCount: _transactions.length,
+              ),
+            )
           ],
         ),
       ),

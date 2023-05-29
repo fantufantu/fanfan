@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
 class Avatars extends StatelessWidget {
-  double _size = 20;
-  double _borderWidth = 3;
+  final double _size = 20;
+  final double _borderWidth = 3;
 
   /// 限制展示个数
-  int limit;
+  final int limit;
 
   /// 头像列表
-  List<String> avatars;
+  final List<String> avatars;
 
   Avatars({
+    super.key,
     required this.avatars,
     required this.limit,
   }) {
@@ -28,10 +29,10 @@ class Avatars extends StatelessWidget {
   /// 按限制条目展示头像
   List<String> get _avatars {
     final limited = avatars.sublist(0, limit).reversed.toList();
-    final isMore = avatars.length > limit;
+    final hasMore = avatars.length > limit;
 
     // 传入的头像大于限制长度时，拼接一个省略头像长度
-    if (isMore) {
+    if (hasMore) {
       limited.insert(0, '');
     }
     return limited;
@@ -57,7 +58,7 @@ class Avatars extends StatelessWidget {
                     borderRadius: BorderRadius.circular(_size + _borderWidth),
                   ),
                   child: CircleAvatar(
-                    backgroundImage: AssetImage('images/user/preset.png'),
+                    backgroundImage: const AssetImage('images/user/preset.png'),
                     radius: _size,
                   ),
                 ),
