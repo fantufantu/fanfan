@@ -16,7 +16,7 @@ class Home extends StatelessWidget {
         color: Colors.amber,
         label: '我的账本',
         icon: CupertinoIcons.tickets_fill,
-        onPressed: () => context.pushNamed(NamedRoute.Billings.name),
+        onPressed: () => context.goNamed(NamedRoute.Billings.name),
       ),
       ServiceEntry(
         color: Colors.cyan,

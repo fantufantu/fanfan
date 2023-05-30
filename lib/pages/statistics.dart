@@ -34,11 +34,10 @@ class _State extends State<Statistics> {
   /// 总数
   int _total = 0;
 
+  /// 滚动控制器
+  final ScrollController _scrollController = ScrollController();
+
   _fetchMore() async {
-    // 条目数 >= 总数，不再请求
-    if (_transactions.length >= _total) {
-      return;
-    }
     // 需要查询的页码
     final page = _page + 1;
 
@@ -63,10 +62,27 @@ class _State extends State<Statistics> {
   }
 
   @override
-  void initState() {
+  initState() {
     super.initState();
+
     // 按着默认时间间隔请求交易列表
     _fetchMore();
+
+    // 监听滚动器，滚动到下方时，请求下一页数据
+    _scrollController.addListener(() {
+      // 没有更多数据时，不再请求
+      if (_transactions.length >= _total) {
+        return;
+      }
+
+      // 仅当滚动到底部时，发起请求更多
+      if (_scrollController.position.pixels <
+          _scrollController.position.maxScrollExtent - 30) {
+        return;
+      }
+
+      _fetchMore();
+    });
   }
 
   @override
@@ -74,8 +90,9 @@ class _State extends State<Statistics> {
     return NavigationLayout(
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: Colors.grey.shade50,
         title: Container(
-          margin: const EdgeInsets.only(left: 24),
+          margin: const EdgeInsets.only(left: 4),
           child: const Text(
             "Statistics",
             style: TextStyle(
@@ -88,89 +105,118 @@ class _State extends State<Statistics> {
         ),
         centerTitle: false,
       ),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 40, right: 40),
+      child: Container(
+        color: Colors.grey.shade50,
         child: CustomScrollView(
+          controller: _scrollController,
           slivers: [
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  return Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Statistics Grapgh"),
-                          InkWell(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (_) {
-                                  return CupertinoActionSheet(
-                                    actions: _supportDurations.entries
-                                        .map<CupertinoActionSheetAction>(
-                                            (item) =>
-                                                CupertinoActionSheetAction(
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        _duration = item.key;
-                                                      });
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: Text(item.value)))
-                                        .toList(),
-                                  );
-                                },
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.fromLTRB(12, 6, 12, 6),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.blue,
-                                  width: 2,
-                                ),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(_supportDurations[_duration]!),
-                                  Container(
-                                    margin: const EdgeInsets.only(left: 8),
-                                    child: const Icon(
-                                      CupertinoIcons.chevron_down,
-                                      color: Colors.blue,
-                                      size: 16,
-                                    ),
-                                  ),
-                                ],
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Statistics Grapgh",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const ExpenseRatio(),
-                      Container(
-                        margin: const EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text("Transactions"),
-                            TextButton(
-                                onPressed: () {
-                                  context
-                                      .pushNamed(NamedRoute.Transactions.name);
-                                },
-                                child: const Text("See All"))
+                            InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (_) {
+                                    return CupertinoActionSheet(
+                                      actions: _supportDurations.entries
+                                          .map<CupertinoActionSheetAction>(
+                                            (item) =>
+                                                CupertinoActionSheetAction(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _duration = item.key;
+                                                });
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text(item.value),
+                                            ),
+                                          )
+                                          .toList(),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                    left: 12, right: 12, top: 6, bottom: 6),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.blue,
+                                    width: 2,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _supportDurations[_duration]!,
+                                      style: const TextStyle(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 8),
+                                      child: const Icon(
+                                        CupertinoIcons.chevron_down,
+                                        color: Colors.blue,
+                                        size: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                      )
-                    ],
+                        const ExpenseRatio(),
+                        Container(
+                          margin: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Transactions",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    context.pushNamed(
+                                        NamedRoute.Transactions.name);
+                                  },
+                                  child: const Text(
+                                    "See All",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ))
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
                 childCount: 1,
@@ -179,7 +225,8 @@ class _State extends State<Statistics> {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) => Container(
-                  margin: const EdgeInsets.only(top: 16),
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  margin: index == 0 ? null : const EdgeInsets.only(top: 16),
                   child: Thumbnail(transaction: _transactions.elementAt(index)),
                 ),
                 childCount: _transactions.length,

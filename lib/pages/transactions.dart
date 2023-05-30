@@ -27,10 +27,6 @@ class _State extends State {
   int _total = 0;
 
   _fetchMore() async {
-    // 条目数 >= 总数，不再请求
-    if (_transactions.length >= _total) {
-      return;
-    }
     // 需要查询的页码
     final page = _page + 1;
 
@@ -63,10 +59,18 @@ class _State extends State {
 
     // 监听滚动器，滚动到下方时，请求下一页数据
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels >
-          _scrollController.position.maxScrollExtent - 30) {
-        _fetchMore();
+      // 没有更多数据时，不再请求
+      if (_transactions.length >= _total) {
+        return;
       }
+
+      // 仅当滚动到底部时，发起请求更多
+      if (_scrollController.position.pixels <
+          _scrollController.position.maxScrollExtent - 30) {
+        return;
+      }
+
+      _fetchMore();
     });
   }
 
