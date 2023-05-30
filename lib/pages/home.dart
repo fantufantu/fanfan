@@ -1,14 +1,11 @@
 import 'package:fanfan/components/service_entry.dart';
 import 'package:fanfan/router/main.dart';
-import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/components/billing/card.dart' as components show Card;
-import 'package:fanfan/components/switch.dart' as components;
-import 'package:tuple/tuple.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -139,16 +136,6 @@ class Home extends StatelessWidget {
               },
             ),
           ),
-          SliverList(
-              delegate: SliverChildBuilderDelegate(
-            (context, index) => components.Switch(
-                children: Tuple2(
-                  Direction.In.name,
-                  Direction.Out.name,
-                ),
-                onChanged: (_) {}),
-            childCount: 1,
-          )),
           SliverList(
             delegate: SliverChildBuilderDelegate(
               childCount: 1,
