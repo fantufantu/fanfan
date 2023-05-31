@@ -133,10 +133,10 @@ class _State extends State<Editable> {
                                 ? _transaction.amount.toString()
                                 : null),
                             textAlign: TextAlign.end,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            keyboardType: TextInputType.number,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                              signed: false,
+                            ),
                             onSaved: (value) {
                               _transaction.amount = double.tryParse(value!);
                             },
@@ -157,7 +157,6 @@ class _State extends State<Editable> {
                                   ),
                                 ),
                               ),
-                              // suffixStyle: MaterialStateTextStyle,
                             ),
                           ),
                         ),

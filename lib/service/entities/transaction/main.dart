@@ -41,9 +41,13 @@ class Transaction extends Entity {
         id: json["id"],
         billingId: json['billingId'],
         categoryId: json['categoryId'],
-        direction: Direction.values.asNameMap()[json['direction']],
-        amount: (json['amount'] as int?)?.toDouble(),
-        happenedAt: DateTime.tryParse((json['happenedAt'] as String?) ?? ''),
+        direction: json['direction'] != null
+            ? Direction.values.asNameMap()[json['direction']]
+            : null,
+        amount: json['amount']?.toDouble(),
+        happenedAt: json['happenedAt'] != null
+            ? DateTime.tryParse(json['happenedAt'])
+            : null,
         remark: json['remark'],
       );
 
