@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/router/main.dart';
@@ -42,11 +41,12 @@ class Profile extends StatelessWidget {
                         child: const Text("取消"),
                       ),
                       CupertinoDialogAction(
-                        onPressed: () {
-                          userProfile.logout().then((isLoggedOut) {
-                            if (!isLoggedOut) return;
-                            context.goNamed(NamedRoute.Authorization.name);
-                          });
+                        onPressed: () async {
+                          final isLoggedOut = await userProfile.logout();
+                          // 登出失败，不执行跳转
+                          if (!isLoggedOut) return;
+                          Navigator.of(context).pop();
+                          context.goNamed(NamedRoute.Authorization.name);
                         },
                         child: const Text("确认"),
                       ),
