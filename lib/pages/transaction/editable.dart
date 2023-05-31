@@ -2,6 +2,7 @@ import 'package:fanfan/components/form/date_picker_form_field.dart';
 import 'package:fanfan/components/form/picker_form_field.dart';
 import 'package:fanfan/components/form/switch_form_field.dart';
 import 'package:fanfan/components/picker.dart';
+import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fanfan/layouts/main.dart' show PopLayout;
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/components/billing/card.dart' as components show Card;
 import 'package:tuple/tuple.dart';
@@ -77,11 +79,18 @@ class _State extends State<Editable> {
   }
 
   _submit() async {
+    // 校验表单完整
+    final isValid = _formKey.currentState?.validate();
+    if (isValid != true) {
+      return;
+    }
+
     // 保存表单数据
     _formKey.currentState?.save();
-
     // 向服务端请求
     await createTransaction(editable: _transaction);
+    // 重定向到交易页
+    GoRouter.of(context).replaceNamed(NamedRoute.Transactions.name);
   }
 
   @override
@@ -140,6 +149,12 @@ class _State extends State<Editable> {
                             onSaved: (value) {
                               _transaction.amount = double.tryParse(value!);
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return '请输入金额';
+                              }
+                              return null;
+                            },
                             decoration: InputDecoration(
                               labelText: "金额",
                               contentPadding:
@@ -176,9 +191,15 @@ class _State extends State<Editable> {
                             options: categories,
                             placeholder: "请选择分类",
                             onSaved: (value) {
-                              _transaction.categoryId = value == null
+                              _transaction.categoryId = (value == null
                                   ? null
-                                  : categories.elementAt(value).value;
+                                  : categories.elementAt(value).value);
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return "请选择分类";
+                              }
+                              return null;
                             },
                           ),
                         ),
