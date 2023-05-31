@@ -11,8 +11,11 @@ class PickerFormField<T> extends FormField<int> {
     super.restorationId,
     super.validator,
 
-    /// 属性传递
+    /// 选项
     required List<SelectOption<T>> options,
+
+    /// placeholder
+    String? placeholder,
   }) : super(
           builder: (field) {
             return Picker(
@@ -21,6 +24,7 @@ class PickerFormField<T> extends FormField<int> {
               onChanged: (value) {
                 field.didChange(value);
               },
+              placeholder: placeholder,
             );
           },
         );

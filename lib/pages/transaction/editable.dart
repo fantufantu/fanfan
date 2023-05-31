@@ -128,108 +128,73 @@ class _State extends State<Editable> {
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: [
-                              const Flexible(
-                                  fit: FlexFit.tight, child: Text("金额：")),
-                              Expanded(
-                                flex: 3,
-                                child: TextFormField(
-                                  initialValue: _transaction.amount.toString(),
-                                  textAlign: TextAlign.end,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  keyboardType: TextInputType.number,
-                                  onSaved: (value) {
-                                    _transaction.amount =
-                                        double.tryParse(value!);
-                                  },
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.fromLTRB(
-                                        24, 12, 24, 12),
-                                    prefix: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.shade100,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      padding: const EdgeInsets.all(8),
-                                      child: const Text(
-                                        "CNY",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
+                          child: TextFormField(
+                            initialValue: (_transaction.amount != 0
+                                ? _transaction.amount.toString()
+                                : null),
+                            textAlign: TextAlign.end,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            keyboardType: TextInputType.number,
+                            onSaved: (value) {
+                              _transaction.amount = double.tryParse(value!);
+                            },
+                            decoration: InputDecoration(
+                              labelText: "金额",
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                              prefix: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade100,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.all(8),
+                                child: const Text(
+                                  "CNY",
+                                  style: TextStyle(
+                                    fontSize: 12,
                                   ),
                                 ),
                               ),
-                            ],
+                              // suffixStyle: MaterialStateTextStyle,
+                            ),
                           ),
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: [
-                              const Flexible(
-                                  fit: FlexFit.tight, child: Text("发生时间：")),
-                              Expanded(
-                                flex: 3,
-                                child: DatePickerFormField(
-                                  initialValue: _transaction.happenedAt,
-                                  mode: CupertinoDatePickerMode.date,
-                                  onSaved: (value) {
-                                    _transaction.happenedAt = value;
-                                  },
-                                ),
-                              ),
-                            ],
+                          child: DatePickerFormField(
+                            initialValue: _transaction.happenedAt,
+                            mode: CupertinoDatePickerMode.date,
+                            onSaved: (value) {
+                              _transaction.happenedAt = value;
+                            },
                           ),
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: [
-                              const Flexible(
-                                  fit: FlexFit.tight, child: Text("选择分类：")),
-                              Expanded(
-                                flex: 3,
-                                child: Container(
-                                  child: categories.isNotEmpty
-                                      ? PickerFormField(
-                                          options: categories,
-                                          onSaved: (value) {
-                                            _transaction.categoryId =
-                                                value == null
-                                                    ? null
-                                                    : categories
-                                                        .elementAt(value)
-                                                        .value;
-                                          },
-                                        )
-                                      : null,
-                                ),
-                              )
-                            ],
+                          child: PickerFormField(
+                            options: categories,
+                            placeholder: "请选择分类",
+                            onSaved: (value) {
+                              _transaction.categoryId = value == null
+                                  ? null
+                                  : categories.elementAt(value).value;
+                            },
                           ),
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: [
-                              const Flexible(
-                                  fit: FlexFit.tight, child: Text("备注：")),
-                              Expanded(
-                                flex: 3,
-                                child: TextFormField(
-                                  minLines: 3,
-                                  maxLines: 8,
-                                  onSaved: (value) {
-                                    _transaction.remark = value;
-                                  },
-                                ),
-                              ),
-                            ],
+                          child: TextFormField(
+                            minLines: 3,
+                            maxLines: 8,
+                            onSaved: (value) {
+                              _transaction.remark = value;
+                            },
+                            decoration: const InputDecoration(
+                              labelText: "备注",
+                              alignLabelWithHint: true,
+                            ),
                           ),
                         ),
                       ],
