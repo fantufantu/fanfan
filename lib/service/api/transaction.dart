@@ -41,6 +41,7 @@ Future<PaginatedTransactions> queryTransactions({
         },
         "paginateBy": paginateBy.toJson(),
       },
+      fetchPolicy: FetchPolicy.noCache,
     ),
   );
 

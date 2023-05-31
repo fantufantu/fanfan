@@ -2,6 +2,7 @@ import 'package:fanfan/components/form/date_picker_form_field.dart';
 import 'package:fanfan/components/form/picker_form_field.dart';
 import 'package:fanfan/components/form/switch_form_field.dart';
 import 'package:fanfan/components/picker.dart';
+import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fanfan/layouts/main.dart' show PopLayout;
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/components/billing/card.dart' as components show Card;
 import 'package:tuple/tuple.dart';
@@ -77,11 +79,18 @@ class _State extends State<Editable> {
   }
 
   _submit() async {
+    // 校验表单完整
+    final isValid = _formKey.currentState?.validate();
+    if (isValid != true) {
+      return;
+    }
+
     // 保存表单数据
     _formKey.currentState?.save();
-
     // 向服务端请求
     await createTransaction(editable: _transaction);
+    // 重定向到交易页
+    GoRouter.of(context).replaceNamed(NamedRoute.Transactions.name);
   }
 
   @override
@@ -128,108 +137,84 @@ class _State extends State<Editable> {
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: [
-                              const Flexible(
-                                  fit: FlexFit.tight, child: Text("金额：")),
-                              Expanded(
-                                flex: 3,
-                                child: TextFormField(
-                                  initialValue: _transaction.amount.toString(),
-                                  textAlign: TextAlign.end,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  keyboardType: TextInputType.number,
-                                  onSaved: (value) {
-                                    _transaction.amount =
-                                        double.tryParse(value!);
-                                  },
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.fromLTRB(
-                                        24, 12, 24, 12),
-                                    prefix: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.shade100,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      padding: const EdgeInsets.all(8),
-                                      child: const Text(
-                                        "CNY",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
+                          child: TextFormField(
+                            initialValue: (_transaction.amount != 0
+                                ? _transaction.amount.toString()
+                                : null),
+                            textAlign: TextAlign.end,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                              signed: false,
+                            ),
+                            onSaved: (value) {
+                              _transaction.amount = double.tryParse(value!);
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return '请输入金额';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              labelText: "金额",
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                              prefix: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade100,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.all(8),
+                                child: const Text(
+                                  "CNY",
+                                  style: TextStyle(
+                                    fontSize: 12,
                                   ),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: [
-                              const Flexible(
-                                  fit: FlexFit.tight, child: Text("发生时间：")),
-                              Expanded(
-                                flex: 3,
-                                child: DatePickerFormField(
-                                  initialValue: _transaction.happenedAt,
-                                  mode: CupertinoDatePickerMode.date,
-                                  onSaved: (value) {
-                                    _transaction.happenedAt = value;
-                                  },
-                                ),
-                              ),
-                            ],
+                          child: DatePickerFormField(
+                            initialValue: _transaction.happenedAt,
+                            mode: CupertinoDatePickerMode.date,
+                            onSaved: (value) {
+                              _transaction.happenedAt = value;
+                            },
                           ),
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: [
-                              const Flexible(
-                                  fit: FlexFit.tight, child: Text("选择分类：")),
-                              Expanded(
-                                flex: 3,
-                                child: Container(
-                                  child: categories.isNotEmpty
-                                      ? PickerFormField(
-                                          options: categories,
-                                          onSaved: (value) {
-                                            _transaction.categoryId =
-                                                value == null
-                                                    ? null
-                                                    : categories
-                                                        .elementAt(value)
-                                                        .value;
-                                          },
-                                        )
-                                      : null,
-                                ),
-                              )
-                            ],
+                          child: PickerFormField(
+                            options: categories,
+                            placeholder: "请选择分类",
+                            onSaved: (value) {
+                              _transaction.categoryId = (value == null
+                                  ? null
+                                  : categories.elementAt(value).value);
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return "请选择分类";
+                              }
+                              return null;
+                            },
                           ),
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: [
-                              const Flexible(
-                                  fit: FlexFit.tight, child: Text("备注：")),
-                              Expanded(
-                                flex: 3,
-                                child: TextFormField(
-                                  minLines: 3,
-                                  maxLines: 8,
-                                  onSaved: (value) {
-                                    _transaction.remark = value;
-                                  },
-                                ),
-                              ),
-                            ],
+                          child: TextFormField(
+                            minLines: 3,
+                            maxLines: 8,
+                            onSaved: (value) {
+                              _transaction.remark = value;
+                            },
+                            decoration: const InputDecoration(
+                              labelText: "备注",
+                              alignLabelWithHint: true,
+                            ),
                           ),
                         ),
                       ],

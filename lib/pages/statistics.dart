@@ -200,8 +200,8 @@ class _State extends State<Statistics> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              TextButton(
-                                  onPressed: () {
+                              InkWell(
+                                  onTap: () {
                                     context.pushNamed(
                                         NamedRoute.Transactions.name);
                                   },
@@ -210,6 +210,7 @@ class _State extends State<Statistics> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
+                                      color: Colors.blue,
                                     ),
                                   ))
                             ],
@@ -226,7 +227,9 @@ class _State extends State<Statistics> {
               delegate: SliverChildBuilderDelegate(
                 (context, index) => Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  margin: index == 0 ? null : const EdgeInsets.only(top: 16),
+                  margin: EdgeInsets.only(
+                      top: 20,
+                      bottom: (index == _transactions.length - 1 ? 20 : 0)),
                   child: Thumbnail(transaction: _transactions.elementAt(index)),
                 ),
                 childCount: _transactions.length,

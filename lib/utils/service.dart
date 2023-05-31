@@ -33,5 +33,5 @@ reject(
     throw const GraphQLError(message: '未知异常！');
   }
 
-  throw errors.single;
+  throw errors.first;
 }
