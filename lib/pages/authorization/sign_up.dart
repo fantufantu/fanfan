@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/service/api/authorization.dart';
 import 'package:fanfan/utils/application.dart';
 import 'package:flutter/foundation.dart';
@@ -201,182 +202,184 @@ class _SignUpFormState extends State<_SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 40,
-                    ),
-                    child: const Text(
-                      'Create your',
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
+    return PopLayout(
+      child: CustomScrollView(
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                        top: 40,
+                      ),
+                      child: const Text(
+                        'Create your',
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 12,
-                    ),
-                    child: const Text(
-                      'Account',
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      margin: const EdgeInsets.only(
+                        top: 12,
+                      ),
+                      child: const Text(
+                        'Account',
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 40,
-                    ),
-                    child: TextFormField(
-                      initialValue: _emailAddress,
-                      decoration: const InputDecoration(
-                        label: Text('邮箱'),
-                        prefixIcon: Icon(
-                          Icons.email_rounded,
-                          size: 16,
-                        ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                        top: 40,
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          _emailAddress = value;
-                        });
-                      },
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: TextFormField(
-                            initialValue: _captcha,
-                            decoration: const InputDecoration(
-                              label: Text('验证码'),
-                              prefixIcon: Icon(
-                                Icons.fingerprint_rounded,
-                                size: 16,
-                              ),
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                _captcha = value;
-                              });
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _buildCaptchaSender(context),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    child: TextFormField(
-                      initialValue: _password,
-                      obscureText: !_isPasswordVisable,
-                      decoration: InputDecoration(
-                        label: const Text('密码'),
-                        prefixIcon: const Icon(
-                          Icons.lock_rounded,
-                          size: 16,
-                        ),
-                        suffixIcon: InkWell(
-                          onTap: _onIsPasswordVisableChange,
-                          child: Icon(
-                            _isPasswordVisable
-                                ? Icons.remove_red_eye_rounded
-                                : Icons.password_rounded,
+                      child: TextFormField(
+                        initialValue: _emailAddress,
+                        decoration: const InputDecoration(
+                          label: Text('邮箱'),
+                          prefixIcon: Icon(
+                            Icons.email_rounded,
                             size: 16,
                           ),
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            _emailAddress = value;
+                          });
+                        },
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          _password = value;
-                        });
-                      },
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Checkbox(
-                          value: _isRememberMe,
-                          onChanged: (changed) => setState(() {
-                            _isRememberMe = changed == true;
-                          }),
-                        ),
-                        const Text('Remember me')
-                      ],
+                    Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: TextFormField(
+                              initialValue: _captcha,
+                              decoration: const InputDecoration(
+                                label: Text('验证码'),
+                                prefixIcon: Icon(
+                                  Icons.fingerprint_rounded,
+                                  size: 16,
+                                ),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  _captcha = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildCaptchaSender(context),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 8,
-                    ),
-                    width: double.infinity,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: _useRegister(context),
-                      style: const ButtonStyle(
-                        shape: MaterialStatePropertyAll(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(24),
+                    Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                        initialValue: _password,
+                        obscureText: !_isPasswordVisable,
+                        decoration: InputDecoration(
+                          label: const Text('密码'),
+                          prefixIcon: const Icon(
+                            Icons.lock_rounded,
+                            size: 16,
+                          ),
+                          suffixIcon: InkWell(
+                            onTap: _onIsPasswordVisableChange,
+                            child: Icon(
+                              _isPasswordVisable
+                                  ? Icons.remove_red_eye_rounded
+                                  : Icons.password_rounded,
+                              size: 16,
                             ),
                           ),
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            _password = value;
+                          });
+                        },
                       ),
-                      child: const Text('Sign up'),
                     ),
-                  ),
-                ],
+                    Container(
+                      margin: const EdgeInsets.only(top: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                            value: _isRememberMe,
+                            onChanged: (changed) => setState(() {
+                              _isRememberMe = changed == true;
+                            }),
+                          ),
+                          const Text('Remember me')
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                        top: 8,
+                      ),
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: _useRegister(context),
+                        style: const ButtonStyle(
+                          shape: MaterialStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(24),
+                              ),
+                            ),
+                          ),
+                        ),
+                        child: const Text('Sign up'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              childCount: 1,
             ),
-            childCount: 1,
           ),
-        ),
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text('Already have an account?'),
-                  TextButton(
-                    onPressed: () => context.go('/authorization/sign-in'),
-                    child: const Text("Sign in"),
-                  ),
-                ],
-              ),
-            ],
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('Already have an account?'),
+                    TextButton(
+                      onPressed: () => context.go('/authorization/sign-in'),
+                      child: const Text("Sign in"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
