@@ -1,40 +1,34 @@
 import 'package:graphql/client.dart';
+import 'package:fanfan/service/schemas/billing.dart';
+
+const USER_FRAGMENT = '''
+  $BILLING_FRAGMENT
+  fragment UserFragment on User {
+    id
+    username
+    emailAddress
+    avatar
+    defaultBilling {
+      ...BillingFragment
+    }
+  }
+''';
 
 final WHO_AM_I = gql('''
+  $USER_FRAGMENT
   query WhoAmI {
     whoAmI {
-      id
-      username
-      emailAddress
-      avatar
-      defaultBilling {
-        id
-        name
-        createdBy {
-          id
-          username
-          emailAddress
-          avatar
-        }
-        createdAt
-      }
+      ...UserFragment
     }
   }
 ''');
 
 final DEFAULT_BILLING = gql('''
+  $BILLING_FRAGMENT
   query WhoAmI {
     whoAmI {
       defaultBilling {
-        id
-        name
-        createdBy {
-          id
-          username
-          emailAddress
-          avatar
-        }
-        createdAt
+        ...BillingFragment
       }
     }
   }

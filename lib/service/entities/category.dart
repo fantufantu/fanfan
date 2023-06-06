@@ -1,10 +1,12 @@
 import 'package:fanfan/service/factories/entity.dart';
+import 'package:fanfan/service/entities/direction.dart';
 
 class Category implements Entity {
   Category({
     required this.id,
     required this.name,
     required this.icon,
+    required this.direction,
   });
 
   /// 分类id
@@ -16,10 +18,14 @@ class Category implements Entity {
   /// 分类icon
   String icon;
 
+  /// 交易方向
+  Direction direction;
+
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["id"],
         name: json["name"],
         icon: json["icon"],
+        direction: Direction.values.asNameMap()[json['direction']]!,
       );
 
   @override
@@ -27,5 +33,6 @@ class Category implements Entity {
         "id": id,
         "name": name,
         "icon": icon,
+        "direction": direction.name,
       };
 }

@@ -14,12 +14,16 @@ class Picker<T> extends StatefulWidget {
   /// 默认选中下标
   final int? value;
 
+  /// placeholder
+  final String? placeholder;
+
   const Picker({
     super.key,
     required this.options,
     this.itemExtent = 48,
     this.onChanged,
     this.value,
+    this.placeholder,
   });
 
   @override
@@ -43,8 +47,16 @@ class _State<T> extends State<Picker<T>> {
     _focusNode.addListener(_onFocusChanged);
     // 初始化默认选中值
     _selectedItem = widget.value;
+    // 滚动控制器
     _scrollController =
         FixedExtentScrollController(initialItem: widget.value ?? 0);
+  }
+
+  @override
+  didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 保证组件受控
+    _selectedItem = widget.value;
   }
 
   /// 点击事件
@@ -127,11 +139,18 @@ class _State<T> extends State<Picker<T>> {
         isFocused: _focusNode.hasFocus,
         decoration: const InputDecoration()
             .applyDefaults(Theme.of(context).inputDecorationTheme),
-        child: _selectedItem == null
-            ? null
-            : Text(
+        child: _selectedItem != null
+            ? Text(
                 widget.options.elementAt(_selectedItem!).label,
-              ),
+              )
+            : widget.placeholder != null
+                ? Text(
+                    widget.placeholder!,
+                    style: TextStyle(
+                      color: Colors.grey.shade700,
+                    ),
+                  )
+                : null,
       ),
     );
   }

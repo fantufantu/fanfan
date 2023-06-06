@@ -1,31 +1,35 @@
-import 'package:fanfan/store/application.dart';
-import 'package:fanfan/store/user_profile.dart';
+import 'package:fanfan/service/entities/paginated_categories.dart';
+import 'package:fanfan/service/entities/who_am_i.dart';
+import 'package:fanfan/service/schemas/application.dart';
+import 'package:fanfan/utils/service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:graphql/client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fanfan/store/user_profile.dart' as store show UserProfile;
+import 'package:fanfan/store/category.dart' as store show Category;
 
 enum StorageToken {
   token,
 }
 
-initialize() async {
+Future<void> initialize() async {
   // 获取持久化缓存的实例
   final SharedPreferences storage = await SharedPreferences.getInstance();
   // 获取持久化存储的token
   final token = storage.getString(describeEnum(StorageToken.token)) ?? '';
 
-  // token 换用户信息
-  if (token.isNotEmpty) {
-    final userProfile = UserProfile();
-    // 设置token
-    userProfile.setToken(token);
-    // 换用户信息
-    await userProfile.authorize();
-  }
+  // 用户信息
+  final userProfile = store.UserProfile()..setToken(token);
+  // 分类
+  final category = store.Category();
 
-  // 应用层逻辑
-  final application = Application();
-  // 应用初始化完成
-  application.ready();
+  final response = await Client().query(QueryOptions(document: INITIALIZE));
+
+  // 归属用户信息
+  userProfile.belong(WhoAmI.fromJson(response.data!['whoAmI']));
+  // 归属分类
+  category
+      .belong(PaginatedCategories.fromJson(response.data!['categories']).items);
 }
 
 Future<void> reinitialize(String? token) async {
@@ -36,7 +40,7 @@ Future<void> reinitialize(String? token) async {
   // 存储 token
   storage.setString(describeEnum(StorageToken.token), token!);
 
-  final userProfile = UserProfile();
+  final userProfile = store.UserProfile();
   // 设置token
   userProfile.setToken(token);
   // 换用户信息

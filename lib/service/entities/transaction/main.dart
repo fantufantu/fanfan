@@ -1,19 +1,15 @@
 import 'package:fanfan/service/factories/entity.dart';
-
-enum Direction {
-  Out,
-  In,
-}
+import 'package:fanfan/service/entities/category.dart';
 
 class Transaction extends Entity {
   Transaction({
     this.id,
     this.billingId,
     this.categoryId,
-    this.direction,
     this.amount,
     this.happenedAt,
     this.remark,
+    this.category,
   });
 
   /// 交易id
@@ -25,9 +21,6 @@ class Transaction extends Entity {
   /// 交易所属分类id
   int? categoryId;
 
-  /// 交易方向
-  Direction? direction;
-
   /// 交易金额
   double? amount;
 
@@ -37,14 +30,21 @@ class Transaction extends Entity {
   /// 交易备注
   String? remark;
 
+  /// 交易分类
+  Category? category;
+
   factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
         id: json["id"],
         billingId: json['billingId'],
         categoryId: json['categoryId'],
-        direction: Direction.values.asNameMap()[json['direction']],
-        amount: (json['amount'] as int?)?.toDouble(),
-        happenedAt: DateTime.tryParse((json['happenedAt'] as String?) ?? ''),
+        amount: json['amount']?.toDouble(),
+        happenedAt: json['happenedAt'] != null
+            ? DateTime.tryParse(json['happenedAt'])
+            : null,
         remark: json['remark'],
+        category: json['category'] != null
+            ? Category.fromJson(json['category'])
+            : null,
       );
 
   @override
@@ -52,9 +52,9 @@ class Transaction extends Entity {
         "id": id,
         "billingId": billingId,
         "categoryId": categoryId,
-        "direction": direction?.name,
         "amount": amount,
         "happenedAt": happenedAt?.toString(),
-        "remark": remark
+        "remark": remark,
+        "category": category?.toJson(),
       };
 }

@@ -28,7 +28,6 @@ Future<Transaction> createTransaction({
 
 Future<PaginatedTransactions> queryTransactions({
   required int billingId,
-  required String direction,
   required PaginateBy paginateBy,
 }) async {
   final response = await Client().query(
@@ -37,10 +36,10 @@ Future<PaginatedTransactions> queryTransactions({
       variables: {
         "filterBy": {
           "billingId": billingId,
-          "directions": [direction],
         },
         "paginateBy": paginateBy.toJson(),
       },
+      fetchPolicy: FetchPolicy.noCache,
     ),
   );
 

@@ -1,3 +1,4 @@
+import 'package:fanfan/service/entities/direction.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,14 @@ class Thumbnail extends StatelessWidget {
     super.key,
     required this.transaction,
   });
+
+  bool get _isExpense {
+    return transaction.category?.direction == Direction.Out;
+  }
+
+  Color get _primaryColor {
+    return _isExpense ? Colors.red : Colors.blue;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +40,7 @@ class Thumbnail extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(transaction.id.toString()),
+                    Text(transaction.category!.name),
                     Text(
                       DateFormat('yyyy-MM-dd | HH:mm:ss')
                           .format(transaction.happenedAt!),
@@ -47,17 +56,31 @@ class Thumbnail extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('￥${transaction.amount.toString()}'),
+                Text(
+                  '￥${transaction.amount.toString()}',
+                  style: TextStyle(
+                    color: _primaryColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
+                ),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Icon(
+                    Icon(
                       CupertinoIcons.arrow_up_square,
-                      color: Colors.red,
+                      color: _primaryColor,
                       size: 20,
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 4),
-                      child: const Text("Expense"),
+                      child: Text(
+                        _isExpense ? "Expense" : 'Income',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ],
                 ),

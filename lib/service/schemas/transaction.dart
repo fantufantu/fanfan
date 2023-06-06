@@ -8,17 +8,21 @@ final CREATE_TRANSACTION = gql('''
   }
 ''');
 
-final TRANSACTIONS = gql('''
-  query Transactions(\$filterBy: FilterTransactionBy!) {
-    transactions(filterBy: \$filterBy) {
+final TRANSACTIONS = gql(r'''
+  query Transactions($filterBy: FilterTransactionBy!) {
+    transactions(filterBy: $filterBy) {
       items {
         id
         amount
         remark
         billingId
-        categoryId
         happenedAt
-        direction
+        category {
+          id
+          name
+          icon
+          direction
+        }
       }
     }
   }

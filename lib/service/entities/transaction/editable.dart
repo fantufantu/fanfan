@@ -1,12 +1,10 @@
 import 'package:fanfan/service/factories/entity.dart';
-import 'package:fanfan/service/entities/transaction/main.dart' show Direction;
 import 'package:fanfan/service/entities/billing/main.dart' show Billing;
 
 class Editable extends Entity {
   Editable({
     this.billing,
     this.categoryId,
-    this.direction,
     this.amount,
     this.happenedAt,
     this.remark,
@@ -17,9 +15,6 @@ class Editable extends Entity {
 
   /// 交易所属分类id
   int? categoryId;
-
-  /// 交易方向
-  Direction? direction;
 
   /// 交易金额
   double? amount;
@@ -34,7 +29,6 @@ class Editable extends Entity {
   Map<String, dynamic> toJson() => {
         "billingId": billing?.id,
         "categoryId": categoryId,
-        "direction": direction?.name,
         "amount": amount,
         "happenedAt": happenedAt?.toString(),
         "remark": remark

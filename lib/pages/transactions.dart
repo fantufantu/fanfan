@@ -33,7 +33,6 @@ class _State extends State {
     // 请求服务端获取交易列表
     final paginatedTransactions = await queryTransactions(
         billingId: 2,
-        direction: Direction.Out.name,
         paginateBy: PaginateBy(
           page: page,
           pageSize: 20,

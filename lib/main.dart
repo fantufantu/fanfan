@@ -36,7 +36,12 @@ void main() async {
   );
 
   // 应用初始化
-  await initialize();
+  await initialize().whenComplete(() {
+    // 应用层逻辑
+    final application = Application();
+    // 应用初始化完成
+    application.ready();
+  });
 }
 
 class App extends StatelessWidget {
@@ -72,7 +77,7 @@ class App extends StatelessWidget {
       GoRoute(
         path: '/billings',
         name: NamedRoute.Billings.name,
-        pageBuilder: (context, state) => MaterialPage(child: const Billings()),
+        pageBuilder: (context, state) => const MaterialPage(child: Billings()),
       ),
       GoRoute(
         path: '/',

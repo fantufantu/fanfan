@@ -54,6 +54,11 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
+  /// 归属用户信息
+  belong(WhoAmI whoAmI) {
+    _whoAmI = whoAmI;
+  }
+
   /// 设置 token
   setToken(String token) {
     _token = token;

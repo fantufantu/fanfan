@@ -1,17 +1,21 @@
-import 'package:fanfan/service/api/category.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/entities/category.dart' as entities;
 
 class Category with ChangeNotifier, DiagnosticableTreeMixin {
-  List<entities.Category> categories = [];
+  /// 单例
+  static Category? _instance;
 
-  Category() {
-    intiialize();
+  Category._internal();
+
+  factory Category() => _instance ??= Category._internal();
+
+  List<entities.Category> _categories = [];
+
+  belong(List<entities.Category> categories) {
+    _categories = categories;
   }
 
-  /// 初始化获取分类
-  void intiialize() async {
-    categories = (await queryCategories()).items;
-    notifyListeners();
+  List<entities.Category> get categories {
+    return _categories;
   }
 }

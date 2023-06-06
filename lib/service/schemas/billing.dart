@@ -1,18 +1,25 @@
 import 'package:graphql/client.dart';
 
+const BILLING_FRAGMENT = '''
+  fragment BillingFragment on Billing {
+    id
+    name
+    createdBy {
+      id
+      username
+      emailAddress
+      avatar
+    }
+    createdAt
+  }
+''';
+
 final BILLINGS = gql('''
+  $BILLING_FRAGMENT
   query Billings {
     billings {
       items {
-        id
-        name
-        createdBy {
-          id
-          username
-          emailAddress
-          avatar
-        }
-        createdAt
+        ...BillingFragment
       }
       total
     }
@@ -28,17 +35,10 @@ final CREATE_BILLING = gql('''
 ''');
 
 final BILLING = gql('''
+  $BILLING_FRAGMENT
   query Billing(\$id: Int!) {
     billing(id: \$id) {
-      id
-      name
-      createdBy {
-        id
-        username
-        emailAddress
-        avatar
-      }
-      createdAt
+      ...BillingFragment
     }
   }
 ''');
