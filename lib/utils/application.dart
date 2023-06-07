@@ -23,13 +23,21 @@ Future<void> initialize() async {
   // 分类
   final category = store.Category();
 
-  final response = await Client().query(QueryOptions(document: INITIALIZE));
+  final response = await Client().query(QueryOptions(
+    document: INITIALIZE,
+    errorPolicy: ErrorPolicy.ignore,
+    fetchPolicy: FetchPolicy.noCache,
+  ));
 
   // 归属用户信息
-  userProfile.belong(WhoAmI.fromJson(response.data!['whoAmI']));
+  if (response.data?['whoAmI'] != null) {
+    userProfile.belong(WhoAmI.fromJson(response.data!['whoAmI']));
+  }
   // 归属分类
-  category
-      .belong(PaginatedCategories.fromJson(response.data!['categories']).items);
+  if (response.data?['categories'] != null) {
+    category.belong(
+        PaginatedCategories.fromJson(response.data!['categories']).items);
+  }
 }
 
 Future<void> reinitialize(String? token) async {

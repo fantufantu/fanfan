@@ -40,8 +40,10 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
 
   /// 交换用户信息
   authorize() async {
-    final response =
-        await _client.query<WhoAmI>(QueryOptions(document: WHO_AM_I));
+    final response = await _client.query<WhoAmI>(QueryOptions(
+      document: WHO_AM_I,
+      fetchPolicy: FetchPolicy.noCache,
+    ));
 
     if (response.hasException || response.data == null) {
       _whoAmI = null;
