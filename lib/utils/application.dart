@@ -25,7 +25,6 @@ Future<void> initialize() async {
 
   final response = await Client().query(QueryOptions(
     document: INITIALIZE,
-    errorPolicy: ErrorPolicy.ignore,
     fetchPolicy: FetchPolicy.noCache,
   ));
 
