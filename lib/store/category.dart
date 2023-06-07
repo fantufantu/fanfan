@@ -13,6 +13,9 @@ class Category with ChangeNotifier, DiagnosticableTreeMixin {
 
   belong(List<entities.Category> categories) {
     _categories = categories;
+
+    // 消息触达
+    notifyListeners();
   }
 
   List<entities.Category> get categories {

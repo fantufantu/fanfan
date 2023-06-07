@@ -55,8 +55,11 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   /// 归属用户信息
-  belong(WhoAmI whoAmI) {
+  void belong(WhoAmI? whoAmI) {
     _whoAmI = whoAmI;
+
+    // 消息触达
+    notifyListeners();
   }
 
   /// 设置 token
@@ -92,8 +95,10 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
     if (!isRemoved) return false;
     _whoAmI = null;
     _token = "";
+
     // 消息触达
     notifyListeners();
+
     return true;
   }
 }
