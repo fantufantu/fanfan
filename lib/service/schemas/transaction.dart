@@ -1,4 +1,5 @@
 import 'package:graphql/client.dart';
+import 'package:fanfan/service/schemas/category.dart' show CATEGORY_FRAGMENT;
 
 final CREATE_TRANSACTION = gql('''
   mutation CreateTransaction(\$createBy: CreateTransactionBy!) {
@@ -8,9 +9,10 @@ final CREATE_TRANSACTION = gql('''
   }
 ''');
 
-final TRANSACTIONS = gql(r'''
-  query Transactions($filterBy: FilterTransactionBy!) {
-    transactions(filterBy: $filterBy) {
+final TRANSACTIONS = gql('''
+  $CATEGORY_FRAGMENT
+  query Transactions(\$filterBy: FilterTransactionBy!) {
+    transactions(filterBy: \$filterBy) {
       items {
         id
         amount
@@ -18,10 +20,7 @@ final TRANSACTIONS = gql(r'''
         billingId
         happenedAt
         category {
-          id
-          name
-          icon
-          direction
+          ...CategoryFragment
         }
       }
     }
