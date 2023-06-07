@@ -4,7 +4,6 @@ const CATEGORY_FRAGMENT = '''
   fragment CategoryFragment on Category {
     id
     name
-    icon
     direction
   }
 ''';
