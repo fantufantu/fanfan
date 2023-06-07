@@ -5,7 +5,6 @@ class Category implements Entity {
   Category({
     required this.id,
     required this.name,
-    required this.icon,
     required this.direction,
   });
 
@@ -15,16 +14,12 @@ class Category implements Entity {
   /// 分类名称
   String name;
 
-  /// 分类icon
-  String icon;
-
   /// 交易方向
   Direction direction;
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["id"],
         name: json["name"],
-        icon: json["icon"],
         direction: Direction.values.asNameMap()[json['direction']]!,
       );
 
@@ -32,7 +27,6 @@ class Category implements Entity {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "icon": icon,
         "direction": direction.name,
       };
 }

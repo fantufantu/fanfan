@@ -22,10 +22,6 @@ class Thumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconCodePoint = transaction.category?.icon != null
-        ? int.tryParse(transaction.category!.icon)
-        : null;
-
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -37,13 +33,7 @@ class Thumbnail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
-              iconCodePoint != null
-                  ? IconData(
-                      iconCodePoint,
-                      fontFamily: CupertinoIcons.iconFont,
-                      fontPackage: CupertinoIcons.iconFontPackage,
-                    )
-                  : CupertinoIcons.money_yen_circle,
+              CupertinoIcons.money_yen_circle,
               size: 40,
               color: _primaryColor,
             ),
