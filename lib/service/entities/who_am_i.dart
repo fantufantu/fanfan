@@ -46,6 +46,11 @@ class WhoAmI implements Entity {
 
   /// 用户名简称
   String get nickname {
-    return '用户 ${username.substring(0, 6)}';
+    if (RegExp(r"^[a-f\d]{4}(?:[a-f\d]{4}-){4}[a-f\d]{12}$")
+        .hasMatch(username)) {
+      return '用户 ${username.substring(0, 4)}';
+    } else {
+      return username;
+    }
   }
 }

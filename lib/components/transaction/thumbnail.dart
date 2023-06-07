@@ -22,6 +22,10 @@ class Thumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconCodePoint = transaction.category?.icon != null
+        ? int.tryParse(transaction.category!.icon)
+        : null;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -32,20 +36,36 @@ class Thumbnail extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(CupertinoIcons.alarm),
+            Icon(
+              iconCodePoint != null
+                  ? IconData(
+                      iconCodePoint,
+                      fontFamily: CupertinoIcons.iconFont,
+                      fontPackage: CupertinoIcons.iconFontPackage,
+                    )
+                  : CupertinoIcons.money_yen_circle,
+              size: 40,
+              color: _primaryColor,
+            ),
             Expanded(
               child: Container(
-                margin: const EdgeInsets.only(left: 20, right: 20),
+                margin: const EdgeInsets.only(left: 16, right: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(transaction.category!.name),
+                    Text(
+                      transaction.category!.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
                     Text(
                       DateFormat('yyyy-MM-dd | HH:mm:ss')
                           .format(transaction.happenedAt!),
                       style: const TextStyle(
-                        letterSpacing: 1.2,
+                        fontSize: 14,
+                        letterSpacing: 1.1,
                       ),
                     )
                   ],
@@ -60,7 +80,7 @@ class Thumbnail extends StatelessWidget {
                   '￥${transaction.amount.toString()}',
                   style: TextStyle(
                     color: _primaryColor,
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
                   ),
@@ -71,14 +91,14 @@ class Thumbnail extends StatelessWidget {
                     Icon(
                       CupertinoIcons.arrow_up_square,
                       color: _primaryColor,
-                      size: 20,
+                      size: 16,
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 4),
                       child: Text(
                         _isExpense ? "Expense" : 'Income',
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ),
