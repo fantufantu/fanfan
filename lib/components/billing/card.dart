@@ -69,7 +69,7 @@ class Card extends StatelessWidget {
             ],
           ),
           Container(
-            margin: EdgeInsets.only(top: 20),
+            margin: const EdgeInsets.only(top: 20),
             child: Row(
               children: [
                 Column(
