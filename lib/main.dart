@@ -138,10 +138,11 @@ class App extends StatelessWidget {
         ],
       ),
       GoRoute(
-        path: '/transactions',
+        path: '/transactions/:billingId',
         name: NamedRoute.Transactions.name,
-        pageBuilder: (context, state) =>
-            const MaterialPage(child: Transactions()),
+        builder: (context, state) {
+          return const Transactions();
+        },
       ),
       GoRoute(
         path: '/transaction/editable',

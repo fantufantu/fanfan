@@ -1,6 +1,7 @@
 import 'package:fanfan/components/service_entry.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/store/user_profile.dart';
+import 'package:fanfan/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +11,10 @@ import 'package:fanfan/components/billing/card.dart' as components show Card;
 class Home extends StatelessWidget {
   const Home({super.key});
 
-  _buildServiceEntries(BuildContext context) {
+  _buildServiceEntries(
+    BuildContext context, {
+    int? defaultBillingId,
+  }) {
     final serviceEntries = [
       ServiceEntry(
         color: Colors.amber,
@@ -34,7 +38,18 @@ class Home extends StatelessWidget {
         color: Colors.purple,
         label: '交易记录',
         icon: CupertinoIcons.bitcoin,
-        onPressed: () => context.pushNamed(NamedRoute.Transactions.name),
+        onPressed: () {
+          // 当前用户没有设置默认账本时，消息提醒用户设置
+          if (defaultBillingId != null) {
+            Notifier.error();
+            return;
+          }
+
+          // 存在默认账本，直接跳转到默认账本对应的交易记录
+          context.pushNamed(NamedRoute.Transactions.name, pathParameters: {
+            "billingId": defaultBillingId.toString(),
+          });
+        },
       ),
       ServiceEntry(
         color: Colors.red,
@@ -168,7 +183,10 @@ class Home extends StatelessWidget {
                           )
                         ],
                       ),
-                      _buildServiceEntries(context),
+                      _buildServiceEntries(
+                        context,
+                        defaultBillingId: defaultBilling?.id,
+                      ),
                     ],
                   ),
                 );
