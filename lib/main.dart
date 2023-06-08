@@ -111,7 +111,7 @@ class App extends StatelessWidget {
         path: '/billing/editable',
         name: NamedRoute.EditableBilling.name,
         builder: (context, state) {
-          return const PopLayout(child: billing.Editable());
+          return const billing.Editable();
         },
       ),
       GoRoute(

@@ -117,160 +117,164 @@ class _State extends State<Editable> {
     return PopLayout(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: CustomScrollView(
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                childCount: 1,
-                (context, index) {
-                  return Column(
-                    children: [
-                      _buildBelongTo(),
-                      const Divider(height: 32),
-                    ],
-                  );
-                },
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return Form(
-                    key: _formKey,
-                    child: Column(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 32, right: 32),
+          child: CustomScrollView(
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  childCount: 1,
+                  (context, index) {
+                    return Column(
                       children: [
-                        SwitchFormField(
-                          initialValue: _directions.indexOf(_direction),
-                          children: const Tuple2("支出", "收入"),
-                          onChanged: (value) {
-                            // 联动表单
-                            _categoryFormField.currentState?.reset();
-                            setState(() {
-                              _direction = _directions.elementAt(value);
-                            });
-                          },
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          child: TextFormField(
-                            initialValue: (_transaction.amount != 0
-                                ? _transaction.amount.toString()
-                                : null),
-                            textAlign: TextAlign.end,
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                              signed: false,
-                            ),
-                            onSaved: (value) {
-                              _transaction.amount = double.tryParse(value!);
+                        _buildBelongTo(),
+                        const Divider(height: 32),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          SwitchFormField(
+                            initialValue: _directions.indexOf(_direction),
+                            children: const Tuple2("支出", "收入"),
+                            onChanged: (value) {
+                              // 联动表单
+                              _categoryFormField.currentState?.reset();
+                              setState(() {
+                                _direction = _directions.elementAt(value);
+                              });
                             },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return '请输入金额';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              labelText: "金额",
-                              contentPadding:
-                                  const EdgeInsets.fromLTRB(24, 12, 24, 12),
-                              prefix: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                child: const Text(
-                                  "CNY",
-                                  style: TextStyle(
-                                    fontSize: 12,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            child: TextFormField(
+                              initialValue: (_transaction.amount != 0
+                                  ? _transaction.amount.toString()
+                                  : null),
+                              textAlign: TextAlign.end,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                decimal: true,
+                                signed: false,
+                              ),
+                              onSaved: (value) {
+                                _transaction.amount = double.tryParse(value!);
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return '请输入金额';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                labelText: "金额",
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                                prefix: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.shade100,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  padding: const EdgeInsets.all(8),
+                                  child: const Text(
+                                    "CNY",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          child: DatePickerFormField(
-                            initialValue: _transaction.happenedAt,
-                            mode: CupertinoDatePickerMode.date,
-                            onSaved: (value) {
-                              _transaction.happenedAt = value;
-                            },
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          child: PickerFormField(
-                            key: _categoryFormField,
-                            options: _categoryOptions,
-                            placeholder: "请选择分类",
-                            onSaved: (value) {
-                              _transaction.categoryId = (value == null
-                                  ? null
-                                  : _categoryOptions.elementAt(value).value);
-                            },
-                            validator: (value) {
-                              if (value == null) {
-                                return "请选择分类";
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          child: TextFormField(
-                            minLines: 3,
-                            maxLines: 8,
-                            onSaved: (value) {
-                              _transaction.remark = value;
-                            },
-                            decoration: const InputDecoration(
-                              labelText: "备注",
-                              alignLabelWithHint: true,
+                          Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            child: DatePickerFormField(
+                              initialValue: _transaction.happenedAt,
+                              mode: CupertinoDatePickerMode.date,
+                              onSaved: (value) {
+                                _transaction.happenedAt = value;
+                              },
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                childCount: 1,
+                          Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            child: PickerFormField(
+                              key: _categoryFormField,
+                              options: _categoryOptions,
+                              placeholder: "请选择分类",
+                              onSaved: (value) {
+                                _transaction.categoryId = (value == null
+                                    ? null
+                                    : _categoryOptions.elementAt(value).value);
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return "请选择分类";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            child: TextFormField(
+                              minLines: 3,
+                              maxLines: 8,
+                              onSaved: (value) {
+                                _transaction.remark = value;
+                              },
+                              decoration: const InputDecoration(
+                                labelText: "备注",
+                                alignLabelWithHint: true,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  childCount: 1,
+                ),
               ),
-            ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    child: ElevatedButton(
-                      onPressed: _submit,
-                      style: ButtonStyle(
-                          padding: const MaterialStatePropertyAll(
-                              EdgeInsets.all(16)),
-                          shape: MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(28))),
-                          elevation: const MaterialStatePropertyAll(8)),
-                      child: const Text(
-                        '提交',
-                        style: TextStyle(
-                          letterSpacing: 4,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      child: ElevatedButton(
+                        onPressed: _submit,
+                        style: ButtonStyle(
+                            padding: const MaterialStatePropertyAll(
+                                EdgeInsets.all(16)),
+                            shape: MaterialStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(28))),
+                            elevation: const MaterialStatePropertyAll(8)),
+                        child: const Text(
+                          '提交',
+                          style: TextStyle(
+                            letterSpacing: 4,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
