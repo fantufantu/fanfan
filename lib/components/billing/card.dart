@@ -90,7 +90,6 @@ class Card extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
-                        strutStyle: const StrutStyle(forceStrutHeight: true),
                       ),
                     )
                   ],
@@ -115,7 +114,6 @@ class Card extends StatelessWidget {
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
-                          strutStyle: const StrutStyle(forceStrutHeight: true),
                         ),
                       )
                     ],
