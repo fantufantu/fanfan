@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fanfan/layouts/main.dart' show PopLayout;
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/components/billing/card.dart' as components show Card;
 import 'package:tuple/tuple.dart';
@@ -67,7 +68,8 @@ class _State extends State<Editable> {
     _transaction = entities.Editable(
       amount: 0,
       billing: context.read<UserProfile>().whoAmI?.defaultBilling,
-      happenedAt: DateTime.now(),
+      happenedAt:
+          DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now())),
       remark: "",
       categoryId: null,
     );

@@ -91,7 +91,11 @@ class _State extends State<Switch> with SingleTickerProviderStateMixin {
                           ),
                           child: Text(
                             entry.value,
-                            style: TextStyle(color: widget.primaryColor),
+                            style: TextStyle(
+                              color: widget.primaryColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       );
@@ -121,6 +125,8 @@ class _State extends State<Switch> with SingleTickerProviderStateMixin {
                             : widget.children.item1,
                         style: const TextStyle(
                           color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),

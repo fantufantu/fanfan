@@ -10,6 +10,7 @@ enum NamedRoute {
   Billings,
   Billing,
   EditableBilling,
+  BillingLimitSettings,
 
   Transactions,
   Transaction,

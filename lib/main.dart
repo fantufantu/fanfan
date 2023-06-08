@@ -16,13 +16,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/pages/authorization/sign_in.dart';
 import 'package:fanfan/pages/authorization/sign_up.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:fanfan/pages/billing/main.dart' as billing;
 import 'package:fanfan/pages/transaction/editable.dart' as transaction;
 
 void main() async {
   // 禁用http请求获取远程字体
-  GoogleFonts.config.allowRuntimeFetching = false;
+  // GoogleFonts.config.allowRuntimeFetching = false;
 
   runApp(
     MultiProvider(
@@ -57,7 +57,7 @@ class App extends StatelessWidget {
       return [
         GoRoute(
           path: '/',
-          builder: (context, state) => Loading(),
+          builder: (context, state) => const Loading(),
         )
       ];
     }
@@ -91,28 +91,32 @@ class App extends StatelessWidget {
       GoRoute(
         path: '/authorization',
         name: NamedRoute.Authorization.name,
-        pageBuilder: (context, staet) =>
-            const MaterialPage(child: Authorization()),
+        builder: (context, staet) {
+          return const Authorization();
+        },
         routes: [
           GoRoute(
             path: 'sign-in',
             name: NamedRoute.SignIn.name,
-            pageBuilder: (context, staet) =>
-                const MaterialPage(child: SignIn()),
+            builder: (context, state) {
+              return const SignIn();
+            },
           ),
           GoRoute(
             path: 'sign-up',
             name: NamedRoute.SignUp.name,
-            pageBuilder: (context, staet) =>
-                const MaterialPage(child: SignUp()),
+            builder: (context, state) {
+              return const SignUp();
+            },
           ),
         ],
       ),
       GoRoute(
         path: '/billing/editable',
         name: NamedRoute.EditableBilling.name,
-        pageBuilder: (context, state) =>
-            const MaterialPage(child: PopLayout(child: billing.Editable())),
+        builder: (context, state) {
+          return const PopLayout(child: billing.Editable());
+        },
       ),
       GoRoute(
         path: '/billing/:id',
@@ -122,6 +126,16 @@ class App extends StatelessWidget {
             id: int.parse(state.pathParameters['id']!),
           );
         },
+        routes: [
+          GoRoute(
+              path: 'limit-settings',
+              name: NamedRoute.BillingLimitSettings.name,
+              builder: (context, state) {
+                return billing.LimitSettings(
+                  id: int.parse(state.pathParameters['id']!),
+                );
+              })
+        ],
       ),
       GoRoute(
         path: '/transactions',
@@ -149,7 +163,7 @@ class App extends StatelessWidget {
           highlightColor: Colors.transparent,
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
-          textTheme: GoogleFonts.josefinSansTextTheme(),
+          // textTheme: GoogleFonts.josefinSansTextTheme(),
           inputDecorationTheme: InputDecorationTheme(
             filled: true,
             fillColor: Colors.grey.shade100,

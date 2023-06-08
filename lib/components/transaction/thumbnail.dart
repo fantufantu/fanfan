@@ -48,14 +48,14 @@ class Thumbnail extends StatelessWidget {
                       transaction.category!.name,
                       style: const TextStyle(
                         fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      DateFormat('yyyy-MM-dd | HH:mm:ss')
-                          .format(transaction.happenedAt!),
+                      DateFormat('yyyy-MM-dd').format(transaction.happenedAt!),
                       style: const TextStyle(
                         fontSize: 14,
-                        letterSpacing: 1.1,
+                        letterSpacing: 1.2,
                       ),
                     )
                   ],

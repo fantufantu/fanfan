@@ -4,10 +4,16 @@ import 'package:go_router/go_router.dart';
 
 class PopLayout extends StatelessWidget {
   final Widget child;
+  final Color? backgroundColor;
+  final Widget? title;
+  final bool? centerTitle;
 
   const PopLayout({
     super.key,
     required this.child,
+    this.backgroundColor,
+    this.title,
+    this.centerTitle,
   });
 
   @override
@@ -15,6 +21,9 @@ class PopLayout extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: null,
       appBar: AppBar(
+        backgroundColor: backgroundColor,
+        title: title,
+        centerTitle: centerTitle,
         elevation: 0,
         leading: Container(
           padding: const EdgeInsets.only(left: 24),
@@ -31,6 +40,9 @@ class PopLayout extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+          ),
           padding: const EdgeInsets.only(
             left: 40,
             right: 40,
