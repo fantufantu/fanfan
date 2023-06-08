@@ -25,10 +25,10 @@ class _SignInFormState extends State<_SignInForm> {
   bool _isRememberMe = false;
 
   /// 用户凭证
-  String _who = 'tutu@fantufantu.com';
+  String _who = '';
 
   /// 密码
-  String _password = 'hjz+++0502';
+  String _password = '';
 
   /// 是否密码可见
   bool _isPasswordVisable = false;
