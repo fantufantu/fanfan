@@ -38,15 +38,11 @@ class PopLayout extends StatelessWidget {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-          ),
-          padding: const EdgeInsets.only(
-            left: 40,
-            right: 40,
-          ),
+      body: Container(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+        ),
+        child: SafeArea(
           child: child,
         ),
       ),

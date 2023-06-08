@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class Notifier {
-  static void error() {
-    Fluttertoast.showToast(
-      msg: "This is Center Short Toast",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
+  static void error(
+    BuildContext context, {
+    required String message,
+  }) {
+    // 展示异常信息
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              message,
+              style: TextStyle(
+                color: Colors.redAccent.shade200,
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.grey.shade50,
+      ),
     );
   }
 }

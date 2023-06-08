@@ -1,20 +1,23 @@
 import 'package:fanfan/components/transaction/thumbnail.dart';
+import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class Transactions extends StatefulWidget {
+  final int billingId;
+
   const Transactions({
     super.key,
+    required this.billingId,
   });
 
   @override
-  State<StatefulWidget> createState() => _State();
+  State<Transactions> createState() => _State();
 }
 
-class _State extends State {
+class _State extends State<Transactions> {
   List<Transaction> _transactions = [];
 
   /// 滚动控制器
@@ -32,7 +35,7 @@ class _State extends State {
 
     // 请求服务端获取交易列表
     final paginatedTransactions = await queryTransactions(
-        billingId: 2,
+        billingId: widget.billingId,
         paginateBy: PaginateBy(
           page: page,
           pageSize: 20,
@@ -75,59 +78,39 @@ class _State extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey.shade50,
-        elevation: 0,
-        leading: Container(
-          padding: const EdgeInsets.only(left: 20),
-          child: IconButton(
-            onPressed: () {
-              context.canPop() ? context.pop() : context.go('/');
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-          ),
-        ),
-        title: const Text(
-          'In & Out Payment',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-            letterSpacing: 2,
-            color: Colors.black,
-          ),
+    return PopLayout(
+      backgroundColor: Colors.grey.shade50,
+      title: const Text(
+        'In & Out Payment',
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 20,
+          letterSpacing: 2,
+          color: Colors.black,
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-        ),
+      child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => Container(
-                          margin: const EdgeInsets.only(top: 16),
-                          child: Thumbnail(
-                              transaction: _transactions.elementAt(index)),
-                        ),
-                        childCount: _transactions.length,
+        child: Column(
+          children: [
+            Expanded(
+              child: CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => Container(
+                        margin: const EdgeInsets.only(top: 16),
+                        child: Thumbnail(
+                            transaction: _transactions.elementAt(index)),
                       ),
-                    )
-                  ],
-                ),
+                      childCount: _transactions.length,
+                    ),
+                  )
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -59,8 +59,13 @@ class _State extends State<Billing> {
       _Navigation(
         title: '明细',
         isFilled: true,
+        margin: const EdgeInsets.only(right: 8),
       ),
-      _Navigation(title: '交易', isFilled: false),
+      _Navigation(
+        title: '交易',
+        isFilled: false,
+        margin: const EdgeInsets.only(left: 8),
+      ),
     ];
   }
 
@@ -85,7 +90,7 @@ class _State extends State<Billing> {
                 (e) => Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(10),
-                    margin: const EdgeInsets.only(left: 8, right: 8),
+                    margin: e.margin,
                     decoration: BoxDecoration(
                       color: e.isFilled ? Colors.blue : Colors.white,
                       border: Border.all(
@@ -187,15 +192,21 @@ class _State extends State<Billing> {
   Widget build(BuildContext context) {
     return PopLayout(
       backgroundColor: Colors.grey.shade50,
-      child: _buildBillingContent(),
+      centerTitle: false,
       title: _billing?.name != null
           ? Text(
               _billing!.name,
               style: const TextStyle(
                 color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
               ),
             )
           : null,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 32, right: 32),
+        child: _buildBillingContent(),
+      ),
     );
   }
 }
@@ -204,8 +215,10 @@ class _Navigation {
   _Navigation({
     required this.title,
     required this.isFilled,
+    required this.margin,
   });
 
   String title;
   bool isFilled;
+  EdgeInsetsGeometry margin;
 }

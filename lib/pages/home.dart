@@ -40,8 +40,11 @@ class Home extends StatelessWidget {
         icon: CupertinoIcons.bitcoin,
         onPressed: () {
           // 当前用户没有设置默认账本时，消息提醒用户设置
-          if (defaultBillingId != null) {
-            Notifier.error();
+          if (defaultBillingId == null) {
+            Notifier.error(
+              context,
+              message: "请先设置默认账本！",
+            );
             return;
           }
 
@@ -143,7 +146,7 @@ class Home extends StatelessWidget {
               childCount: 1,
               (context, index) {
                 return Container(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 16),
                   child: defaultBilling == null
                       ? null
                       : components.Card(billing: defaultBilling),

@@ -37,7 +37,6 @@ class Card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.all(32),
       width: double.infinity,
       decoration: BoxDecoration(
@@ -57,7 +56,7 @@ class Card extends StatelessWidget {
             children: [
               Text(
                 billing.name,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
                   fontSize: 20,

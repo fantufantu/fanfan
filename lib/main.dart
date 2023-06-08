@@ -16,14 +16,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/pages/authorization/sign_in.dart';
 import 'package:fanfan/pages/authorization/sign_up.dart';
-// import 'package:google_fonts/google_fonts.dart';
 import 'package:fanfan/pages/billing/main.dart' as billing;
 import 'package:fanfan/pages/transaction/editable.dart' as transaction;
 
 void main() async {
-  // 禁用http请求获取远程字体
-  // GoogleFonts.config.allowRuntimeFetching = false;
-
   runApp(
     MultiProvider(
       providers: [
@@ -141,7 +137,9 @@ class App extends StatelessWidget {
         path: '/transactions/:billingId',
         name: NamedRoute.Transactions.name,
         builder: (context, state) {
-          return const Transactions();
+          return Transactions(
+            billingId: int.parse(state.pathParameters['billingId']!),
+          );
         },
       ),
       GoRoute(
@@ -164,7 +162,6 @@ class App extends StatelessWidget {
           highlightColor: Colors.transparent,
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
-          // textTheme: GoogleFonts.josefinSansTextTheme(),
           inputDecorationTheme: InputDecorationTheme(
             filled: true,
             fillColor: Colors.grey.shade100,

@@ -73,6 +73,7 @@ class _State extends State {
                     },
                     child: Container(
                       margin: const EdgeInsets.only(
+                        top: 12,
                         left: 12,
                         right: 12,
                         bottom: 12,
