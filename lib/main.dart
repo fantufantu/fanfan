@@ -145,8 +145,9 @@ class App extends StatelessWidget {
       GoRoute(
         path: '/transaction/editable',
         name: NamedRoute.EditableTransaction.name,
-        pageBuilder: (context, state) =>
-            const MaterialPage(child: transaction.Editable()),
+        builder: (context, state) {
+          return const transaction.Editable();
+        },
       ),
     ];
   }
@@ -158,69 +159,70 @@ class App extends StatelessWidget {
         routes: _buildRoutes(context),
       ),
       theme: ThemeData(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: Colors.white,
-          inputDecorationTheme: InputDecorationTheme(
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            focusColor: Colors.deepOrange,
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(12),
-              ),
-              borderSide: BorderSide.none,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.grey.shade100,
+          focusColor: Colors.deepOrange,
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
             ),
-            enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(12),
-              ),
-              borderSide: BorderSide.none,
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
             ),
-            errorBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(12),
-              ),
-              borderSide: BorderSide(
-                color: Colors.red,
-              ),
+            borderSide: BorderSide.none,
+          ),
+          errorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(12),
-              ),
-              borderSide: BorderSide(
-                color: Colors.blue,
-              ),
-            ),
-            focusedErrorBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(12),
-              ),
-              borderSide: BorderSide(
-                color: Colors.red,
-              ),
-            ),
-            floatingLabelBehavior: FloatingLabelBehavior.never,
-            labelStyle: const TextStyle(
-              fontSize: 14,
+            borderSide: BorderSide(
+              color: Colors.red,
             ),
           ),
-          checkboxTheme: const CheckboxThemeData(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(6),
-              ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
             ),
-            side: BorderSide(
+            borderSide: BorderSide(
               color: Colors.blue,
-              width: 2,
             ),
           ),
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.white,
-          )),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+            borderSide: BorderSide(
+              color: Colors.red,
+            ),
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          labelStyle: const TextStyle(
+            fontSize: 14,
+          ),
+        ),
+        checkboxTheme: const CheckboxThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(6),
+            ),
+          ),
+          side: BorderSide(
+            color: Colors.blue,
+            width: 2,
+          ),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+        ),
+      ),
     );
   }
 }

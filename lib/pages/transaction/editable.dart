@@ -109,7 +109,12 @@ class _State extends State<Editable> {
     // 向服务端请求
     await createTransaction(editable: _transaction);
     // 重定向到交易页
-    GoRouter.of(context).replaceNamed(NamedRoute.Transactions.name);
+    GoRouter.of(context).replaceNamed(
+      NamedRoute.Transactions.name,
+      pathParameters: {
+        "billingId": _transaction.billing!.id.toString(),
+      },
+    );
   }
 
   @override

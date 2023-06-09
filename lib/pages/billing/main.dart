@@ -1,4 +1,5 @@
 import 'package:fanfan/layouts/main.dart';
+import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/billing.dart';
 import 'package:fanfan/store/user_profile.dart';
@@ -65,6 +66,14 @@ class _State extends State<Billing> {
         title: '交易',
         isFilled: false,
         margin: const EdgeInsets.only(left: 8),
+        onTap: () {
+          GoRouter.of(context).pushNamed(
+            NamedRoute.Transactions.name,
+            pathParameters: {
+              "billingId": widget.id.toString(),
+            },
+          );
+        },
       ),
     ];
   }
@@ -72,7 +81,7 @@ class _State extends State<Billing> {
   /// 页面信息
   _buildBillingContent() {
     if (!_isBillingNotEmpty) {
-      return const Text("获取账本失败！");
+      return const Loading();
     }
 
     final isDefault = context.select((UserProfile userProfile) {
@@ -88,24 +97,28 @@ class _State extends State<Billing> {
           children: _navigations
               .map(
                 (e) => Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    margin: e.margin,
-                    decoration: BoxDecoration(
-                      color: e.isFilled ? Colors.blue : Colors.white,
-                      border: Border.all(
-                        width: 4,
-                        color: Colors.blue,
+                  child: InkWell(
+                    onTap: e.onTap,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      margin: e.margin,
+                      decoration: BoxDecoration(
+                        color: e.isFilled ? Colors.blue : Colors.white,
+                        border: Border.all(
+                          width: 4,
+                          color: Colors.blue,
+                        ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(99)),
                       ),
-                      borderRadius: const BorderRadius.all(Radius.circular(99)),
-                    ),
-                    child: Text(
-                      e.title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: e.isFilled ? Colors.white : Colors.blue,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                      child: Text(
+                        e.title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: e.isFilled ? Colors.white : Colors.blue,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -113,14 +126,19 @@ class _State extends State<Billing> {
               )
               .toList(),
         ),
-        const Divider(),
+        const Divider(height: 32),
         components.Card(
           billing: _billing!,
           elevation: 0,
         ),
-        const Divider(),
-        Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8),
+        const Divider(height: 32),
+        Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
+          padding:
+              const EdgeInsets.only(left: 28, right: 28, top: 20, bottom: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,12 +157,13 @@ class _State extends State<Billing> {
             ],
           ),
         ),
-        const Divider(),
+        const Divider(height: 32),
         Container(
           decoration: const BoxDecoration(
             color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(28),
           child: Column(
             children: [
               Row(
@@ -158,6 +177,9 @@ class _State extends State<Billing> {
                     ),
                   ),
                   FilledButton.tonalIcon(
+                    style: const ButtonStyle(
+                        padding: MaterialStatePropertyAll(
+                            EdgeInsets.only(left: 12, right: 12))),
                     onPressed: () {
                       GoRouter.of(context).pushNamed(
                           NamedRoute.BillingLimitSettings.name,
@@ -166,19 +188,24 @@ class _State extends State<Billing> {
                           });
                     },
                     icon: const Icon(
-                      CupertinoIcons.pencil_ellipsis_rectangle,
+                      CupertinoIcons.pencil_outline,
                       size: 14,
                     ),
-                    label: const Text("修改"),
+                    label: const Text(
+                      "Edit",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   )
                 ],
               ),
-              const Divider(),
+              const Divider(height: 32),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("data"),
-                  Text("data"),
+                  Text("每月交易限额"),
+                  Text("￥100000.00"),
                 ],
               )
             ],
@@ -204,7 +231,7 @@ class _State extends State<Billing> {
             )
           : null,
       child: Padding(
-        padding: const EdgeInsets.only(left: 32, right: 32),
+        padding: const EdgeInsets.only(left: 32, right: 32, top: 20),
         child: _buildBillingContent(),
       ),
     );
@@ -216,9 +243,11 @@ class _Navigation {
     required this.title,
     required this.isFilled,
     required this.margin,
+    this.onTap,
   });
 
   String title;
   bool isFilled;
   EdgeInsetsGeometry margin;
+  VoidCallback? onTap;
 }
