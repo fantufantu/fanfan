@@ -39,7 +39,7 @@ class Transaction extends Entity {
         categoryId: json['categoryId'],
         amount: double.tryParse(json['amount'].toString()),
         happenedAt: json['happenedAt'] != null
-            ? DateTime.tryParse(json['happenedAt'])
+            ? DateTime.tryParse(json['happenedAt'])?.toLocal()
             : null,
         remark: json['remark'],
         category: json['category'] != null

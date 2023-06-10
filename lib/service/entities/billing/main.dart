@@ -47,7 +47,7 @@ class Billing extends Entity {
         id: json["id"],
         name: json['name'],
         createdBy: WhoAmI.fromJson(json['createdBy']),
-        createdAt: DateTime.parse(json['createdAt']),
+        createdAt: DateTime.parse(json['createdAt']).toLocal(),
         limitAmount: double.tryParse(json['limitAmount'].toString()),
         limitDuration: LimitDuration.values.asNameMap()[json['limitDuration']],
       );
