@@ -7,6 +7,7 @@ import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/pages/statistics.dart';
 import 'package:fanfan/pages/transactions.dart';
 import 'package:fanfan/router/main.dart';
+import 'package:fanfan/service/entities/billing/main.dart' show LimitDuration;
 import 'package:fanfan/store/application.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/utils/application.dart';
@@ -129,6 +130,10 @@ class App extends StatelessWidget {
               builder: (context, state) {
                 return billing.LimitSettings(
                   id: int.parse(state.pathParameters['id']!),
+                  initialLimitAmount: double.tryParse(
+                      state.queryParameters['limitAmount'] ?? ''),
+                  initialLimitDuration: LimitDuration.values
+                      .asNameMap()[state.queryParameters['limitDuration']],
                 );
               })
         ],

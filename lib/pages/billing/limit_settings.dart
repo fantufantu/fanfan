@@ -1,21 +1,24 @@
 import 'package:fanfan/components/form/picker_form_field.dart';
 import 'package:fanfan/components/picker.dart';
 import 'package:fanfan/layouts/main.dart';
+import 'package:fanfan/router/main.dart';
+import 'package:fanfan/service/api/billing.dart';
+import 'package:fanfan/service/entities/billing/main.dart';
+import 'package:fanfan/service/entities/billing/limit_settings.dart' as entities
+    show LimitSettings;
 import 'package:flutter/material.dart';
-
-enum _Duration {
-  day,
-  weak,
-  month,
-  year,
-}
+import 'package:go_router/go_router.dart';
 
 class LimitSettings extends StatefulWidget {
   final int id;
+  final double? initialLimitAmount;
+  final LimitDuration? initialLimitDuration;
 
   const LimitSettings({
     super.key,
     required this.id,
+    this.initialLimitAmount,
+    this.initialLimitDuration,
   });
 
   @override
@@ -23,12 +26,45 @@ class LimitSettings extends StatefulWidget {
 }
 
 class _State extends State<LimitSettings> {
-  final _durationOptions = [
-    SelectOption(label: "天", value: _Duration.day),
-    SelectOption(label: "周", value: _Duration.weak),
-    SelectOption(label: "月", value: _Duration.month),
-    SelectOption(label: "年", value: _Duration.year),
-  ];
+  /// 表单
+  final _formKey = GlobalKey<FormState>();
+
+  /// 下拉选项
+  final _durationOptions = LimitDuration.values
+      .map((e) =>
+          SelectOption(value: e.name, label: LimitDurationDescriptions[e]))
+      .toList();
+
+  /// 表单项
+  late entities.LimitSettings _limitSettings;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _limitSettings = entities.LimitSettings(
+      limitAmount: widget.initialLimitAmount,
+      limitDuration: widget.initialLimitDuration,
+    );
+  }
+
+  /// 表单提交
+  void _submit() async {
+    // 触发表单保存
+    _formKey.currentState?.save();
+
+    final isSucceed = await setLimit(
+      id: widget.id,
+      limitSettings: _limitSettings,
+    );
+
+    if (!isSucceed) return;
+
+    // 跳转回账本页
+    GoRouter.of(context).goNamed(NamedRoute.Billing.name, pathParameters: {
+      "id": widget.id.toString(),
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +84,7 @@ class _State extends State<LimitSettings> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Form(
+              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -65,7 +102,14 @@ class _State extends State<LimitSettings> {
                     margin: const EdgeInsets.only(top: 12),
                     child: PickerFormField(
                       options: _durationOptions,
-                      initialValue: 0,
+                      initialValue: _limitSettings.limitDuration != null
+                          ? LimitDuration.values
+                              .indexOf(_limitSettings.limitDuration!)
+                          : null,
+                      onSaved: (newValue) {
+                        _limitSettings.limitDuration =
+                            LimitDuration.values.elementAt(newValue!);
+                      },
                     ),
                   ),
                   Container(
@@ -80,7 +124,22 @@ class _State extends State<LimitSettings> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 12),
-                    child: TextFormField(),
+                    child: TextFormField(
+                      initialValue: _limitSettings.limitAmount.toString(),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: false,
+                      ),
+                      onSaved: (value) {
+                        _limitSettings.limitAmount = double.tryParse(value!);
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '请输入金额';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -96,7 +155,7 @@ class _State extends State<LimitSettings> {
                     ),
                     padding: const MaterialStatePropertyAll(
                         EdgeInsets.only(top: 16, bottom: 16))),
-                onPressed: () {},
+                onPressed: _submit,
                 child: const Text(
                   "保存修改",
                   style: TextStyle(

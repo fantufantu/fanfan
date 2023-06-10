@@ -72,12 +72,7 @@ class _State extends State {
                           pathParameters: {"id": billing.id.toString()});
                     },
                     child: Container(
-                      margin: const EdgeInsets.only(
-                        top: 12,
-                        left: 12,
-                        right: 12,
-                        bottom: 12,
-                      ),
+                      margin: const EdgeInsets.all(12),
                       child: components.Card(
                         billing: billing,
                       ),

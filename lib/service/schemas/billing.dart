@@ -39,12 +39,20 @@ final BILLING = gql('''
   query Billing(\$id: Int!) {
     billing(id: \$id) {
       ...BillingFragment
+      limitAmount
+      limitDuration
     }
   }
 ''');
 
-final SET_DEFAULT = gql('''
-  mutation SetDefaultBilling(\$setBy: SetDefaultBillingBy!) {
-    setDefaultBilling(setBy: \$setBy)
+final SET_DEFAULT = gql(r'''
+  mutation SetDefaultBilling($setBy: SetDefaultBillingBy!) {
+    setDefaultBilling(setBy: $setBy)
+  }
+''');
+
+final SET_LIMIT = gql(r'''
+  mutation SetBillingLimit($id: Int!, $setBy: SetBillingLimitBy!) {
+    setBillingLimit(id: $id, setBy: $setBy)
   }
 ''');

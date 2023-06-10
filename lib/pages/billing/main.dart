@@ -11,6 +11,8 @@ import 'package:fanfan/components/billing/card.dart' as components show Card;
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../service/entities/billing/main.dart';
+
 export './editable.dart';
 export './limit_settings.dart';
 
@@ -43,12 +45,17 @@ class _State extends State<Billing> {
     })();
   }
 
-  get _isBillingNotEmpty {
+  bool get _isBillingNotEmpty {
     return _billing != null;
   }
 
+  /// 当前账本是否被限额
+  bool get _isLimitted {
+    return _billing?.limitAmount != null && _billing?.limitDuration != null;
+  }
+
   /// 设置默认账本
-  _setDefault(bool isDefault, {required BuildContext context}) async {
+  _setDefault(bool isDefault) async {
     final isSucceed = await setDefault(id: _billing!.id, isDefault: isDefault);
     if (!isSucceed) return;
     await context.read<UserProfile>().refreshDefaultBilling();
@@ -152,7 +159,7 @@ class _State extends State<Billing> {
               ),
               Switch(
                 value: isDefault,
-                onChanged: (value) => _setDefault(value, context: context),
+                onChanged: (value) => _setDefault(value),
               )
             ],
           ),
@@ -182,10 +189,15 @@ class _State extends State<Billing> {
                             EdgeInsets.only(left: 12, right: 12))),
                     onPressed: () {
                       GoRouter.of(context).pushNamed(
-                          NamedRoute.BillingLimitSettings.name,
-                          pathParameters: {
-                            "id": _billing!.id.toString(),
-                          });
+                        NamedRoute.BillingLimitSettings.name,
+                        pathParameters: {
+                          "id": _billing!.id.toString(),
+                        },
+                        queryParameters: {
+                          "limitAmount": _billing!.limitAmount!.toString(),
+                          "limitDuration": _billing!.limitDuration!.name,
+                        },
+                      );
                     },
                     icon: const Icon(
                       CupertinoIcons.pencil_outline,
@@ -201,12 +213,15 @@ class _State extends State<Billing> {
                 ],
               ),
               const Divider(height: 32),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("每月交易限额"),
-                  Text("￥100000.00"),
-                ],
+                children: _isLimitted
+                    ? [
+                        Text(
+                            "每${LimitDurationDescriptions[_billing!.limitDuration!]}交易限额"),
+                        Text('￥${_billing!.limitAmount.toString()}'),
+                      ]
+                    : [const Text("暂未设置限额！")],
               )
             ],
           ),
