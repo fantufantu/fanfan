@@ -87,10 +87,6 @@ class _State extends State<Billing> {
 
   /// 页面信息
   _buildBillingContent() {
-    if (!_isBillingNotEmpty) {
-      return const Loading();
-    }
-
     final isDefault = context.select((UserProfile userProfile) {
       return userProfile.whoAmI?.defaultBilling?.id == _billing?.id;
     });
@@ -232,6 +228,10 @@ class _State extends State<Billing> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_isBillingNotEmpty) {
+      return const Loading();
+    }
+
     return PopLayout(
       backgroundColor: Colors.grey.shade50,
       centerTitle: false,

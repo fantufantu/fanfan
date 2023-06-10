@@ -37,7 +37,7 @@ class Transaction extends Entity {
         id: json["id"],
         billingId: json['billingId'],
         categoryId: json['categoryId'],
-        amount: json['amount']?.toDouble(),
+        amount: double.tryParse(json['amount'].toString()),
         happenedAt: json['happenedAt'] != null
             ? DateTime.tryParse(json['happenedAt'])
             : null,
