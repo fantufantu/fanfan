@@ -14,5 +14,7 @@ enum NamedRoute {
 
   Transactions,
   Transaction,
-  EditableTransaction
+  EditableTransaction,
+
+  Share,
 }

@@ -10,8 +10,8 @@ import 'package:fanfan/service/entities/billing/main.dart' as entities
 import 'package:fanfan/components/billing/card.dart' as components show Card;
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
-import '../../service/entities/billing/main.dart';
+import 'package:fanfan/service/entities/billing/main.dart';
+import 'package:fanfan/service/entities/sharing.dart' as sharing;
 
 export './editable.dart';
 export './limit_settings.dart';
@@ -86,7 +86,7 @@ class _State extends State<Billing> {
   }
 
   /// 页面信息
-  _buildBillingContent() {
+  Widget _buildBillingContent(BuildContext context) {
     final isDefault = context.select((UserProfile userProfile) {
       return userProfile.whoAmI?.defaultBilling?.id == _billing?.id;
     });
@@ -226,6 +226,14 @@ class _State extends State<Billing> {
     );
   }
 
+  /// 分享账本
+  _share() {
+    GoRouter.of(context).pushNamed(NamedRoute.Share.name, pathParameters: {
+      "type": sharing.Type.Billing.name,
+      "target": _billing!.id.toString(),
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_isBillingNotEmpty) {
@@ -235,6 +243,10 @@ class _State extends State<Billing> {
     return PopLayout(
       backgroundColor: Colors.grey.shade50,
       centerTitle: false,
+      floatingActionButton: FloatingActionButton(
+        onPressed: _share,
+        child: const Icon(CupertinoIcons.arrowshape_turn_up_right_fill),
+      ),
       title: _billing?.name != null
           ? Text(
               _billing!.name,
@@ -245,9 +257,20 @@ class _State extends State<Billing> {
               ),
             )
           : null,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 32, right: 32, top: 20),
-        child: _buildBillingContent(),
+      child: CustomScrollView(
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => Padding(
+                padding: const EdgeInsets.only(left: 32, right: 32, top: 20),
+                child: Builder(
+                  builder: _buildBillingContent,
+                ),
+              ),
+              childCount: 1,
+            ),
+          ),
+        ],
       ),
     );
   }

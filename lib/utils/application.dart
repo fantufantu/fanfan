@@ -18,6 +18,8 @@ Future<void> initialize() async {
   // 获取持久化存储的token
   final token = storage.getString(describeEnum(StorageToken.token)) ?? '';
 
+  print(token);
+
   // 用户信息
   final userProfile = store.UserProfile()..setToken(token);
   // 分类

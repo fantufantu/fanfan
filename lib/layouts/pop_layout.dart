@@ -7,6 +7,7 @@ class PopLayout extends StatelessWidget {
   final Color? backgroundColor;
   final Widget? title;
   final bool? centerTitle;
+  final Widget? floatingActionButton;
 
   const PopLayout({
     super.key,
@@ -14,6 +15,7 @@ class PopLayout extends StatelessWidget {
     this.backgroundColor,
     this.title,
     this.centerTitle,
+    this.floatingActionButton,
   });
 
   @override
@@ -46,6 +48,7 @@ class PopLayout extends StatelessWidget {
           child: child,
         ),
       ),
+      floatingActionButton: floatingActionButton,
     );
   }
 }

@@ -19,6 +19,7 @@ import 'package:fanfan/pages/authorization/sign_in.dart';
 import 'package:fanfan/pages/authorization/sign_up.dart';
 import 'package:fanfan/pages/billing/main.dart' as billing;
 import 'package:fanfan/pages/transaction/editable.dart' as transaction;
+import 'package:fanfan/pages/share.dart' as sharing;
 
 void main() async {
   runApp(
@@ -152,6 +153,13 @@ class App extends StatelessWidget {
         name: NamedRoute.EditableTransaction.name,
         builder: (context, state) {
           return const transaction.Editable();
+        },
+      ),
+      GoRoute(
+        path: '/share/:type/:target',
+        name: NamedRoute.Share.name,
+        builder: (context, state) {
+          return const sharing.Share();
         },
       ),
     ];
