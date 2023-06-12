@@ -5,6 +5,7 @@ import 'package:fanfan/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/components/billing/card.dart' as components show Card;
 
@@ -76,7 +77,11 @@ class Home extends StatelessWidget {
 
   /// 问候语
   List<Widget> _buildGreetings(String? nickname) {
-    final List<Widget> greetings = [const Text("Good morning 👋🏻")];
+    final meridiem = DateFormat('a').format(DateTime.now());
+    final List<Widget> greetings = [
+      Text("Good ${(meridiem == 'PM') ? 'afternoon' : 'morning'} 👋🏻")
+    ];
+
     if (nickname != null) {
       greetings.add(Text(
         nickname,

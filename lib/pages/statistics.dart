@@ -23,7 +23,7 @@ class Statistics extends StatefulWidget {
 class _State extends State<Statistics> {
   int _duration = 7;
   List<Transaction> _transactions = [];
-  late int _billingId;
+  late int? _billingId;
 
   final _supportDurations = const {
     7: "This week",
@@ -41,11 +41,16 @@ class _State extends State<Statistics> {
   final ScrollController _scrollController = ScrollController();
 
   _fetchMore() async {
+    // 没有账本id，无法获取对应交易数据
+    if (_billingId == null) {
+      return;
+    }
+
     // 需要查询的页码
     final page = _page + 1;
     // 请求服务端获取交易列表
     final paginatedTransactions = await queryTransactions(
-        billingId: _billingId,
+        billingId: _billingId!,
         paginateBy: PaginateBy(
           page: page,
           pageSize: 20,
@@ -66,7 +71,7 @@ class _State extends State<Statistics> {
     super.initState();
 
     // 默认账本id
-    _billingId = context.read<UserProfile>().whoAmI!.defaultBilling!.id;
+    _billingId = context.read<UserProfile>().whoAmI?.defaultBilling?.id;
     // 按着默认时间间隔请求交易列表
     _fetchMore();
     // 监听滚动器，滚动到下方时，请求下一页数据
