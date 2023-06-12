@@ -1,7 +1,9 @@
 import 'package:fanfan/layouts/main.dart';
+import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/billing.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Editable extends StatefulWidget {
   const Editable({super.key});
@@ -18,18 +20,18 @@ class _State extends State<Editable> {
   String _name = '';
 
   /// 提交表单
-  _useSubmit(BuildContext context) {
-    return () {
-      // 表单校验
-      final isValid = _formKey.currentState?.validate() ?? false;
-      if (!isValid) return;
+  void _submit() {
+    // 表单校验
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (!isValid) return;
 
-      // 表单保存
-      _formKey.currentState!.save();
+    // 表单保存
+    _formKey.currentState!.save();
 
-      // 提交
-      createBilling(name: _name).then((billing) {}).catchError((error) {});
-    };
+    // 提交
+    createBilling(name: _name).then((billing) {
+      context.goNamed(NamedRoute.Billings.name);
+    });
   }
 
   @override
@@ -88,7 +90,7 @@ class _State extends State<Editable> {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               child: ElevatedButton(
-                onPressed: _useSubmit(context),
+                onPressed: _submit,
                 style: ButtonStyle(
                   padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
                   shape: MaterialStatePropertyAll(RoundedRectangleBorder(

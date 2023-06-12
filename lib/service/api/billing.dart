@@ -9,6 +9,7 @@ Future<PaginatedBillings> queryBillings() async {
   final response = await Client().query(
     QueryOptions(
       document: BILLINGS,
+      fetchPolicy: FetchPolicy.noCache,
     ),
   );
 
@@ -20,14 +21,16 @@ Future<PaginatedBillings> queryBillings() async {
   return PaginatedBillings.fromJson(response.data!['billings']);
 }
 
-Future<Billing> createBilling({required String name}) async {
+Future<Billing> createBilling({
+  required String name,
+}) async {
   final response = await Client().mutate(MutationOptions(
     document: CREATE_BILLING,
     variables: Map.from(
       {
-        "createBy": Map.from(
-          {"name": name},
-        )
+        "createBy": {
+          "name": name,
+        }
       },
     ),
   ));
