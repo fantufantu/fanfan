@@ -1,11 +1,21 @@
 import 'package:fanfan/layouts/main.dart';
+import 'package:fanfan/service/api/sharing.dart';
+import 'package:fanfan/service/api/user.dart';
 import 'package:fanfan/service/entities/who_am_i.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rxdart/rxdart.dart';
+import "package:fanfan/components/user/thumbnail.dart";
+import 'package:fanfan/service/entities/sharing/main.dart';
 
 class Share extends StatefulWidget {
+  final Type type;
+  final int target;
+
   const Share({
     super.key,
+    required this.type,
+    required this.target,
   });
 
   @override
@@ -13,23 +23,44 @@ class Share extends StatefulWidget {
 }
 
 class _State extends State<Share> {
-  late String _who;
   late List<WhoAmI> _users;
+  late PublishSubject<String> _userSearcher;
 
   @override
   void initState() {
     super.initState();
 
-    _who = '';
     _users = [];
+    _userSearcher = PublishSubject<String>()
+      ..debounceTime(
+        const Duration(seconds: 1),
+      ).asyncMap<List<WhoAmI>>(
+        (who) async {
+          return who.isEmpty ? [] : await queryUsers(who);
+        },
+      ).listen((users) {
+        setState(() {
+          _users = users;
+        });
+      });
   }
 
-  /// 防抖模糊搜索用户
-  void _searchUsers(String value) {}
+  _onShare(int userId) async {
+    final isSucceed = await createSharing(
+      targetId: widget.target,
+      targetType: widget.type,
+      sharedByIds: [userId],
+    );
+
+    if (isSucceed) {
+      context.pop();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return PopLayout(
+      backgroundColor: Colors.grey.shade50,
       title: const Text(
         "搜索用户",
         style: TextStyle(
@@ -43,7 +74,9 @@ class _State extends State<Share> {
         child: Column(
           children: [
             TextField(
-              onChanged: _searchUsers,
+              onChanged: (value) {
+                _userSearcher.add(value);
+              },
             ),
             Container(
               margin: const EdgeInsets.only(top: 20),
@@ -60,7 +93,17 @@ class _State extends State<Share> {
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        return Text("data");
+                        return Container(
+                          margin: const EdgeInsets.only(top: 20),
+                          child: InkWell(
+                            onTap: () {
+                              _onShare(_users.elementAt(index).id);
+                            },
+                            child: Thumbnail(
+                              user: _users.elementAt(index),
+                            ),
+                          ),
+                        );
                       },
                       childCount: _users.length,
                     ),

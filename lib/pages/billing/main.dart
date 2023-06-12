@@ -11,7 +11,7 @@ import 'package:fanfan/components/billing/card.dart' as components show Card;
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/service/entities/billing/main.dart';
-import 'package:fanfan/service/entities/sharing.dart' as sharing;
+import 'package:fanfan/service/entities/sharing/main.dart' as sharing;
 
 export './editable.dart';
 export './limit_settings.dart';

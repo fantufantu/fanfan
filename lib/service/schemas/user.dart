@@ -33,3 +33,14 @@ final DEFAULT_BILLING = gql('''
     }
   }
 ''');
+
+final USERS = gql(r'''
+  query Users($who: String!) {
+    users(who: $who) {
+      id
+      username
+      emailAddress
+      avatar
+    }
+  }
+''');

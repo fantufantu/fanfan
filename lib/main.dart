@@ -20,6 +20,8 @@ import 'package:fanfan/pages/authorization/sign_up.dart';
 import 'package:fanfan/pages/billing/main.dart' as billing;
 import 'package:fanfan/pages/transaction/editable.dart' as transaction;
 import 'package:fanfan/pages/share.dart' as sharing;
+import 'package:fanfan/service/entities/sharing/main.dart' as sharingEntities
+    show Type;
 
 void main() async {
   runApp(
@@ -159,7 +161,11 @@ class App extends StatelessWidget {
         path: '/share/:type/:target',
         name: NamedRoute.Share.name,
         builder: (context, state) {
-          return const sharing.Share();
+          return sharing.Share(
+            target: int.parse(state.pathParameters['target']!),
+            type: sharingEntities.Type.values
+                .asNameMap()[state.pathParameters['type']]!,
+          );
         },
       ),
     ];
