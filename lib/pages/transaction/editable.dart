@@ -4,6 +4,7 @@ import 'package:fanfan/components/form/switch_form_field.dart';
 import 'package:fanfan/components/picker.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
+import 'package:fanfan/service/entities/billing/main.dart';
 import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,8 +21,11 @@ import 'package:fanfan/service/entities/transaction/editable.dart' as entities
     show Editable;
 
 class Editable extends StatefulWidget {
+  final Billing? billing;
+
   const Editable({
     super.key,
+    this.billing,
   });
 
   @override
@@ -50,7 +54,7 @@ class _State extends State<Editable> {
   /// 当前交易方向下的分类
   List<SelectOption> get _categoryOptions {
     return context
-        .watch<Category>()
+        .read<Category>()
         .categories
         .where((element) => element.direction == _direction)
         .map((e) => SelectOption(value: e.id, label: e.name))
@@ -67,7 +71,8 @@ class _State extends State<Editable> {
     // 页面入参没有id时，初始化默认的编辑数据
     _transaction = entities.Editable(
       amount: 0,
-      billing: context.read<UserProfile>().whoAmI?.defaultBilling,
+      billing:
+          widget.billing ?? context.read<UserProfile>().whoAmI?.defaultBilling,
       happenedAt:
           DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now())),
       remark: "",

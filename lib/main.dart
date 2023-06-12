@@ -154,7 +154,9 @@ class App extends StatelessWidget {
         path: '/transaction/editable',
         name: NamedRoute.EditableTransaction.name,
         builder: (context, state) {
-          return const transaction.Editable();
+          return transaction.Editable(
+            billing: (state.extra as Map<String, dynamic>?)?['billing'],
+          );
         },
       ),
       GoRoute(

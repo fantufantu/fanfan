@@ -142,20 +142,48 @@ class _State extends State<Billing> {
           ),
           padding:
               const EdgeInsets.only(left: 28, right: 28, top: 20, bottom: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
             children: [
-              const Text(
-                "设置默认：",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "设置默认：",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Switch(
+                    value: isDefault,
+                    onChanged: (value) => _setDefault(value),
+                  )
+                ],
               ),
-              Switch(
-                value: isDefault,
-                onChanged: (value) => _setDefault(value),
+              const Divider(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "账本共享：",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  FilledButton.tonalIcon(
+                    onPressed: _share,
+                    icon: const Icon(
+                        CupertinoIcons.arrowshape_turn_up_right_fill),
+                    label: const Text(
+                      "去分享",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  )
+                ],
               )
             ],
           ),
@@ -227,11 +255,21 @@ class _State extends State<Billing> {
   }
 
   /// 分享账本
-  _share() {
+  void _share() {
     GoRouter.of(context).pushNamed(NamedRoute.Share.name, pathParameters: {
       "type": sharing.Type.Billing.name,
       "target": _billing!.id.toString(),
     });
+  }
+
+  /// 记一笔
+  void _booking() {
+    GoRouter.of(context).pushNamed(
+      NamedRoute.EditableTransaction.name,
+      extra: {
+        "billing": _billing,
+      },
+    );
   }
 
   @override
@@ -244,8 +282,8 @@ class _State extends State<Billing> {
       backgroundColor: Colors.grey.shade50,
       centerTitle: false,
       floatingActionButton: FloatingActionButton(
-        onPressed: _share,
-        child: const Icon(CupertinoIcons.arrowshape_turn_up_right_fill),
+        onPressed: _booking,
+        child: const Icon(CupertinoIcons.plus),
       ),
       title: _billing?.name != null
           ? Text(

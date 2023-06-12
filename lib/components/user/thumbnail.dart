@@ -22,7 +22,12 @@ class _State extends State<Thumbnail> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(widget.user.username),
+      child: Column(
+        children: [
+          Text(widget.user.username),
+          Text(widget.user.emailAddress),
+        ],
+      ),
     );
   }
 }
