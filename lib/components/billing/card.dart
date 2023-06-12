@@ -84,7 +84,7 @@ class Card extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.only(top: 8),
                       child: Text(
-                        billing.createdBy.nickname,
+                        billing.createdBy!.nickname,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -108,7 +108,7 @@ class Card extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.only(top: 8),
                         child: Text(
-                          DateFormat.yMd().format(billing.createdAt),
+                          DateFormat.yMd().format(billing.createdAt!),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,

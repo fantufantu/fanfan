@@ -32,10 +32,10 @@ class Billing extends Entity {
   String name;
 
   /// 账本创建人
-  WhoAmI createdBy;
+  WhoAmI? createdBy;
 
   /// 创建时间
-  DateTime createdAt;
+  DateTime? createdAt;
 
   /// 限额时间段
   LimitDuration? limitDuration;
@@ -46,8 +46,10 @@ class Billing extends Entity {
   factory Billing.fromJson(Map<String, dynamic> json) => Billing(
         id: json["id"],
         name: json['name'],
-        createdBy: WhoAmI.fromJson(json['createdBy']),
-        createdAt: DateTime.parse(json['createdAt']).toLocal(),
+        createdBy: json['createdBy'] != null
+            ? WhoAmI.fromJson(json['createdBy'])
+            : null,
+        createdAt: DateTime.tryParse(json['createdAt'].toString())?.toLocal(),
         limitAmount: double.tryParse(json['limitAmount'].toString()),
         limitDuration: LimitDuration.values.asNameMap()[json['limitDuration']],
       );
@@ -56,7 +58,7 @@ class Billing extends Entity {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "createdBy": createdBy.toJson(),
+        "createdBy": createdBy?.toJson(),
         "createdAt": createdAt.toString(),
         "limitAmount": limitAmount,
         "limitDuration": limitDuration?.name,
