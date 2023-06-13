@@ -85,11 +85,11 @@ class NavigationLayout extends StatelessWidget {
           showUnselectedLabels: true,
           selectedLabelStyle: const TextStyle(
             height: 2,
-            fontSize: 14,
+            fontSize: 12,
           ),
           unselectedLabelStyle: const TextStyle(
             height: 2,
-            fontSize: 14,
+            fontSize: 12,
           ),
           items: _navigationItems
               .map((item) => BottomNavigationBarItem(

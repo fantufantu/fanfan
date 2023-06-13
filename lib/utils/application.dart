@@ -36,6 +36,7 @@ Future<void> initialize() async {
   }
   // 归属分类
   if (response.data?['categories'] != null) {
+    print(response.data!['categories']);
     category.belong(
         PaginatedCategories.fromJson(response.data!['categories']).items);
   }

@@ -1,3 +1,4 @@
+import 'package:fanfan/assets/category.dart';
 import 'package:fanfan/service/entities/direction.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,13 +34,14 @@ class Thumbnail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
-              CupertinoIcons.money_yen_circle,
-              size: 40,
+              CategoryIcons[transaction.category!.id] ??
+                  CupertinoIcons.money_yen_circle,
+              size: 32,
               color: _primaryColor,
             ),
             Expanded(
               child: Container(
-                margin: const EdgeInsets.only(left: 16, right: 12),
+                margin: const EdgeInsets.only(left: 20, right: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,7 +81,9 @@ class Thumbnail extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Icon(
-                      CupertinoIcons.arrow_up_square,
+                      _isExpense
+                          ? CupertinoIcons.arrow_up_square
+                          : CupertinoIcons.arrow_down_square,
                       color: _primaryColor,
                       size: 16,
                     ),
