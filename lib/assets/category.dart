@@ -1,16 +1,16 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 final CategoryIcons = Map<int, IconData>.from({
-  1: CupertinoIcons.car_fill,
-  2: CupertinoIcons.gamecontroller_fill,
-  3: CupertinoIcons.ant_fill,
-  4: CupertinoIcons.airplane,
-  5: CupertinoIcons.chevron_left_slash_chevron_right,
-  6: CupertinoIcons.cart_fill,
-  7: CupertinoIcons.house_fill,
-  8: CupertinoIcons.heart_solid,
-  9: CupertinoIcons.camera_fill,
-  10: CupertinoIcons.paw_solid,
-  11: CupertinoIcons.bag_fill,
-  12: CupertinoIcons.person_fill,
+  1: Icons.moped,
+  2: Icons.music_note,
+  3: Icons.fastfood,
+  4: Icons.travel_explore,
+  5: Icons.badge,
+  6: Icons.checkroom,
+  7: Icons.bed,
+  8: Icons.local_hospital,
+  9: Icons.brush,
+  10: Icons.pets,
+  11: Icons.local_atm,
+  12: Icons.shower,
 });
