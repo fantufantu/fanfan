@@ -18,8 +18,6 @@ Future<void> initialize() async {
   // 获取持久化存储的token
   final token = storage.getString(describeEnum(StorageToken.token)) ?? '';
 
-  print(token);
-
   // 用户信息
   final userProfile = store.UserProfile()..setToken(token);
   // 分类
@@ -36,7 +34,6 @@ Future<void> initialize() async {
   }
   // 归属分类
   if (response.data?['categories'] != null) {
-    print(response.data!['categories']);
     category.belong(
         PaginatedCategories.fromJson(response.data!['categories']).items);
   }

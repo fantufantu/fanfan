@@ -89,9 +89,12 @@ class _State extends State<Editable> {
       return ElevatedButton(
           onPressed: () {},
           style: ButtonStyle(
-              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ))),
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
           child: const Text("请选择"));
     }
 
