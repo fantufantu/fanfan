@@ -39,7 +39,7 @@ class NavigationLayout extends StatelessWidget {
       activeIcon: Icon(CupertinoIcons.person_fill),
       routeName: NamedRoute.Profile,
       guardRouteName: NamedRoute.Authorization,
-      label: "我",
+      label: "我的",
     )
   ];
 
