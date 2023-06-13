@@ -13,4 +13,5 @@ final CategoryIcons = Map<int, IconData>.from({
   10: Icons.pets,
   11: Icons.local_atm,
   12: Icons.shower,
+  13: Icons.handshake,
 });
