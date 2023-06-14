@@ -1,10 +1,12 @@
 import 'package:fanfan/components/transaction/thumbnail.dart';
 import 'package:fanfan/layouts/main.dart';
+import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
 import 'package:fanfan/utils/confirm.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Transactions extends StatefulWidget {
   final int billingId;
@@ -93,6 +95,13 @@ class _State extends State<Transactions> {
     return true;
   }
 
+  /// 跳转到明细
+  void _navigateDetail(int id) {
+    context.pushNamed(NamedRoute.Transaction.name, pathParameters: {
+      "id": id.toString(),
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopLayout(
@@ -154,8 +163,12 @@ class _State extends State<Transactions> {
                         ),
                         child: Container(
                           margin: const EdgeInsets.only(top: 16),
-                          child: Thumbnail(
-                            transaction: _transactions.elementAt(index),
+                          child: InkWell(
+                            onTap: () => _navigateDetail(
+                                _transactions.elementAt(index).id!),
+                            child: Thumbnail(
+                              transaction: _transactions.elementAt(index),
+                            ),
                           ),
                         ),
                       ),

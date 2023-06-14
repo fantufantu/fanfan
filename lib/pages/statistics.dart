@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:fanfan/utils/bottom_action_sheet.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({
@@ -21,15 +22,17 @@ class Statistics extends StatefulWidget {
 }
 
 class _State extends State<Statistics> {
-  int _duration = 7;
-  List<Transaction> _transactions = [];
-  late int? _billingId;
+  /// 周期索引
+  int _durationIndex = 0;
 
-  final _supportDurations = const {
-    7: "This week",
-    30: "This month",
-    365: "This year",
-  };
+  /// 交易列表
+  List<Transaction> _transactions = [];
+
+  /// 账本id
+  late final int? _billingId;
+
+  /// 周期列表
+  late final List<_StatisticDuration> _durations;
 
   /// 当前对应的页码
   int _page = 0;
@@ -66,10 +69,45 @@ class _State extends State<Statistics> {
     });
   }
 
+  /// 初始化周期选项
+  _initDurations() {
+    final currentAt = DateTime.now();
+    final currentYear = currentAt.year;
+    final currentMonth = currentAt.month;
+    final currentDay = currentAt.day;
+    final currentWeekday = currentAt.weekday;
+    final currentStartAt = DateTime(currentYear, currentMonth, currentDay);
+
+    _durations = [
+      _StatisticDuration(
+        from: currentStartAt.subtract(Duration(days: currentWeekday - 1)),
+        label: '当周',
+      ),
+      _StatisticDuration(
+        from: DateTime(currentYear, currentMonth),
+        label: '当月',
+      ),
+      _StatisticDuration(
+        from: DateTime(currentYear),
+        label: '当年',
+      ),
+      _StatisticDuration(
+        from: currentStartAt.subtract(const Duration(days: 6)),
+        label: '过去7天',
+      ),
+      _StatisticDuration(
+        from: currentStartAt.subtract(const Duration(days: 29)),
+        label: '过去30天',
+      ),
+    ];
+  }
+
   @override
   initState() {
     super.initState();
 
+    // 周期选项
+    _initDurations();
     // 默认账本id
     _billingId = context.read<UserProfile>().whoAmI?.defaultBilling?.id;
     // 按着默认时间间隔请求交易列表
@@ -87,6 +125,25 @@ class _State extends State<Statistics> {
       }
       // 执行查询更多
       _fetchMore();
+    });
+  }
+
+  /// 修改周期
+  void _changeDuration() async {
+    final selectedIndex = await showBottomActionSheet(context,
+        actions: _durations.map(
+          (e) {
+            return e.label;
+          },
+        ).toList());
+
+    // 用户取消选择
+    if (selectedIndex == null) {
+      return;
+    }
+    // 修改时间周期，获取新的周期内的数据
+    setState(() {
+      _durationIndex = selectedIndex;
     });
   }
 
@@ -116,29 +173,7 @@ class _State extends State<Statistics> {
                               ),
                             ),
                             InkWell(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (_) {
-                                    return CupertinoActionSheet(
-                                      actions: _supportDurations.entries
-                                          .map<CupertinoActionSheetAction>(
-                                            (item) =>
-                                                CupertinoActionSheetAction(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _duration = item.key;
-                                                });
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text(item.value),
-                                            ),
-                                          )
-                                          .toList(),
-                                    );
-                                  },
-                                );
-                              },
+                              onTap: _changeDuration,
                               child: Container(
                                 padding: const EdgeInsets.only(
                                     left: 12, right: 12, top: 6, bottom: 6),
@@ -155,7 +190,9 @@ class _State extends State<Statistics> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      _supportDurations[_duration]!,
+                                      _durations
+                                          .elementAt(_durationIndex)
+                                          .label,
                                       style: const TextStyle(
                                         color: Colors.blue,
                                       ),
@@ -232,4 +269,14 @@ class _State extends State<Statistics> {
       ),
     );
   }
+}
+
+class _StatisticDuration {
+  final DateTime from;
+  final String label;
+
+  _StatisticDuration({
+    required this.from,
+    required this.label,
+  });
 }

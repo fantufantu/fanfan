@@ -20,6 +20,7 @@ import 'package:fanfan/pages/authorization/sign_up.dart';
 import 'package:fanfan/pages/billing/main.dart' as billing;
 import 'package:fanfan/pages/transaction/editable.dart' as transaction;
 import 'package:fanfan/pages/share.dart' as sharing;
+import 'package:fanfan/pages/transaction/main.dart' as transaction;
 import 'package:fanfan/service/entities/sharing/main.dart' as sharing_entities
     show Type;
 
@@ -167,6 +168,15 @@ class App extends StatelessWidget {
             target: int.parse(state.pathParameters['target']!),
             type: sharing_entities.Type.values
                 .asNameMap()[state.pathParameters['type']]!,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/transaction/:id',
+        name: NamedRoute.Transaction.name,
+        builder: (context, state) {
+          return transaction.Transaction(
+            id: int.parse(state.pathParameters['id']!),
           );
         },
       ),
