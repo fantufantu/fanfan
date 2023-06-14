@@ -93,23 +93,6 @@ class _State extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
     return NavigationLayout(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.grey.shade50,
-        title: Container(
-          margin: const EdgeInsets.only(left: 4),
-          child: const Text(
-            "Statistics",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              letterSpacing: 2,
-            ),
-          ),
-        ),
-        centerTitle: false,
-      ),
       child: Container(
         color: Colors.grey.shade50,
         child: CustomScrollView(

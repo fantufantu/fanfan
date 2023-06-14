@@ -3,6 +3,7 @@ import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
+import 'package:fanfan/utils/confirm.dart';
 import 'package:flutter/material.dart';
 
 class Transactions extends StatefulWidget {
@@ -76,6 +77,22 @@ class _State extends State<Transactions> {
     });
   }
 
+  Future<bool> _confirmDismiss(DismissDirection direction) async {
+    final action = await showConfirmDialog(
+      context,
+      title: const Text("用户确认"),
+      content: const Text("确认删除当前交易吗？"),
+    );
+
+    // 用户取消操作，直接返回 false
+    if (action == ConfirmAction.Cancel) {
+      return false;
+    }
+
+    // 请求删除交易
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopLayout(
@@ -99,10 +116,48 @@ class _State extends State<Transactions> {
                 slivers: [
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
-                      (context, index) => Container(
-                        margin: const EdgeInsets.only(top: 16),
-                        child: Thumbnail(
-                            transaction: _transactions.elementAt(index)),
+                      (context, index) => Dismissible(
+                        key: Key(_transactions.elementAt(index).id.toString()),
+                        direction: DismissDirection.endToStart,
+                        confirmDismiss: _confirmDismiss,
+                        background: Container(
+                          margin: const EdgeInsets.only(top: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                padding:
+                                    const EdgeInsets.only(left: 50, right: 50),
+                                height: double.infinity,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(16)),
+                                ),
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "删除",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: 2,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 16),
+                          child: Thumbnail(
+                            transaction: _transactions.elementAt(index),
+                          ),
+                        ),
                       ),
                       childCount: _transactions.length,
                     ),

@@ -7,12 +7,10 @@ import 'package:provider/provider.dart';
 
 class NavigationLayout extends StatelessWidget {
   final Widget child;
-  final PreferredSizeWidget? appBar;
 
   NavigationLayout({
     super.key,
     required this.child,
-    this.appBar,
   });
 
   final _navigationItems = [
@@ -22,32 +20,53 @@ class NavigationLayout extends StatelessWidget {
       routeName: NamedRoute.Home,
       label: "主页",
     ),
-    const _NavigationItem(
-      icon: Icon(CupertinoIcons.chart_bar_square),
-      activeIcon: Icon(CupertinoIcons.chart_bar_square_fill),
+    _NavigationItem(
+      icon: const Icon(CupertinoIcons.chart_bar_square),
+      activeIcon: const Icon(CupertinoIcons.chart_bar_square_fill),
       routeName: NamedRoute.Statistics,
       label: "统计",
+      appBar: _AppBar(
+        title: 'Statistics',
+        leading: _Leading(
+          icon: CupertinoIcons.chart_bar_square_fill,
+          color: Colors.amber.shade500,
+        ),
+        backgroundColor: Colors.grey.shade50,
+      ),
     ),
-    const _NavigationItem(
-      icon: Icon(CupertinoIcons.tickets),
-      activeIcon: Icon(CupertinoIcons.tickets_fill),
+    _NavigationItem(
+      icon: const Icon(CupertinoIcons.tickets),
+      activeIcon: const Icon(CupertinoIcons.tickets_fill),
       routeName: NamedRoute.Billings,
       label: "账本",
+      appBar: _AppBar(
+        title: '我的账本',
+        leading: _Leading(
+          icon: CupertinoIcons.tickets_fill,
+          color: Colors.blueGrey.shade500,
+        ),
+      ),
     ),
-    const _NavigationItem(
-      icon: Icon(CupertinoIcons.person),
-      activeIcon: Icon(CupertinoIcons.person_fill),
+    _NavigationItem(
+      icon: const Icon(CupertinoIcons.person),
+      activeIcon: const Icon(CupertinoIcons.person_fill),
       routeName: NamedRoute.Profile,
       guardRouteName: NamedRoute.Authorization,
       label: "我的",
+      appBar: _AppBar(
+        title: '关于我',
+        leading: _Leading(
+          icon: CupertinoIcons.person_fill,
+          color: Colors.orange.shade500,
+        ),
+      ),
     )
   ];
 
   /// 根据路由计算所在的导航位置
   int _calculateSelectedIndex(BuildContext context) {
-    return ['/statistics', '/billings', '/profile']
-            .indexOf(GoRouterState.of(context).location) +
-        1;
+    return _navigationItems.indexWhere(
+        (item) => item.routeName.name == GoRouterState.of(context).name);
   }
 
   /// 路由导航
@@ -62,14 +81,45 @@ class NavigationLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 当前导航所在索引
+    final selectedIndex = _calculateSelectedIndex(context);
+    // 当前导航
+    final selectedNavigationItem = _navigationItems.elementAt(selectedIndex);
+
     return Scaffold(
+      appBar: selectedNavigationItem.appBar != null
+          ? AppBar(
+              elevation: 0,
+              backgroundColor: selectedNavigationItem.appBar!.backgroundColor,
+              leading: selectedNavigationItem.appBar!.leading != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 28),
+                      child: Icon(
+                        selectedNavigationItem.appBar!.leading!.icon,
+                        color: selectedNavigationItem.appBar!.leading!.color,
+                        size: 32,
+                      ),
+                    )
+                  : null,
+              title: Text(
+                selectedNavigationItem.appBar!.title,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  letterSpacing: 2,
+                ),
+              ),
+              centerTitle: false,
+            )
+          : null,
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(top: 8),
         decoration: const BoxDecoration(
           color: Colors.white,
         ),
         child: BottomNavigationBar(
-          currentIndex: _calculateSelectedIndex(context),
+          currentIndex: selectedIndex,
           onTap: (int activeIndex) => _navigate(
             context,
             activeIndex: activeIndex,
@@ -102,7 +152,6 @@ class NavigationLayout extends StatelessWidget {
           backgroundColor: Colors.white,
         ),
       ),
-      appBar: appBar,
       body: SafeArea(
         child: SizedBox.expand(child: child),
       ),
@@ -116,6 +165,7 @@ class _NavigationItem {
   final Widget activeIcon;
   final NamedRoute routeName;
   final String label;
+  final _AppBar? appBar;
   final NamedRoute? guardRouteName;
 
   const _NavigationItem({
@@ -124,6 +174,7 @@ class _NavigationItem {
     required this.routeName,
     required this.label,
     this.guardRouteName,
+    this.appBar,
   });
 
   NamedRoute to(bool? isLoggedIn) {
@@ -133,4 +184,26 @@ class _NavigationItem {
             ? routeName
             : (guardRouteName ?? routeName);
   }
+}
+
+class _AppBar {
+  final String title;
+  final _Leading? leading;
+  final Color? backgroundColor;
+
+  _AppBar({
+    required this.title,
+    this.leading,
+    this.backgroundColor,
+  });
+}
+
+class _Leading {
+  final IconData icon;
+  final Color? color;
+
+  _Leading({
+    required this.icon,
+    this.color,
+  });
 }

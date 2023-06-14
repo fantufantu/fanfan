@@ -21,6 +21,8 @@ class _State extends State {
 
   @override
   void initState() {
+    super.initState();
+
     (() async {
       // 请求账本
       final paginatedBillings = await queryBillings();
@@ -30,33 +32,11 @@ class _State extends State {
         _billings = paginatedBillings.items;
       });
     })();
-
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return NavigationLayout(
-      appBar: AppBar(
-        elevation: 0,
-        leading: Padding(
-            padding: const EdgeInsets.only(left: 28),
-            child: Icon(
-              CupertinoIcons.tickets_fill,
-              color: Colors.deepOrange.shade500,
-              size: 32,
-            )),
-        title: const Text(
-          '我的账本',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-            letterSpacing: 2,
-          ),
-        ),
-        centerTitle: false,
-      ),
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: CustomScrollView(

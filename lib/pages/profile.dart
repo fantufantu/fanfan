@@ -3,6 +3,7 @@ import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/store/user_profile.dart';
+import 'package:fanfan/utils/confirm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -23,35 +24,23 @@ class Profile extends StatelessWidget {
         leading: CupertinoIcons.square_arrow_left,
         title: '登出',
         isLink: false,
-        onClick: () {
-          showCupertinoDialog(
-              context: context,
-              builder: (_) => CupertinoAlertDialog(
-                    content: const Text(
-                      "确认退出登录吗？",
-                      style: TextStyle(
-                        color: Colors.red,
-                      ),
-                    ),
-                    actions: [
-                      CupertinoDialogAction(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("取消"),
-                      ),
-                      CupertinoDialogAction(
-                        onPressed: () async {
-                          final isLoggedOut = await userProfile.logout();
-                          // 登出失败，不执行跳转
-                          if (!isLoggedOut) return;
-                          Navigator.of(context).pop();
-                          context.goNamed(NamedRoute.Authorization.name);
-                        },
-                        child: const Text("确认"),
-                      ),
-                    ],
-                  ));
+        onClick: () async {
+          final aciton = await showConfirmDialog(context,
+              title: const Text("用户确认"),
+              content: const Text(
+                "确认退出登录吗？",
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ));
+
+          // 用户取消
+          if (aciton == ConfirmAction.Cancel) return;
+          // 退出登录
+          final isLoggedOut = await userProfile.logout();
+          // 登出失败，不执行跳转
+          if (!isLoggedOut) return;
+          context.goNamed(NamedRoute.Authorization.name);
         },
         color: Colors.red,
         rotateAngle: pi,
@@ -97,23 +86,10 @@ class Profile extends StatelessWidget {
     final whoAmI = userProfile.whoAmI;
 
     if (whoAmI == null) {
-      return Loading();
+      return const Loading();
     }
 
     return NavigationLayout(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: false,
-        title: const Text(
-          "关于我",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-            letterSpacing: 2,
-          ),
-        ),
-      ),
       child: Padding(
         padding: const EdgeInsets.only(left: 32, right: 32, top: 20),
         child: Column(
