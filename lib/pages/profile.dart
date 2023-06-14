@@ -111,7 +111,7 @@ class Profile extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.only(top: 12),
-              child: Text(whoAmI.emailAddress),
+              child: Text(whoAmI.emailAddress!),
             ),
             const Divider(height: 40),
             // 服务列表

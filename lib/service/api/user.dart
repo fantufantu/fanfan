@@ -1,10 +1,10 @@
-import 'package:fanfan/service/entities/who_am_i.dart';
+import 'package:fanfan/service/entities/user.dart';
 import 'package:fanfan/service/schemas/user.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:graphql/client.dart';
 
 /// 利用用户关键字查询用户列表
-Future<List<WhoAmI>> queryUsers(String who) async {
+Future<List<User>> queryUsers(String who) async {
   final response = await Client().query(
     QueryOptions(
       document: USERS,
@@ -20,6 +20,6 @@ Future<List<WhoAmI>> queryUsers(String who) async {
   }
 
   return (response.data!['users'] as List<dynamic>)
-      .map((e) => WhoAmI.fromJson(e))
+      .map((e) => User.fromJson(e))
       .toList();
 }

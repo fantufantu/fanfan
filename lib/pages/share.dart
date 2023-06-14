@@ -1,7 +1,7 @@
 import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/service/api/sharing.dart';
 import 'package:fanfan/service/api/user.dart';
-import 'package:fanfan/service/entities/who_am_i.dart';
+import 'package:fanfan/service/entities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rxdart/rxdart.dart';
@@ -23,7 +23,7 @@ class Share extends StatefulWidget {
 }
 
 class _State extends State<Share> {
-  late List<WhoAmI> _users;
+  late List<User> _users;
   late PublishSubject<String> _userSearcher;
 
   @override
@@ -34,7 +34,7 @@ class _State extends State<Share> {
     _userSearcher = PublishSubject<String>()
       ..debounceTime(
         const Duration(seconds: 1),
-      ).asyncMap<List<WhoAmI>>(
+      ).asyncMap<List<User>>(
         (who) async {
           return who.isEmpty ? [] : await queryUsers(who);
         },
@@ -97,7 +97,7 @@ class _State extends State<Share> {
                           margin: const EdgeInsets.only(top: 20),
                           child: InkWell(
                             onTap: () {
-                              _onShare(_users.elementAt(index).id);
+                              _onShare(_users.elementAt(index).id!);
                             },
                             child: Thumbnail(
                               user: _users.elementAt(index),

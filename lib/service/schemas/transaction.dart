@@ -26,3 +26,22 @@ final TRANSACTIONS = gql('''
     }
   }
 ''');
+
+/// 根据id获取交易明细
+final TRANSACTION = gql('''
+  $CATEGORY_FRAGMENT
+  query Transaction(\$id: Int!) {
+    transaction(id: \$id) {
+      id
+      amount
+      happenedAt
+      remark
+      category {
+        ...CategoryFragment
+      }
+      createdBy {
+        username
+      }
+    }
+  }
+''');

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final CategoryIcons = Map<int, IconData>.from({
+final CATEGORY_ICONS = Map<int, IconData>.from({
   1: Icons.moped,
   2: Icons.music_note,
   3: Icons.fastfood,

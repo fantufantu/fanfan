@@ -1,5 +1,5 @@
 import 'package:fanfan/service/entities/paginated_categories.dart';
-import 'package:fanfan/service/entities/who_am_i.dart';
+import 'package:fanfan/service/entities/user.dart';
 import 'package:fanfan/service/schemas/application.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +18,8 @@ Future<void> initialize() async {
   // 获取持久化存储的token
   final token = storage.getString(describeEnum(StorageToken.token)) ?? '';
 
+  print(token);
+
   // 用户信息
   final userProfile = store.UserProfile()..setToken(token);
   // 分类
@@ -30,7 +32,7 @@ Future<void> initialize() async {
 
   // 归属用户信息
   if (response.data?['whoAmI'] != null) {
-    userProfile.belong(WhoAmI.fromJson(response.data!['whoAmI']));
+    userProfile.belong(User.fromJson(response.data!['whoAmI']));
   }
   // 归属分类
   if (response.data?['categories'] != null) {

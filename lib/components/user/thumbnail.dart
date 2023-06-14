@@ -1,8 +1,8 @@
-import 'package:fanfan/service/entities/who_am_i.dart';
+import 'package:fanfan/service/entities/user.dart';
 import 'package:flutter/material.dart';
 
 class Thumbnail extends StatefulWidget {
-  final WhoAmI user;
+  final User user;
 
   const Thumbnail({
     super.key,
@@ -24,8 +24,8 @@ class _State extends State<Thumbnail> {
       ),
       child: Column(
         children: [
-          Text(widget.user.username),
-          Text(widget.user.emailAddress),
+          Text(widget.user.username!),
+          Text(widget.user.emailAddress!),
         ],
       ),
     );

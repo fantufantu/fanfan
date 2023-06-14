@@ -1,4 +1,4 @@
-import 'package:fanfan/service/entities/who_am_i.dart';
+import 'package:fanfan/service/entities/user.dart';
 import 'package:fanfan/service/factories/entity.dart';
 
 enum LimitDuration {
@@ -32,7 +32,7 @@ class Billing extends Entity {
   String name;
 
   /// 账本创建人
-  WhoAmI? createdBy;
+  User? createdBy;
 
   /// 创建时间
   DateTime? createdAt;
@@ -46,9 +46,8 @@ class Billing extends Entity {
   factory Billing.fromJson(Map<String, dynamic> json) => Billing(
         id: json["id"],
         name: json['name'],
-        createdBy: json['createdBy'] != null
-            ? WhoAmI.fromJson(json['createdBy'])
-            : null,
+        createdBy:
+            json['createdBy'] != null ? User.fromJson(json['createdBy']) : null,
         createdAt: DateTime.tryParse(json['createdAt'].toString())?.toLocal(),
         limitAmount: double.tryParse(json['limitAmount'].toString()),
         limitDuration: LimitDuration.values.asNameMap()[json['limitDuration']],

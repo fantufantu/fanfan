@@ -1,8 +1,8 @@
 import 'package:fanfan/service/entities/billing/main.dart';
 import 'package:fanfan/service/factories/entity.dart';
 
-class WhoAmI implements Entity {
-  WhoAmI({
+class User implements Entity {
+  User({
     required this.id,
     required this.username,
     required this.emailAddress,
@@ -11,13 +11,13 @@ class WhoAmI implements Entity {
   });
 
   /// 用户id
-  int id;
+  int? id;
 
   /// 用户名
-  String username;
+  String? username;
 
   /// 邮箱地址
-  String emailAddress;
+  String? emailAddress;
 
   /// 头像地址
   String? avatar;
@@ -25,7 +25,7 @@ class WhoAmI implements Entity {
   /// 默认账本
   Billing? defaultBilling;
 
-  factory WhoAmI.fromJson(Map<String, dynamic> json) => WhoAmI(
+  factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         username: json["username"],
         emailAddress: json["emailAddress"],
@@ -46,11 +46,15 @@ class WhoAmI implements Entity {
 
   /// 用户名简称
   String get nickname {
+    if (username == null) {
+      return '未知用户';
+    }
+
     if (RegExp(r"^[a-f\d]{4}(?:[a-f\d]{4}-){4}[a-f\d]{12}$")
-        .hasMatch(username)) {
-      return '用户 ${username.substring(0, 4)}';
+        .hasMatch(username!)) {
+      return '用户 ${username!.substring(0, 4)}';
     } else {
-      return username;
+      return username!;
     }
   }
 }

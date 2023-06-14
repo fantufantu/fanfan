@@ -3,7 +3,7 @@ import 'package:fanfan/utils/application.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/schemas/user.dart';
-import 'package:fanfan/service/entities/who_am_i.dart';
+import 'package:fanfan/service/entities/user.dart';
 import 'package:graphql/client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +18,7 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   String _token = '';
 
   /// 用户信息
-  WhoAmI? _whoAmI;
+  User? _whoAmI;
 
   UserProfile._internal() {
     _client = Client();
@@ -30,7 +30,7 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
     return _token;
   }
 
-  WhoAmI? get whoAmI {
+  User? get whoAmI {
     return _whoAmI;
   }
 
@@ -40,7 +40,7 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
 
   /// 交换用户信息
   authorize() async {
-    final response = await _client.query<WhoAmI>(QueryOptions(
+    final response = await _client.query<User>(QueryOptions(
       document: WHO_AM_I,
       fetchPolicy: FetchPolicy.noCache,
     ));
@@ -49,7 +49,7 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
       _whoAmI = null;
       _token = '';
     } else {
-      _whoAmI = WhoAmI.fromJson(response.data!['whoAmI']);
+      _whoAmI = User.fromJson(response.data!['whoAmI']);
     }
 
     // 消息触达
@@ -57,7 +57,7 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   /// 归属用户信息
-  void belong(WhoAmI? whoAmI) {
+  void belong(User? whoAmI) {
     _whoAmI = whoAmI;
 
     // 消息触达
@@ -74,7 +74,7 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
 
   /// 刷新默认账本信息
   refreshDefaultBilling() async {
-    final response = await _client.query<WhoAmI>(QueryOptions(
+    final response = await _client.query<User>(QueryOptions(
       document: DEFAULT_BILLING,
       fetchPolicy: FetchPolicy.noCache,
     ));

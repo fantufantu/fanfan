@@ -34,7 +34,7 @@ class Thumbnail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
-              CategoryIcons[transaction.category!.id] ??
+              CATEGORY_ICONS[transaction.category!.id] ??
                   CupertinoIcons.money_yen_circle,
               size: 32,
               color: _primaryColor,

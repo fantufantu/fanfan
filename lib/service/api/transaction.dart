@@ -50,3 +50,23 @@ Future<PaginatedTransactions> queryTransactions({
 
   return PaginatedTransactions.fromJson(response.data!['transactions']);
 }
+
+/// 根据id获取交易明细
+Future<Transaction> queryTransactionById(int id) async {
+  final response = await Client().query(
+    QueryOptions(
+      document: TRANSACTION,
+      variables: {
+        "id": id,
+      },
+      fetchPolicy: FetchPolicy.noCache,
+    ),
+  );
+
+  if (response.hasException || response.data == null) {
+    reject(List.from(response.exception?.graphqlErrors ?? [])
+      ..add(const GraphQLError(message: '获取失败！')));
+  }
+
+  return Transaction.fromJson(response.data!['transaction']);
+}
