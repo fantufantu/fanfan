@@ -157,6 +157,7 @@ class App extends StatelessWidget {
         builder: (context, state) {
           return transaction.Editable(
             billing: (state.extra as Map<String, dynamic>?)?['billing'],
+            id: int.tryParse(state.queryParameters['id'] ?? ''),
           );
         },
       ),

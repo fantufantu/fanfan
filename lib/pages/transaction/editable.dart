@@ -2,6 +2,7 @@ import 'package:fanfan/components/form/date_picker_form_field.dart';
 import 'package:fanfan/components/form/picker_form_field.dart';
 import 'package:fanfan/components/form/switch_form_field.dart';
 import 'package:fanfan/components/picker.dart';
+import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/service/entities/billing/main.dart';
@@ -21,11 +22,16 @@ import 'package:fanfan/service/entities/transaction/editable.dart' as entities
     show Editable;
 
 class Editable extends StatefulWidget {
+  /// 账本信息
   final Billing? billing;
+
+  /// 交易id
+  final int? id;
 
   const Editable({
     super.key,
     this.billing,
+    this.id,
   });
 
   @override
@@ -33,6 +39,9 @@ class Editable extends StatefulWidget {
 }
 
 class _State extends State<Editable> {
+  /// 加载中
+  bool _isLoading = true;
+
   /// 表单
   final _formKey = GlobalKey<FormState>();
 
@@ -52,7 +61,7 @@ class _State extends State<Editable> {
   ];
 
   /// 当前交易方向下的分类
-  List<SelectOption> get _categoryOptions {
+  List<SelectOption<int>> get _categoryOptions {
     return context
         .read<Category>()
         .categories
@@ -65,21 +74,46 @@ class _State extends State<Editable> {
   void initState() {
     super.initState();
 
-    // 默认支出
-    _direction = entities.Direction.Out;
+    (() async {
+      if (widget.id == null) {
+        // 页面入参没有id时，初始化默认的编辑数据
+        return setState(() {
+          // 默认支出
+          _direction = entities.Direction.Out;
+          // 默认交易
+          _transaction = entities.Editable(
+            amount: 0,
+            billing: widget.billing ??
+                context.read<UserProfile>().whoAmI?.defaultBilling,
+            happenedAt:
+                DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now())),
+            remark: "",
+            categoryId: null,
+          );
+          // 停止加载
+          _isLoading = false;
+        });
+      }
 
-    // 页面入参没有id时，初始化默认的编辑数据
-    _transaction = entities.Editable(
-      amount: 0,
-      billing:
-          widget.billing ?? context.read<UserProfile>().whoAmI?.defaultBilling,
-      happenedAt:
-          DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now())),
-      remark: "",
-      categoryId: null,
-    );
+      // 页面传入id，请求服务端获取对应的交易数据
+      final transaction = await queryTransactionById(widget.id!);
 
-    // 页面传入id，请求服务端获取对应的交易数据
+      return setState(() {
+        // 方向
+        _direction = transaction.category!.direction;
+        // 交易内容
+        _transaction = entities.Editable(
+          amount: transaction.amount,
+          billing: transaction.billing ??
+              context.read<UserProfile>().whoAmI?.defaultBilling,
+          happenedAt: transaction.happenedAt,
+          remark: transaction.remark,
+          categoryId: transaction.category!.id,
+        );
+        // 停止加载
+        _isLoading = false;
+      });
+    })();
   }
 
   /// 渲染交易归属账本
@@ -105,6 +139,7 @@ class _State extends State<Editable> {
     );
   }
 
+  /// 提交表单
   _submit() async {
     // 校验表单完整
     final isValid = _formKey.currentState?.validate();
@@ -127,6 +162,13 @@ class _State extends State<Editable> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Loading();
+    }
+
+    final initialCategoryIndex = _categoryOptions
+        .indexWhere((element) => element.value == _transaction.categoryId);
+
     return PopLayout(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -159,7 +201,8 @@ class _State extends State<Editable> {
                             children: const Tuple2("支出", "收入"),
                             onChanged: (value) {
                               // 联动表单
-                              _categoryFormField.currentState?.reset();
+                              _categoryFormField.currentState?.didChange(null);
+                              // 状态变更
                               setState(() {
                                 _direction = _directions.elementAt(value);
                               });
@@ -222,6 +265,9 @@ class _State extends State<Editable> {
                               key: _categoryFormField,
                               options: _categoryOptions,
                               placeholder: "请选择分类",
+                              initialValue: initialCategoryIndex != -1
+                                  ? initialCategoryIndex
+                                  : null,
                               onSaved: (value) {
                                 _transaction.categoryId = (value == null
                                     ? null
@@ -243,6 +289,7 @@ class _State extends State<Editable> {
                               onSaved: (value) {
                                 _transaction.remark = value;
                               },
+                              initialValue: _transaction.remark,
                               decoration: const InputDecoration(
                                 labelText: "备注",
                                 alignLabelWithHint: true,

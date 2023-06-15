@@ -25,12 +25,24 @@ class Editable extends Entity {
   /// 交易备注
   String? remark;
 
+  factory Editable.fromJson(Map<String, dynamic> json) => Editable(
+        categoryId: json['categoryId'],
+        amount: double.tryParse(json['amount'].toString()),
+        happenedAt: json['happenedAt'] != null
+            ? DateTime.tryParse(json['happenedAt'])?.toLocal()
+            : null,
+        remark: json['remark'],
+        billing: json['createdBy'] != null
+            ? Billing.fromJson(json['createdBy'])
+            : null,
+      );
+
   @override
   Map<String, dynamic> toJson() => {
         "billingId": billing?.id,
         "categoryId": categoryId,
         "amount": amount,
         "happenedAt": happenedAt?.toString(),
-        "remark": remark
+        "remark": remark,
       };
 }

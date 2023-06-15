@@ -31,7 +31,7 @@ class _State extends State<Transaction> {
   void _edit() {
     context.pushNamed(
       NamedRoute.EditableTransaction.name,
-      pathParameters: {
+      queryParameters: {
         "id": widget.id.toString(),
       },
     );

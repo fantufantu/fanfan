@@ -1,6 +1,7 @@
 import 'package:fanfan/service/factories/entity.dart';
 import 'package:fanfan/service/entities/category.dart';
 import 'package:fanfan/service/entities/user.dart';
+import 'package:fanfan/service/entities/billing/main.dart';
 
 class Transaction extends Entity {
   Transaction({
@@ -12,6 +13,7 @@ class Transaction extends Entity {
     this.remark,
     this.category,
     this.createdBy,
+    this.billing,
   });
 
   /// 交易id
@@ -38,6 +40,9 @@ class Transaction extends Entity {
   /// 交易创建人
   User? createdBy;
 
+  /// billing
+  Billing? billing;
+
   factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
         id: json["id"],
         billingId: json['billingId'],
@@ -52,6 +57,8 @@ class Transaction extends Entity {
             : null,
         createdBy:
             json['createdBy'] != null ? User.fromJson(json['createdBy']) : null,
+        billing:
+            json['billing'] != null ? Billing.fromJson(json['billing']) : null,
       );
 
   @override
@@ -64,5 +71,6 @@ class Transaction extends Entity {
         "remark": remark,
         "category": category?.toJson(),
         "createdBy": createdBy?.toJson(),
+        "billing": billing?.toJson(),
       };
 }
