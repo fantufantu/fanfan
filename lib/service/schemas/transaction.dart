@@ -1,3 +1,4 @@
+import 'package:fanfan/service/schemas/billing.dart';
 import 'package:graphql/client.dart';
 import 'package:fanfan/service/schemas/category.dart' show CATEGORY_FRAGMENT;
 
@@ -30,6 +31,7 @@ final TRANSACTIONS = gql('''
 /// 根据id获取交易明细
 final TRANSACTION = gql('''
   $CATEGORY_FRAGMENT
+  $BILLING_FRAGMENT
   query Transaction(\$id: Int!) {
     transaction(id: \$id) {
       id
@@ -41,6 +43,9 @@ final TRANSACTION = gql('''
       }
       createdBy {
         username
+      }
+      billing {
+        ...BillingFragment
       }
     }
   }

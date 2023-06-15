@@ -100,7 +100,7 @@ class _State extends State<Transaction> {
     );
   }
 
-  bool get isExpense {
+  bool get _isExpense {
     return _transaction.category!.direction == Direction.Out;
   }
 
@@ -138,7 +138,7 @@ class _State extends State<Transaction> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: _isExpense ? Colors.red : Colors.blue,
                       borderRadius: BorderRadius.circular(99),
                     ),
                     padding: const EdgeInsets.all(16),
@@ -179,11 +179,11 @@ class _State extends State<Transaction> {
                       padding: const EdgeInsets.only(
                           top: 8, bottom: 8, left: 16, right: 16),
                       decoration: BoxDecoration(
-                        color: isExpense ? Colors.red : Colors.blue,
+                        color: _isExpense ? Colors.red : Colors.blue,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        isExpense ? '支出' : '收入',
+                        _isExpense ? '支出' : '收入',
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
