@@ -98,9 +98,12 @@ class _State extends State<Transactions> {
 
   /// 跳转到明细
   void _navigateDetail(int id) {
-    context.pushNamed(NamedRoute.Transaction.name, pathParameters: {
-      "id": id.toString(),
-    });
+    context.pushNamed(
+      NamedRoute.Transaction.name,
+      pathParameters: {
+        "id": id.toString(),
+      },
+    );
   }
 
   @override
@@ -131,6 +134,11 @@ class _State extends State<Transactions> {
                         direction: DismissDirection.endToStart,
                         confirmDismiss: (_) =>
                             _confirmDismiss(_transactions.elementAt(index).id!),
+                        onDismissed: (_) {
+                          setState(() {
+                            _transactions.removeAt(index);
+                          });
+                        },
                         background: Container(
                           margin: const EdgeInsets.only(top: 16),
                           child: Row(
