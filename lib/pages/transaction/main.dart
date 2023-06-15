@@ -66,9 +66,7 @@ class _State extends State<Transaction> {
       margin: const EdgeInsets.only(top: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: valueWidget != null
-            ? CrossAxisAlignment.center
-            : CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             label,

@@ -45,3 +45,10 @@ final TRANSACTION = gql('''
     }
   }
 ''');
+
+/// 根据id删除
+final REMOVE_TRANSACTION = gql(r'''
+  mutation RemoveTransaction($id: Int!) {
+    removeTransaction(id: $id)
+  }
+''');

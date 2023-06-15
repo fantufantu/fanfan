@@ -79,7 +79,7 @@ class _State extends State<Transactions> {
     });
   }
 
-  Future<bool> _confirmDismiss(DismissDirection direction) async {
+  Future<bool> _confirmDismiss(int id) async {
     final action = await showConfirmDialog(
       context,
       title: const Text("用户确认"),
@@ -92,7 +92,8 @@ class _State extends State<Transactions> {
     }
 
     // 请求删除交易
-    return true;
+    final isSucceed = await removeTransactionById(id);
+    return isSucceed;
   }
 
   /// 跳转到明细
@@ -128,7 +129,8 @@ class _State extends State<Transactions> {
                       (context, index) => Dismissible(
                         key: Key(_transactions.elementAt(index).id.toString()),
                         direction: DismissDirection.endToStart,
-                        confirmDismiss: _confirmDismiss,
+                        confirmDismiss: (_) =>
+                            _confirmDismiss(_transactions.elementAt(index).id!),
                         background: Container(
                           margin: const EdgeInsets.only(top: 16),
                           child: Row(

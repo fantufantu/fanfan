@@ -70,3 +70,20 @@ Future<Transaction> queryTransactionById(int id) async {
 
   return Transaction.fromJson(response.data!['transaction']);
 }
+
+/// 根据id删除交易
+Future<bool> removeTransactionById(int id) async {
+  final response = await Client().mutate(MutationOptions(
+    document: REMOVE_TRANSACTION,
+    variables: {
+      "id": id,
+    },
+  ));
+
+  if (response.hasException || response.data == null) {
+    reject(List.from(response.exception?.graphqlErrors ?? [])
+      ..add(const GraphQLError(message: '删除失败！')));
+  }
+
+  return response.data!['removeTransaction'];
+}
