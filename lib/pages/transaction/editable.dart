@@ -2,7 +2,7 @@ import 'package:fanfan/components/form/date_picker_form_field.dart';
 import 'package:fanfan/components/form/picker_form_field.dart';
 import 'package:fanfan/components/form/switch_form_field.dart';
 import 'package:fanfan/components/picker.dart';
-import 'package:fanfan/pages/loading.dart';
+import 'package:fanfan/layouts/loading_layout.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/service/entities/billing/main.dart';
@@ -174,7 +174,7 @@ class _State extends State<Editable> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Loading();
+      return const LoadingLayout();
     }
 
     final initialCategoryIndex = _categoryOptions

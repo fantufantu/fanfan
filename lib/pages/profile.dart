@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:fanfan/layouts/main.dart';
-import 'package:fanfan/pages/loading.dart';
+import 'package:fanfan/layouts/loading_layout.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:fanfan/utils/confirm.dart';
@@ -86,7 +86,7 @@ class Profile extends StatelessWidget {
     final whoAmI = userProfile.whoAmI;
 
     if (whoAmI == null) {
-      return const Loading();
+      return const LoadingLayout();
     }
 
     return NavigationLayout(

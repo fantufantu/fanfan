@@ -14,8 +14,6 @@ class _State extends State<Loading> with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> animation;
 
-  Loading() {}
-
   @override
   initState() {
     super.initState();
@@ -30,16 +28,15 @@ class _State extends State<Loading> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AnimatedBuilder(
-          animation: animation,
-          builder: (ctx, _) {
-            return Center(
-              child: CustomPaint(
-                painter: CirclePainter(value: animation.value),
-              ),
-            );
-          }),
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (ctx, _) {
+        return Center(
+          child: CustomPaint(
+            painter: CirclePainter(value: animation.value),
+          ),
+        );
+      },
     );
   }
 

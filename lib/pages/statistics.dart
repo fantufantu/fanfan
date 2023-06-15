@@ -263,7 +263,7 @@ class _State extends State<Statistics> {
                 ),
                 childCount: _transactions.length,
               ),
-            )
+            ),
           ],
         ),
       ),

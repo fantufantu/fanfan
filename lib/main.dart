@@ -2,7 +2,7 @@ import 'package:fanfan/pages/authorization/main.dart';
 import 'package:fanfan/pages/billings.dart';
 import 'package:fanfan/pages/home.dart';
 import 'package:fanfan/layouts/main.dart' show NavigationLayout;
-import 'package:fanfan/pages/loading.dart';
+import 'package:fanfan/layouts/loading_layout.dart';
 import 'package:fanfan/pages/profile.dart';
 import 'package:fanfan/pages/statistics.dart';
 import 'package:fanfan/pages/transactions.dart';
@@ -58,7 +58,7 @@ class App extends StatelessWidget {
       return [
         GoRoute(
           path: '/',
-          builder: (context, state) => const Loading(),
+          builder: (context, state) => const LoadingLayout(),
         )
       ];
     }

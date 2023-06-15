@@ -1,6 +1,6 @@
 import 'package:fanfan/assets/category.dart';
 import 'package:fanfan/layouts/main.dart';
-import 'package:fanfan/pages/loading.dart';
+import 'package:fanfan/layouts/loading_layout.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/service/entities/direction.dart';
@@ -107,7 +107,7 @@ class _State extends State<Transaction> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Loading();
+      return const LoadingLayout();
     }
 
     return PopLayout(
