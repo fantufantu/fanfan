@@ -52,3 +52,10 @@ final REMOVE_TRANSACTION = gql(r'''
     removeTransaction(id: $id)
   }
 ''');
+
+/// 更新
+final UPDATE_TRANSACTION = gql(r'''
+  mutation UpdateTransaction($id: Int!, $updateBy: UpdateTransactionBy!) {
+    updateTransaction(id: $id, updateBy: $updateBy)
+  }
+''');

@@ -6,6 +6,7 @@ import 'package:fanfan/service/schemas/transaction.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:graphql/client.dart';
 
+/// 创建
 Future<Transaction> createTransaction({
   required Editable editable,
 }) async {
@@ -26,6 +27,7 @@ Future<Transaction> createTransaction({
   return Transaction.fromJson(response.data!['createTransaction']);
 }
 
+/// 查询列表
 Future<PaginatedTransactions> queryTransactions({
   required int billingId,
   required PaginateBy paginateBy,
@@ -86,4 +88,27 @@ Future<bool> removeTransactionById(int id) async {
   }
 
   return response.data!['removeTransaction'];
+}
+
+/// 更新
+Future<bool> updateTransactionById({
+  required int id,
+  required Editable editable,
+}) async {
+  final response = await Client().mutate(MutationOptions(
+    document: UPDATE_TRANSACTION,
+    variables: Map.from(
+      {
+        "id": id,
+        "updateBy": editable.toJson(),
+      },
+    ),
+  ));
+
+  if (response.hasException || response.data == null) {
+    reject(List.from(response.exception?.graphqlErrors ?? [])
+      ..add(const GraphQLError(message: '更新失败！')));
+  }
+
+  return response.data!['updateTransaction'];
 }

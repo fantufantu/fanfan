@@ -149,15 +149,26 @@ class _State extends State<Editable> {
 
     // 保存表单数据
     _formKey.currentState?.save();
-    // 向服务端请求
-    await createTransaction(editable: _transaction);
-    // 重定向到交易页
-    GoRouter.of(context).replaceNamed(
-      NamedRoute.Transactions.name,
-      pathParameters: {
-        "billingId": _transaction.billing!.id.toString(),
-      },
-    );
+    // 向服务端请求：存在id时，更新；不存在id时，创建
+    (() async {
+      if (widget.id != null) {
+        await updateTransactionById(
+          id: widget.id!,
+          editable: _transaction,
+        );
+        return widget.id!;
+      }
+      return (await createTransaction(editable: _transaction)).id!;
+    })()
+        .then((transactionId) {
+      // 重定向到交易页
+      GoRouter.of(context).replaceNamed(
+        NamedRoute.Transaction.name,
+        pathParameters: {
+          "id": transactionId.toString(),
+        },
+      );
+    });
   }
 
   @override
