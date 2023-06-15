@@ -3,6 +3,7 @@ import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/pages/loading.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
+import 'package:fanfan/service/entities/direction.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fanfan/service/entities/transaction/main.dart' as entities;
@@ -53,13 +54,21 @@ class _State extends State<Transaction> {
   /// item渲染
   Widget _buildDetailItem({
     required String label,
-    required String value,
+    String? value,
+    Widget? valueWidget,
   }) {
+    assert(value == null || valueWidget == null,
+        'Cannot provide both a value and a valueWidget');
+    assert(value != null || valueWidget != null,
+        'Must provide a value or a valueWidget');
+
     return Container(
       margin: const EdgeInsets.only(top: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: valueWidget != null
+            ? CrossAxisAlignment.center
+            : CrossAxisAlignment.start,
         children: [
           Text(
             label,
@@ -71,21 +80,30 @@ class _State extends State<Transaction> {
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(left: 32),
-              child: Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                maxLines: 3,
-                textAlign: TextAlign.end,
-              ),
+              child: valueWidget != null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [valueWidget],
+                    )
+                  : Text(
+                      value!,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      maxLines: 3,
+                      textAlign: TextAlign.end,
+                    ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  bool get isExpense {
+    return _transaction.category!.direction == Direction.Out;
   }
 
   @override
@@ -156,6 +174,24 @@ class _State extends State<Transaction> {
                   _buildDetailItem(
                     label: '交易ID',
                     value: _transaction.id.toString(),
+                  ),
+                  _buildDetailItem(
+                    label: '交易方向',
+                    valueWidget: Container(
+                      padding: const EdgeInsets.only(
+                          top: 8, bottom: 8, left: 16, right: 16),
+                      decoration: BoxDecoration(
+                        color: isExpense ? Colors.red : Colors.blue,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        isExpense ? '支出' : '收入',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
