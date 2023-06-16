@@ -61,61 +61,58 @@ Future<ConfirmAction> showConfirmBottomSheet(
   }
 
   // 操作按钮
-  widgets.add(Container(
-    padding: const EdgeInsets.only(left: 20, right: 20),
-    child: Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.only(left: 12, right: 12),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                elevation: const MaterialStatePropertyAll(0),
-                backgroundColor: MaterialStatePropertyAll(Colors.blue.shade50),
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(99))),
-                padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
-              ),
-              onPressed: () {
-                Navigator.pop(context, ConfirmAction.Cancel);
-              },
-              child: const Text(
-                "取消",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.blue,
-                  letterSpacing: 3,
-                ),
+  widgets.add(Row(
+    children: [
+      Expanded(
+        child: Container(
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child: ElevatedButton(
+            style: ButtonStyle(
+              elevation: const MaterialStatePropertyAll(0),
+              backgroundColor: MaterialStatePropertyAll(Colors.blue.shade50),
+              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(99))),
+              padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
+            ),
+            onPressed: () {
+              Navigator.pop(context, ConfirmAction.Cancel);
+            },
+            child: const Text(
+              "取消",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.blue,
+                letterSpacing: 3,
               ),
             ),
           ),
         ),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.only(left: 12, right: 12),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(99))),
-                padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
-              ),
-              onPressed: () {
-                Navigator.pop(context, ConfirmAction.Ok);
-              },
-              child: const Text(
-                "确认",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 3,
-                ),
+      ),
+      Expanded(
+        child: Container(
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child: ElevatedButton(
+            style: ButtonStyle(
+              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(99))),
+              padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
+            ),
+            onPressed: () {
+              Navigator.pop(context, ConfirmAction.Ok);
+            },
+            child: const Text(
+              "确认",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 3,
               ),
             ),
           ),
-        )
-      ],
-    ),
+        ),
+      )
+    ],
   ));
 
   return (await showModalBottomSheet<ConfirmAction>(
@@ -129,11 +126,14 @@ Future<ConfirmAction> showConfirmBottomSheet(
           useSafeArea: true,
           showDragHandle: true,
           builder: (context) {
-            return SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: widgets,
+            return Container(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: widgets,
+                ),
               ),
             );
           })) ??
