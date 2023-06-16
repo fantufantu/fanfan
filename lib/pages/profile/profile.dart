@@ -40,7 +40,7 @@ class _State extends State<Profile> {
         title: '登出',
         isLink: false,
         onClick: () async {
-          final aciton = await showConfirmDialog(
+          final aciton = await showConfirmBottomSheet(
             context,
             title: const Text("用户确认"),
             content: const Text(

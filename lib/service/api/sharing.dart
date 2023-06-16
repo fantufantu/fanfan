@@ -6,7 +6,7 @@ import 'package:graphql/client.dart';
 Future<bool> createSharing({
   required int targetId,
   required Type targetType,
-  required List<int> sharedByIds,
+  required int sharedById,
 }) async {
   final response = await Client().mutate(MutationOptions(
     document: CREATE_SHARING,
@@ -14,7 +14,7 @@ Future<bool> createSharing({
       "createBy": {
         "targetId": targetId,
         "targetType": targetType.name,
-        "sharedByIds": sharedByIds,
+        "sharedById": sharedById,
       }
     },
   ));

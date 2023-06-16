@@ -49,7 +49,7 @@ class _State extends State<Share> {
     final isSucceed = await createSharing(
       targetId: widget.target,
       targetType: widget.type,
-      sharedByIds: [userId],
+      sharedById: userId,
     );
 
     if (isSucceed) {

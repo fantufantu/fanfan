@@ -5,6 +5,7 @@ enum ConfirmAction {
   Cancel,
 }
 
+/// 确认对话框
 Future<ConfirmAction> showConfirmDialog(
   BuildContext context, {
   Widget? title,
@@ -33,5 +34,108 @@ Future<ConfirmAction> showConfirmDialog(
           );
         },
       )) ??
+      ConfirmAction.Cancel;
+}
+
+/// 底部确认弹窗
+Future<ConfirmAction> showConfirmBottomSheet(
+  BuildContext context, {
+  Widget? title,
+  Widget? content,
+}) async {
+  final List<Widget> widgets = [];
+
+  // 标题
+  if (title != null) {
+    widgets.addAll([
+      title,
+      const Divider(height: 32),
+    ]);
+  }
+
+  if (content != null) {
+    widgets.add(Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      child: content,
+    ));
+  }
+
+  // 操作按钮
+  widgets.add(Container(
+    padding: const EdgeInsets.only(left: 20, right: 20),
+    child: Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.only(left: 12, right: 12),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                elevation: const MaterialStatePropertyAll(0),
+                backgroundColor: MaterialStatePropertyAll(Colors.blue.shade50),
+                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(99))),
+                padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
+              ),
+              onPressed: () {
+                Navigator.pop(context, ConfirmAction.Cancel);
+              },
+              child: const Text(
+                "取消",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.blue,
+                  letterSpacing: 3,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.only(left: 12, right: 12),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(99))),
+                padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
+              ),
+              onPressed: () {
+                Navigator.pop(context, ConfirmAction.Ok);
+              },
+              child: const Text(
+                "确认",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 3,
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    ),
+  ));
+
+  return (await showModalBottomSheet<ConfirmAction>(
+          context: context,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(32),
+              topRight: Radius.circular(32),
+            ),
+          ),
+          useSafeArea: true,
+          showDragHandle: true,
+          builder: (context) {
+            return SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: widgets,
+              ),
+            );
+          })) ??
       ConfirmAction.Cancel;
 }
