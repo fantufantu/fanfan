@@ -125,7 +125,7 @@ class _State extends State<LimitSettings> {
                   Container(
                     margin: const EdgeInsets.only(top: 12),
                     child: TextFormField(
-                      initialValue: _limitSettings.limitAmount.toString(),
+                      initialValue: _limitSettings.limitAmount?.toString(),
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                         signed: false,

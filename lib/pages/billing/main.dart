@@ -218,8 +218,8 @@ class _State extends State<Billing> {
                           "id": _billing!.id.toString(),
                         },
                         queryParameters: {
-                          "limitAmount": _billing!.limitAmount!.toString(),
-                          "limitDuration": _billing!.limitDuration!.name,
+                          "limitAmount": _billing!.limitAmount?.toString(),
+                          "limitDuration": _billing!.limitDuration?.name,
                         },
                       );
                     },
@@ -256,10 +256,13 @@ class _State extends State<Billing> {
 
   /// 分享账本
   void _share() {
-    GoRouter.of(context).pushNamed(NamedRoute.Share.name, pathParameters: {
-      "type": sharing.Type.Billing.name,
-      "target": _billing!.id.toString(),
-    });
+    GoRouter.of(context).pushNamed(
+      NamedRoute.Share.name,
+      pathParameters: {
+        "type": sharing.Type.Billing.name,
+        "target": _billing!.id.toString(),
+      },
+    );
   }
 
   /// 记一笔
