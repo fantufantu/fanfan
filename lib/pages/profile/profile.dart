@@ -42,11 +42,20 @@ class _State extends State<Profile> {
         onClick: () async {
           final aciton = await showConfirmBottomSheet(
             context,
-            title: const Text("用户确认"),
+            title: const Text(
+              "用户确认",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.red,
+              ),
+            ),
             content: const Text(
               "确认退出登录吗？",
               style: TextStyle(
-                color: Colors.red,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 2,
               ),
             ),
           );
