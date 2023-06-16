@@ -1,7 +1,9 @@
 enum NamedRoute {
   Home,
   Statistics,
+
   Profile,
+  EditableProfile,
 
   Authorization,
   SignIn,

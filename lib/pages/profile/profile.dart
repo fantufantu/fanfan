@@ -9,35 +9,51 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({
     super.key,
   });
 
-  /// 功能
-  Widget _buildServices(
-    BuildContext context, {
-    required UserProfile userProfile,
-  }) {
-    final services = [
+  @override
+  State<Profile> createState() => _State();
+}
+
+class _State extends State<Profile> {
+  late final List<_Service> _services;
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// 功能列表数据
+    _services = [
+      _Service(
+        leading: CupertinoIcons.person,
+        title: '修改信息',
+        isLink: true,
+        onClick: () {
+          context.pushNamed(NamedRoute.EditableProfile.name);
+        },
+      ),
       _Service(
         leading: CupertinoIcons.square_arrow_left,
         title: '登出',
         isLink: false,
         onClick: () async {
-          final aciton = await showConfirmDialog(context,
-              title: const Text("用户确认"),
-              content: const Text(
-                "确认退出登录吗？",
-                style: TextStyle(
-                  color: Colors.red,
-                ),
-              ));
-
+          final aciton = await showConfirmDialog(
+            context,
+            title: const Text("用户确认"),
+            content: const Text(
+              "确认退出登录吗？",
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+          );
           // 用户取消
           if (aciton == ConfirmAction.Cancel) return;
           // 退出登录
-          final isLoggedOut = await userProfile.logout();
+          final isLoggedOut = await context.read<UserProfile>().logout();
           // 登出失败，不执行跳转
           if (!isLoggedOut) return;
           context.goNamed(NamedRoute.Authorization.name);
@@ -46,33 +62,50 @@ class Profile extends StatelessWidget {
         rotateAngle: pi,
       )
     ];
+  }
 
+  /// 渲染功能列表
+  Widget _buildServices() {
     return Column(
-      children: services
+      children: _services
           .map(
-            (item) => InkWell(
-              onTap: item.onClick,
-              child: Row(
-                children: [
-                  Transform.rotate(
-                    angle: item.rotateAngle,
-                    child: Icon(
-                      item.leading,
-                      color: item.color,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 20),
-                    child: Text(
-                      item.title,
-                      style: TextStyle(
+            (item) => Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              child: InkWell(
+                onTap: item.onClick,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Transform.rotate(
+                      angle: item.rotateAngle,
+                      child: Icon(
+                        item.leading,
                         color: item.color,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
                       ),
                     ),
-                  )
-                ],
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        item.title,
+                        style: TextStyle(
+                          color: item.color,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      child: item.isLink
+                          ? Icon(
+                              CupertinoIcons.right_chevron,
+                              color: Colors.grey.shade600,
+                              size: 20,
+                            )
+                          : null,
+                    )
+                  ],
+                ),
               ),
             ),
           )
@@ -115,7 +148,7 @@ class Profile extends StatelessWidget {
             ),
             const Divider(height: 40),
             // 服务列表
-            _buildServices(context, userProfile: userProfile),
+            _buildServices(),
           ],
         ),
       ),
@@ -127,20 +160,20 @@ class _Service {
   _Service({
     required this.leading,
     required this.title,
-    required this.isLink,
     required this.onClick,
-    required this.color,
-    required rotateAngle,
+    required this.isLink,
+    this.color,
+    rotateAngle,
   }) : _rotateAngle = rotateAngle ?? 0;
 
   final IconData leading;
   final String title;
   final bool isLink;
-  final Color color;
-  final double _rotateAngle;
+  final Color? color;
+  final double? _rotateAngle;
   final void Function()? onClick;
 
   double get rotateAngle {
-    return _rotateAngle;
+    return _rotateAngle ?? 0;
   }
 }

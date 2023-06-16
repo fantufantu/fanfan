@@ -3,7 +3,8 @@ import 'package:fanfan/pages/billings.dart';
 import 'package:fanfan/pages/home.dart';
 import 'package:fanfan/layouts/main.dart' show NavigationLayout;
 import 'package:fanfan/layouts/loading_layout.dart';
-import 'package:fanfan/pages/profile.dart';
+import 'package:fanfan/pages/profile/profile.dart' as profile;
+import 'package:fanfan/pages/profile/editable.dart' as profile;
 import 'package:fanfan/pages/statistics.dart';
 import 'package:fanfan/pages/transactions.dart';
 import 'package:fanfan/router/main.dart';
@@ -73,7 +74,14 @@ class App extends StatelessWidget {
       GoRoute(
         path: '/profile',
         name: NamedRoute.Profile.name,
-        pageBuilder: (context, state) => const MaterialPage(child: Profile()),
+        builder: (context, state) => const profile.Profile(),
+        routes: [
+          GoRoute(
+            path: 'editable',
+            name: NamedRoute.EditableProfile.name,
+            builder: (context, state) => const profile.Editable(),
+          ),
+        ],
       ),
       GoRoute(
         path: '/billings',
