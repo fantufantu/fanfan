@@ -162,10 +162,13 @@ class _State extends State<Editable> {
     })()
         .then((transactionId) {
       // 重定向到交易页
-      GoRouter.of(context).goNamed(
+      GoRouter.of(context).pushReplacementNamed(
         NamedRoute.Transaction.name,
         pathParameters: {
           "id": transactionId.toString(),
+        },
+        queryParameters: {
+          "isOneMore": (widget.id == null).toString(),
         },
       );
     });

@@ -10,11 +10,16 @@ import 'package:fanfan/service/entities/transaction/main.dart' as entities;
 import 'package:intl/intl.dart';
 
 class Transaction extends StatefulWidget {
+  /// 交易id
   final int id;
+
+  /// 再记一笔
+  final bool? isOneMore;
 
   const Transaction({
     super.key,
     required this.id,
+    this.isOneMore,
   });
 
   @override
@@ -28,11 +33,22 @@ class _State extends State<Transaction> {
   /// 加载中
   bool isLoading = true;
 
+  /// 修改当前
   void _edit() {
-    context.pushNamed(
+    context.replaceNamed(
       NamedRoute.EditableTransaction.name,
       queryParameters: {
         "id": widget.id.toString(),
+      },
+    );
+  }
+
+  /// 再加一笔
+  void _oneMore() {
+    context.replaceNamed(
+      NamedRoute.EditableTransaction.name,
+      extra: {
+        "billing": _transaction.billing,
       },
     );
   }
@@ -104,6 +120,37 @@ class _State extends State<Transaction> {
     return _transaction.category!.direction == Direction.Out;
   }
 
+  /// 渲染再加一笔
+  List<Widget> _buildOneMore() {
+    if (!(widget.isOneMore == true)) return [];
+
+    return [
+      Container(
+        margin: const EdgeInsets.only(top: 20),
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: _oneMore,
+          style: ButtonStyle(
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(99),
+              ),
+            ),
+            padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
+          ),
+          child: const Text(
+            "再加一笔",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.5,
+            ),
+          ),
+        ),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -125,77 +172,90 @@ class _State extends State<Transaction> {
         padding: const EdgeInsets.only(left: 32, right: 32),
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 20),
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: const BorderRadius.all(Radius.circular(32)),
-                boxShadow: kElevationToShadow[1],
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: _isExpense ? Colors.red : Colors.blue,
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Icon(
-                      CATEGORY_ICONS[_transaction.category!.id],
-                      color: Colors.white,
-                    ),
-                  ),
-                  const Divider(height: 32),
-                  _buildDetailItem(
-                    label: '金额',
-                    value: '￥${_transaction.amount}',
-                  ),
-                  _buildDetailItem(
-                    label: '分类',
-                    value: _transaction.category!.name,
-                  ),
-                  _buildDetailItem(
-                    label: '备注',
-                    value: _transaction.remark!,
-                  ),
-                  _buildDetailItem(
-                    label: '消费人',
-                    value: _transaction.createdBy!.nickname,
-                  ),
-                  _buildDetailItem(
-                    label: '交易日期',
-                    value: DateFormat('yyyy-MM-dd')
-                        .format(_transaction.happenedAt!),
-                  ),
-                  _buildDetailItem(
-                    label: '交易ID',
-                    value: _transaction.id.toString(),
-                  ),
-                  _buildDetailItem(
-                    label: '交易方向',
-                    valueWidget: Container(
-                      padding: const EdgeInsets.only(
-                          top: 8, bottom: 8, left: 16, right: 16),
-                      decoration: BoxDecoration(
-                        color: _isExpense ? Colors.red : Colors.blue,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        _isExpense ? '支出' : '收入',
-                        style: const TextStyle(
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(top: 20),
+                        padding: const EdgeInsets.all(32),
+                        decoration: BoxDecoration(
                           color: Colors.white,
-                          fontWeight: FontWeight.w600,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(32)),
+                          boxShadow: kElevationToShadow[1],
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: _isExpense ? Colors.red : Colors.blue,
+                                borderRadius: BorderRadius.circular(99),
+                              ),
+                              padding: const EdgeInsets.all(16),
+                              child: Icon(
+                                CATEGORY_ICONS[_transaction.category!.id],
+                                color: Colors.white,
+                              ),
+                            ),
+                            const Divider(height: 32),
+                            _buildDetailItem(
+                              label: '金额',
+                              value: '￥${_transaction.amount}',
+                            ),
+                            _buildDetailItem(
+                              label: '分类',
+                              value: _transaction.category!.name,
+                            ),
+                            _buildDetailItem(
+                              label: '备注',
+                              value: _transaction.remark!,
+                            ),
+                            _buildDetailItem(
+                              label: '消费人',
+                              value: _transaction.createdBy!.nickname,
+                            ),
+                            _buildDetailItem(
+                              label: '交易日期',
+                              value: DateFormat('yyyy-MM-dd')
+                                  .format(_transaction.happenedAt!),
+                            ),
+                            _buildDetailItem(
+                              label: '交易ID',
+                              value: _transaction.id.toString(),
+                            ),
+                            _buildDetailItem(
+                              label: '交易方向',
+                              valueWidget: Container(
+                                padding: const EdgeInsets.only(
+                                    top: 8, bottom: 8, left: 16, right: 16),
+                                decoration: BoxDecoration(
+                                  color: _isExpense ? Colors.red : Colors.blue,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  _isExpense ? '支出' : '收入',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                      childCount: 1,
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
+            ..._buildOneMore(),
             Container(
-              margin: const EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 20, bottom: 12),
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _edit,
@@ -216,7 +276,7 @@ class _State extends State<Transaction> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

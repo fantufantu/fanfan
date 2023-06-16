@@ -178,6 +178,8 @@ class App extends StatelessWidget {
         builder: (context, state) {
           return transaction.Transaction(
             id: int.parse(state.pathParameters['id']!),
+            isOneMore:
+                bool.tryParse(state.queryParameters['isOneMore'] ?? 'false'),
           );
         },
       ),
