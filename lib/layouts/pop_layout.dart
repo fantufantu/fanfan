@@ -8,6 +8,7 @@ class PopLayout extends StatelessWidget {
   final Widget? title;
   final bool? centerTitle;
   final Widget? floatingActionButton;
+  final VoidCallback? onPop;
 
   const PopLayout({
     super.key,
@@ -16,6 +17,7 @@ class PopLayout extends StatelessWidget {
     this.title,
     this.centerTitle,
     this.floatingActionButton,
+    this.onPop,
   });
 
   @override
@@ -30,9 +32,10 @@ class PopLayout extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.only(left: 24),
           child: IconButton(
-            onPressed: () => context.canPop()
-                ? context.pop()
-                : context.goNamed(NamedRoute.Home.name),
+            onPressed: onPop ??
+                () => context.canPop()
+                    ? context.pop()
+                    : context.goNamed(NamedRoute.Home.name),
             icon: const Icon(
               Icons.arrow_back,
               color: Colors.black,

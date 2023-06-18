@@ -97,13 +97,25 @@ class _State extends State<Transactions> {
   }
 
   /// 跳转到明细
-  void _navigateDetail(int id) {
-    context.pushNamed(
+  void _navigateDetail(int id) async {
+    final edited = await context.pushNamed<Transaction>(
       NamedRoute.Transaction.name,
       pathParameters: {
         "id": id.toString(),
       },
     );
+
+    if (edited == null) return;
+
+    // 修改交易，更新列表
+    setState(() {
+      _transactions.singleWhere((element) => element.id == edited.id)
+        ..amount = edited.amount
+        ..categoryId = edited.categoryId
+        ..category = edited.category
+        ..happenedAt = edited.happenedAt
+        ..remark = edited.remark;
+    });
   }
 
   @override

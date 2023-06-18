@@ -166,6 +166,7 @@ class App extends StatelessWidget {
           return transaction.Editable(
             billing: (state.extra as Map<String, dynamic>?)?['billing'],
             id: int.tryParse(state.queryParameters['id'] ?? ''),
+            to: NamedRoute.values.asNameMap()[state.queryParameters['to']],
           );
         },
       ),

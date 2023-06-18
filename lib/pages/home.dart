@@ -33,7 +33,12 @@ class Home extends StatelessWidget {
         color: Colors.deepOrange,
         label: '记一笔',
         icon: CupertinoIcons.money_dollar,
-        onPressed: () => context.pushNamed(NamedRoute.EditableTransaction.name),
+        onPressed: () => context.pushNamed(
+          NamedRoute.EditableTransaction.name,
+          queryParameters: {
+            "to": NamedRoute.Transaction.name,
+          },
+        ),
       ),
       ServiceEntry(
         color: Colors.purple,

@@ -31,16 +31,31 @@ class _State extends State<Transaction> {
   late entities.Transaction _transaction;
 
   /// 加载中
-  bool isLoading = true;
+  bool _isLoading = true;
+
+  /// 是否编辑过
+  bool _isEdited = false;
 
   /// 修改当前
-  void _edit() {
-    context.replaceNamed(
+  void _edit() async {
+    final edited = await context.pushNamed<entities.Transaction>(
       NamedRoute.EditableTransaction.name,
       queryParameters: {
         "id": widget.id.toString(),
       },
     );
+
+    if (edited == null) return;
+
+    setState(() {
+      _isEdited = true;
+      _transaction
+        ..amount = edited.amount
+        ..categoryId = edited.categoryId
+        ..category = edited.category
+        ..happenedAt = edited.happenedAt
+        ..remark = edited.remark;
+    });
   }
 
   /// 再加一笔
@@ -62,7 +77,7 @@ class _State extends State<Transaction> {
 
       setState(() {
         _transaction = transaction;
-        isLoading = false;
+        _isLoading = false;
       });
     })();
   }
@@ -153,7 +168,7 @@ class _State extends State<Transaction> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
+    if (_isLoading) {
       return const LoadingLayout();
     }
 
@@ -167,6 +182,7 @@ class _State extends State<Transaction> {
         ),
       ),
       centerTitle: false,
+      onPop: _isEdited ? () => context.pop(_transaction) : null,
       backgroundColor: Colors.grey.shade50,
       child: Container(
         padding: const EdgeInsets.only(left: 32, right: 32),

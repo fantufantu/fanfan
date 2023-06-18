@@ -20,6 +20,8 @@ import 'package:fanfan/service/entities/direction.dart' as entities
     show Direction;
 import 'package:fanfan/service/entities/transaction/editable.dart' as entities
     show Editable;
+import 'package:fanfan/service/entities/transaction/main.dart' as entities
+    show Transaction;
 
 class Editable extends StatefulWidget {
   /// 账本信息
@@ -28,10 +30,14 @@ class Editable extends StatefulWidget {
   /// 交易id
   final int? id;
 
+  /// 页面来源
+  final NamedRoute? to;
+
   const Editable({
     super.key,
     this.billing,
     this.id,
+    this.to,
   });
 
   @override
@@ -156,21 +162,40 @@ class _State extends State<Editable> {
           id: widget.id!,
           editable: _transaction,
         );
+        // 返回交易id
         return widget.id!;
       }
       return (await createTransaction(editable: _transaction)).id!;
     })()
         .then((transactionId) {
-      // 重定向到交易页
-      GoRouter.of(context).pushReplacementNamed(
-        NamedRoute.Transaction.name,
-        pathParameters: {
-          "id": transactionId.toString(),
-        },
-        queryParameters: {
-          "isOneMore": (widget.id == null).toString(),
-        },
-      );
+      // 提交成功后，如果指定了前往页，跳转到前往页
+      if (widget.to != null) {
+        return context.pushReplacementNamed(
+          widget.to!.name,
+          pathParameters: {
+            "id": transactionId.toString(),
+          },
+          queryParameters: {
+            // 当前页面为新建交易时，可以继续记一笔
+            "isOneMore": (widget.id == null).toString(),
+          },
+        );
+      }
+
+      // 对应的分类选项
+      final category = context
+          .read<Category>()
+          .categories
+          .singleWhere((element) => element.id == _transaction.categoryId!);
+      // 返回前一页
+      context.pop(entities.Transaction(
+        amount: _transaction.amount,
+        categoryId: _transaction.categoryId,
+        category: category,
+        remark: _transaction.remark,
+        happenedAt: _transaction.happenedAt,
+        id: transactionId,
+      ));
     });
   }
 
@@ -184,171 +209,175 @@ class _State extends State<Editable> {
         .indexWhere((element) => element.value == _transaction.categoryId);
 
     return PopLayout(
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 32, right: 32),
-          child: CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  childCount: 1,
-                  (context, index) {
-                    return Column(
-                      children: [
-                        _buildBelongTo(),
-                        const Divider(height: 32),
-                      ],
-                    );
-                  },
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          SwitchFormField(
-                            initialValue: _directions.indexOf(_direction),
-                            children: const Tuple2("支出", "收入"),
-                            onChanged: (value) {
-                              // 联动表单
-                              _categoryFormField.currentState?.didChange(null);
-                              // 状态变更
-                              setState(() {
-                                _direction = _directions.elementAt(value);
-                              });
-                            },
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            child: TextFormField(
-                              initialValue: (_transaction.amount != 0
-                                  ? _transaction.amount.toString()
-                                  : null),
-                              textAlign: TextAlign.end,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                                signed: false,
-                              ),
-                              onSaved: (value) {
-                                _transaction.amount = double.tryParse(value!);
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return '请输入金额';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                labelText: "金额",
-                                contentPadding:
-                                    const EdgeInsets.fromLTRB(24, 12, 24, 12),
-                                prefix: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade100,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  padding: const EdgeInsets.all(8),
-                                  child: const Text(
-                                    "CNY",
-                                    style: TextStyle(
-                                      fontSize: 12,
+      child: Container(
+        padding: const EdgeInsets.only(left: 32, right: 32),
+        child: Column(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        childCount: 1,
+                        (context, index) {
+                          return Column(
+                            children: [
+                              _buildBelongTo(),
+                              const Divider(height: 32),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                SwitchFormField(
+                                  initialValue: _directions.indexOf(_direction),
+                                  children: const Tuple2("支出", "收入"),
+                                  onChanged: (value) {
+                                    // 联动表单
+                                    _categoryFormField.currentState
+                                        ?.didChange(null);
+                                    // 状态变更
+                                    setState(() {
+                                      _direction = _directions.elementAt(value);
+                                    });
+                                  },
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 20),
+                                  child: TextFormField(
+                                    initialValue: (_transaction.amount != 0
+                                        ? _transaction.amount.toString()
+                                        : null),
+                                    textAlign: TextAlign.end,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                      signed: false,
+                                    ),
+                                    onSaved: (value) {
+                                      _transaction.amount =
+                                          double.tryParse(value!);
+                                    },
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return '请输入金额';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      labelText: "金额",
+                                      contentPadding: const EdgeInsets.fromLTRB(
+                                          24, 12, 24, 12),
+                                      prefix: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue.shade100,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        padding: const EdgeInsets.all(8),
+                                        child: const Text(
+                                          "CNY",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 20),
+                                  child: DatePickerFormField(
+                                    initialValue: _transaction.happenedAt,
+                                    mode: CupertinoDatePickerMode.date,
+                                    onSaved: (value) {
+                                      _transaction.happenedAt = value;
+                                    },
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 20),
+                                  child: PickerFormField(
+                                    key: _categoryFormField,
+                                    options: _categoryOptions,
+                                    placeholder: "请选择分类",
+                                    initialValue: initialCategoryIndex != -1
+                                        ? initialCategoryIndex
+                                        : null,
+                                    onSaved: (value) {
+                                      _transaction.categoryId = (value == null
+                                          ? null
+                                          : _categoryOptions
+                                              .elementAt(value)
+                                              .value);
+                                    },
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return "请选择分类";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 20),
+                                  child: TextFormField(
+                                    minLines: 3,
+                                    maxLines: 8,
+                                    onSaved: (value) {
+                                      _transaction.remark = value;
+                                    },
+                                    initialValue: _transaction.remark,
+                                    decoration: const InputDecoration(
+                                      labelText: "备注",
+                                      alignLabelWithHint: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            child: DatePickerFormField(
-                              initialValue: _transaction.happenedAt,
-                              mode: CupertinoDatePickerMode.date,
-                              onSaved: (value) {
-                                _transaction.happenedAt = value;
-                              },
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            child: PickerFormField(
-                              key: _categoryFormField,
-                              options: _categoryOptions,
-                              placeholder: "请选择分类",
-                              initialValue: initialCategoryIndex != -1
-                                  ? initialCategoryIndex
-                                  : null,
-                              onSaved: (value) {
-                                _transaction.categoryId = (value == null
-                                    ? null
-                                    : _categoryOptions.elementAt(value).value);
-                              },
-                              validator: (value) {
-                                if (value == null) {
-                                  return "请选择分类";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            child: TextFormField(
-                              minLines: 3,
-                              maxLines: 8,
-                              onSaved: (value) {
-                                _transaction.remark = value;
-                              },
-                              initialValue: _transaction.remark,
-                              decoration: const InputDecoration(
-                                labelText: "备注",
-                                alignLabelWithHint: true,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  childCount: 1,
-                ),
-              ),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      child: ElevatedButton(
-                        onPressed: _submit,
-                        style: ButtonStyle(
-                            padding: const MaterialStatePropertyAll(
-                                EdgeInsets.all(16)),
-                            shape: MaterialStatePropertyAll(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(28))),
-                            elevation: const MaterialStatePropertyAll(8)),
-                        child: const Text(
-                          '提交',
-                          style: TextStyle(
-                            letterSpacing: 4,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
+                          );
+                        },
+                        childCount: 1,
                       ),
                     ),
                   ],
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 12, bottom: 12),
+              child: ElevatedButton(
+                onPressed: _submit,
+                style: ButtonStyle(
+                  padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
+                  shape: MaterialStatePropertyAll(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(99)),
+                  ),
+                  elevation: const MaterialStatePropertyAll(8),
+                ),
+                child: const Text(
+                  '提交',
+                  style: TextStyle(
+                    letterSpacing: 4,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
