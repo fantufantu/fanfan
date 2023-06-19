@@ -1,4 +1,4 @@
-import 'package:fanfan/service/entities/user.dart';
+import 'package:fanfan/service/entities/user/main.dart';
 import 'package:flutter/material.dart';
 
 class Thumbnail extends StatefulWidget {

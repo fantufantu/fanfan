@@ -4,7 +4,7 @@ import 'package:fanfan/utils/application.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fanfan/service/schemas/user.dart';
-import 'package:fanfan/service/entities/user.dart';
+import 'package:fanfan/service/entities/user/main.dart';
 import 'package:graphql/client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

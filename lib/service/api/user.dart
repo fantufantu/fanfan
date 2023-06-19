@@ -1,4 +1,4 @@
-import 'package:fanfan/service/entities/user.dart';
+import 'package:fanfan/service/entities/user/main.dart';
 import 'package:fanfan/service/entities/user/editable.dart';
 import 'package:fanfan/service/schemas/user.dart';
 import 'package:fanfan/utils/service.dart';

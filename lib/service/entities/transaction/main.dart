@@ -1,6 +1,6 @@
 import 'package:fanfan/service/factories/entity.dart';
 import 'package:fanfan/service/entities/category.dart';
-import 'package:fanfan/service/entities/user.dart';
+import 'package:fanfan/service/entities/user/main.dart';
 import 'package:fanfan/service/entities/billing/main.dart';
 
 class Transaction extends Entity {

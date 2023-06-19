@@ -1,7 +1,7 @@
 import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/service/api/sharing.dart';
 import 'package:fanfan/service/api/user.dart';
-import 'package:fanfan/service/entities/user.dart';
+import 'package:fanfan/service/entities/user/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rxdart/rxdart.dart';

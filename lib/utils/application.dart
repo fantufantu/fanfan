@@ -1,5 +1,5 @@
 import 'package:fanfan/service/entities/paginated_categories.dart';
-import 'package:fanfan/service/entities/user.dart';
+import 'package:fanfan/service/entities/user/main.dart';
 import 'package:fanfan/service/schemas/application.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:flutter/foundation.dart';
