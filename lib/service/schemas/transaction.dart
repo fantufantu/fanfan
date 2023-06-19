@@ -43,6 +43,7 @@ final TRANSACTION = gql('''
       }
       createdBy {
         username
+        nickname
       }
       billing {
         ...BillingFragment
