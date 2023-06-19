@@ -84,7 +84,7 @@ class Card extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.only(top: 8),
                       child: Text(
-                        billing.createdBy!.nickname,
+                        billing.createdBy!.displayName,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,

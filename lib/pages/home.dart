@@ -81,15 +81,15 @@ class Home extends StatelessWidget {
   }
 
   /// 问候语
-  List<Widget> _buildGreetings(String? nickname) {
+  List<Widget> _buildGreetings(String? displayName) {
     final meridiem = DateFormat('a').format(DateTime.now());
     final List<Widget> greetings = [
       Text("Good ${(meridiem == 'PM') ? 'afternoon' : 'morning'} 👋🏻")
     ];
 
-    if (nickname != null) {
+    if (displayName != null) {
       greetings.add(Text(
-        nickname,
+        displayName,
         style: const TextStyle(
           fontWeight: FontWeight.w700,
         ),
@@ -100,8 +100,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nickname = context
-        .select((UserProfile userProfile) => userProfile.whoAmI?.nickname);
+    final displayName = context
+        .select((UserProfile userProfile) => userProfile.whoAmI?.displayName);
     final defaultBilling = context.select(
         (UserProfile userProfile) => userProfile.whoAmI?.defaultBilling);
     final avatar =
@@ -133,7 +133,7 @@ class Home extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _buildGreetings(nickname),
+                          children: _buildGreetings(displayName),
                         ),
                       ),
                       const Spacer(),

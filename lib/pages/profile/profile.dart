@@ -144,7 +144,7 @@ class _State extends State<Profile> {
             Container(
               margin: const EdgeInsets.only(top: 20),
               child: Text(
-                whoAmI.nickname,
+                whoAmI.displayName,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

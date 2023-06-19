@@ -6,6 +6,7 @@ const USER_FRAGMENT = '''
   fragment UserFragment on User {
     id
     username
+    nickname
     emailAddress
     avatar
     defaultBilling {
@@ -42,5 +43,11 @@ final USERS = gql(r'''
       emailAddress
       avatar
     }
+  }
+''');
+
+final UPDATE_USER = gql(r'''
+  mutation UpdateUser($updateBy: UpdateUserBy!) {
+    updateUser(updateBy: $updateBy)
   }
 ''');

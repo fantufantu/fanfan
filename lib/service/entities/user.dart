@@ -5,6 +5,7 @@ class User implements Entity {
   User({
     required this.id,
     required this.username,
+    this.nickname,
     required this.emailAddress,
     this.avatar,
     this.defaultBilling,
@@ -15,6 +16,9 @@ class User implements Entity {
 
   /// 用户名
   String? username;
+
+  // /// 用户昵称
+  String? nickname;
 
   /// 邮箱地址
   String? emailAddress;
@@ -28,6 +32,7 @@ class User implements Entity {
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         username: json["username"],
+        nickname: json["nickname"],
         emailAddress: json["emailAddress"],
         avatar: json["avatar"],
         defaultBilling: json['defaultBilling'] == null
@@ -39,13 +44,18 @@ class User implements Entity {
   Map<String, dynamic> toJson() => {
         "id": id,
         "username": username,
+        "nickname": nickname,
         "emailAddress": emailAddress,
         "avatar": avatar,
         "defaultBilling": defaultBilling?.toJson(),
       };
 
   /// 用户名简称
-  String get nickname {
+  String get displayName {
+    if (nickname != null && nickname!.isNotEmpty) {
+      return nickname!;
+    }
+
     if (username == null) {
       return '未知用户';
     }

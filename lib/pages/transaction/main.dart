@@ -231,7 +231,7 @@ class _State extends State<Transaction> {
                             ),
                             _buildDetailItem(
                               label: '消费人',
-                              value: _transaction.createdBy!.nickname,
+                              value: _transaction.createdBy!.displayName,
                             ),
                             _buildDetailItem(
                               label: '交易日期',

@@ -1,4 +1,5 @@
 import 'package:fanfan/service/entities/billing/main.dart';
+import 'package:fanfan/service/entities/user/editable.dart';
 import 'package:fanfan/utils/application.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:flutter/foundation.dart';
@@ -102,5 +103,13 @@ class UserProfile with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
 
     return true;
+  }
+
+  /// 更新用户信息
+  update(Editable updateBy) {
+    whoAmI?.nickname = updateBy.nickname;
+
+    // 消息触达
+    notifyListeners();
   }
 }
