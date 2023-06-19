@@ -14,4 +14,6 @@ final CATEGORY_ICONS = Map<int, IconData>.from({
   11: Icons.local_atm,
   12: Icons.shower,
   13: Icons.handshake,
+  14: Icons.phone_iphone,
+  15: Icons.back_hand,
 });

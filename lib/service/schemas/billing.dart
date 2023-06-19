@@ -7,6 +7,7 @@ const BILLING_FRAGMENT = '''
     createdBy {
       id
       username
+      nickname
       emailAddress
       avatar
     }
