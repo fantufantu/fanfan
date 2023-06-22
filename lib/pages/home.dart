@@ -12,10 +12,10 @@ import 'package:fanfan/components/billing/card.dart' as components show Card;
 class Home extends StatelessWidget {
   const Home({super.key});
 
-  _buildServiceEntries(
-    BuildContext context, {
-    int? defaultBillingId,
-  }) {
+  Widget _buildServiceEntries(BuildContext context) {
+    final defaultBillingId = context.select(
+        (UserProfile userProfile) => userProfile.whoAmI?.defaultBilling?.id);
+
     final serviceEntries = [
       ServiceEntry(
         color: Colors.amber,
@@ -33,12 +33,23 @@ class Home extends StatelessWidget {
         color: Colors.deepOrange,
         label: '记一笔',
         icon: CupertinoIcons.money_dollar,
-        onPressed: () => context.pushNamed(
-          NamedRoute.EditableTransaction.name,
-          queryParameters: {
-            "to": NamedRoute.Transaction.name,
-          },
-        ),
+        onPressed: () {
+          // 当前用户没有设置默认账本时，消息提醒用户设置
+          if (defaultBillingId == null) {
+            Notifier.error(
+              context,
+              message: "请先设置默认账本！",
+            );
+            return;
+          }
+
+          context.pushNamed(
+            NamedRoute.EditableTransaction.name,
+            queryParameters: {
+              "to": NamedRoute.Transaction.name,
+            },
+          );
+        },
       ),
       ServiceEntry(
         color: Colors.purple,
@@ -55,9 +66,12 @@ class Home extends StatelessWidget {
           }
 
           // 存在默认账本，直接跳转到默认账本对应的交易记录
-          context.pushNamed(NamedRoute.Transactions.name, pathParameters: {
-            "billingId": defaultBillingId.toString(),
-          });
+          context.pushNamed(
+            NamedRoute.Transactions.name,
+            pathParameters: {
+              "billingId": defaultBillingId.toString(),
+            },
+          );
         },
       ),
       ServiceEntry(
@@ -71,10 +85,12 @@ class Home extends StatelessWidget {
     const double SPACING = 20;
 
     return Padding(
-      padding: const EdgeInsets.all(SPACING),
+      padding: const EdgeInsets.only(
+          top: SPACING, bottom: SPACING, left: 32, right: 32),
       child: Wrap(
         spacing: SPACING,
         runSpacing: SPACING,
+        alignment: WrapAlignment.spaceBetween,
         children: serviceEntries,
       ),
     );
@@ -108,44 +124,47 @@ class Home extends StatelessWidget {
         context.select((UserProfile userProfile) => userProfile.whoAmI?.avatar);
 
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+      padding: const EdgeInsets.only(top: 12),
       child: CustomScrollView(
         slivers: [
           SliverList(
             delegate: SliverChildBuilderDelegate(
               childCount: 1,
               (context, index) {
-                return IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6, bottom: 6),
-                        child: CircleAvatar(
-                          radius: 24,
-                          backgroundImage:
-                              avatar != null ? NetworkImage(avatar) : null,
-                          child: const Icon(CupertinoIcons.person),
+                return Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6, bottom: 6),
+                          child: CircleAvatar(
+                            radius: 24,
+                            backgroundImage:
+                                avatar != null ? NetworkImage(avatar) : null,
+                            child: const Icon(CupertinoIcons.person),
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 16),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _buildGreetings(displayName),
+                        Container(
+                          margin: const EdgeInsets.only(left: 16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: _buildGreetings(displayName),
+                          ),
                         ),
-                      ),
-                      const Spacer(),
-                      Icon(CupertinoIcons.bell, color: Colors.grey.shade600),
-                      Container(
-                        margin: const EdgeInsets.only(left: 16),
-                        child: Icon(
-                          CupertinoIcons.ellipsis_circle,
-                          color: Colors.grey.shade600,
-                        ),
-                      )
-                    ],
+                        const Spacer(),
+                        Icon(CupertinoIcons.bell, color: Colors.grey.shade600),
+                        Container(
+                          margin: const EdgeInsets.only(left: 16),
+                          child: Icon(
+                            CupertinoIcons.ellipsis_circle,
+                            color: Colors.grey.shade600,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },
@@ -156,7 +175,7 @@ class Home extends StatelessWidget {
               childCount: 1,
               (context, index) {
                 return Container(
-                  padding: const EdgeInsets.only(left: 10, right: 10, top: 16),
+                  padding: const EdgeInsets.only(left: 24, right: 24, top: 20),
                   child: defaultBilling == null
                       ? null
                       : components.Card(billing: defaultBilling),
@@ -169,7 +188,7 @@ class Home extends StatelessWidget {
               childCount: 1,
               (context, index) {
                 return Container(
-                  padding: const EdgeInsets.only(top: 24),
+                  padding: const EdgeInsets.only(top: 24, left: 20, right: 20),
                   child: Column(
                     children: [
                       Row(
@@ -196,16 +215,20 @@ class Home extends StatelessWidget {
                           )
                         ],
                       ),
-                      _buildServiceEntries(
-                        context,
-                        defaultBillingId: defaultBilling?.id,
-                      ),
                     ],
                   ),
                 );
               },
             ),
           ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => Builder(
+                builder: _buildServiceEntries,
+              ),
+              childCount: 1,
+            ),
+          )
         ],
       ),
     );

@@ -26,6 +26,13 @@ import 'package:fanfan/service/entities/sharing/main.dart' as sharing_entities
     show Type;
 
 void main() async {
+  runApp(const MaterialApp(
+    home: LoadingLayout(),
+  ));
+
+  // 应用初始化
+  await initialize();
+
   runApp(
     MultiProvider(
       providers: [
@@ -36,14 +43,6 @@ void main() async {
       child: const App(),
     ),
   );
-
-  // 应用初始化
-  await initialize().whenComplete(() {
-    // 应用层逻辑
-    final application = Application();
-    // 应用初始化完成
-    application.ready();
-  });
 }
 
 class App extends StatelessWidget {
@@ -51,19 +50,6 @@ class App extends StatelessWidget {
 
   /// 路由
   List<RouteBase> _buildRoutes(BuildContext context) {
-    final isReady =
-        context.select((Application application) => application.isReady);
-
-    // 应用未初始化完成时，返回一个loading页
-    if (!isReady) {
-      return [
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const LoadingLayout(),
-        )
-      ];
-    }
-
     return [
       GoRoute(
         path: "/statistics",
@@ -167,6 +153,7 @@ class App extends StatelessWidget {
             billing: (state.extra as Map<String, dynamic>?)?['billing'],
             id: int.tryParse(state.queryParameters['id'] ?? ''),
             to: NamedRoute.values.asNameMap()[state.queryParameters['to']],
+            listener: (state.extra as Map<String, dynamic>?)?['listener'],
           );
         },
       ),
@@ -189,6 +176,7 @@ class App extends StatelessWidget {
             id: int.parse(state.pathParameters['id']!),
             isOneMore:
                 bool.tryParse(state.queryParameters['isOneMore'] ?? 'false'),
+            listener: (state.extra as Map<String, dynamic>?)?['listener'],
           );
         },
       ),

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fanfan/service/entities/transaction/main.dart' as entities;
 import 'package:intl/intl.dart';
+import 'package:rxdart/rxdart.dart';
 
 class Transaction extends StatefulWidget {
   /// 交易id
@@ -16,11 +17,15 @@ class Transaction extends StatefulWidget {
   /// 再记一笔
   final bool? isOneMore;
 
-  const Transaction({
+  /// 监听器
+  final PublishSubject<entities.Transaction> _listener;
+
+  Transaction({
     super.key,
     required this.id,
     this.isOneMore,
-  });
+    PublishSubject<entities.Transaction>? listener,
+  }) : _listener = listener ?? PublishSubject<entities.Transaction>();
 
   @override
   State<Transaction> createState() => _State();
@@ -33,29 +38,17 @@ class _State extends State<Transaction> {
   /// 加载中
   bool _isLoading = true;
 
-  /// 是否编辑过
-  bool _isEdited = false;
-
   /// 修改当前
-  void _edit() async {
-    final edited = await context.pushNamed<entities.Transaction>(
+  void _edit() {
+    context.pushNamed<entities.Transaction>(
       NamedRoute.EditableTransaction.name,
       queryParameters: {
         "id": widget.id.toString(),
       },
+      extra: {
+        "listener": widget._listener,
+      },
     );
-
-    if (edited == null) return;
-
-    setState(() {
-      _isEdited = true;
-      _transaction
-        ..amount = edited.amount
-        ..categoryId = edited.categoryId
-        ..category = edited.category
-        ..happenedAt = edited.happenedAt
-        ..remark = edited.remark;
-    });
   }
 
   /// 再加一笔
@@ -65,6 +58,9 @@ class _State extends State<Transaction> {
       extra: {
         "billing": _transaction.billing,
       },
+      queryParameters: {
+        "to": NamedRoute.Transaction.name,
+      },
     );
   }
 
@@ -72,6 +68,19 @@ class _State extends State<Transaction> {
   void initState() {
     super.initState();
 
+    // 添加事件订阅
+    widget._listener.listen((transaction) {
+      setState(() {
+        _transaction
+          ..amount = transaction.amount
+          ..categoryId = transaction.categoryId
+          ..category = transaction.category
+          ..happenedAt = transaction.happenedAt
+          ..remark = transaction.remark;
+      });
+    });
+
+    // 获取交易详情
     (() async {
       final transaction = await queryTransactionById(widget.id);
 
@@ -182,7 +191,6 @@ class _State extends State<Transaction> {
         ),
       ),
       centerTitle: false,
-      onPop: _isEdited ? () => context.pop(_transaction) : null,
       backgroundColor: Colors.grey.shade50,
       child: Container(
         padding: const EdgeInsets.only(left: 32, right: 32),

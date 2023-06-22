@@ -15,6 +15,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/components/billing/card.dart' as components show Card;
+import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 import 'package:fanfan/service/entities/direction.dart' as entities
     show Direction;
@@ -33,11 +34,15 @@ class Editable extends StatefulWidget {
   /// 页面来源
   final NamedRoute? to;
 
+  /// 交易修改的监听器
+  final PublishSubject<entities.Transaction>? listener;
+
   const Editable({
     super.key,
     this.billing,
     this.id,
     this.to,
+    this.listener,
   });
 
   @override
@@ -187,8 +192,8 @@ class _State extends State<Editable> {
           .read<Category>()
           .categories
           .singleWhere((element) => element.id == _transaction.categoryId!);
-      // 返回前一页
-      context.pop(entities.Transaction(
+      // 触发消息通知
+      widget.listener?.add(entities.Transaction(
         amount: _transaction.amount,
         categoryId: _transaction.categoryId,
         category: category,
@@ -196,6 +201,8 @@ class _State extends State<Editable> {
         happenedAt: _transaction.happenedAt,
         id: transactionId,
       ));
+      // 返回前一页
+      context.pop();
     });
   }
 

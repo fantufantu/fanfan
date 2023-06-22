@@ -7,6 +7,7 @@ import 'package:fanfan/service/factories/paginate_by.dart';
 import 'package:fanfan/utils/confirm.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rxdart/rxdart.dart';
 
 class Transactions extends StatefulWidget {
   final int billingId;
@@ -98,24 +99,27 @@ class _State extends State<Transactions> {
 
   /// 跳转到明细
   void _navigateDetail(int id) async {
-    final edited = await context.pushNamed<Transaction>(
+    context.pushNamed<Transaction>(
       NamedRoute.Transaction.name,
       pathParameters: {
         "id": id.toString(),
       },
+      extra: {
+        // 事件通知
+        "listener": PublishSubject<Transaction>()
+          ..listen((transaction) {
+            setState(() {
+              _transactions
+                  .singleWhere((element) => element.id == transaction.id)
+                ..amount = transaction.amount
+                ..categoryId = transaction.categoryId
+                ..category = transaction.category
+                ..happenedAt = transaction.happenedAt
+                ..remark = transaction.remark;
+            });
+          }),
+      },
     );
-
-    if (edited == null) return;
-
-    // 修改交易，更新列表
-    setState(() {
-      _transactions.singleWhere((element) => element.id == edited.id)
-        ..amount = edited.amount
-        ..categoryId = edited.categoryId
-        ..category = edited.category
-        ..happenedAt = edited.happenedAt
-        ..remark = edited.remark;
-    });
   }
 
   @override
