@@ -2,7 +2,7 @@ import 'package:fanfan/service/schemas/billing.dart';
 import 'package:graphql/client.dart';
 import 'package:fanfan/service/schemas/category.dart' show CATEGORY_FRAGMENT;
 
-final CREATE_TRANSACTION = gql('''
+final CREATE = gql('''
   mutation CreateTransaction(\$createBy: CreateTransactionBy!) {
     createTransaction(createBy: \$createBy) {
       id
@@ -53,15 +53,48 @@ final TRANSACTION = gql('''
 ''');
 
 /// 根据id删除
-final REMOVE_TRANSACTION = gql(r'''
+final REMOVE_BY_ID = gql(r'''
   mutation RemoveTransaction($id: Int!) {
     removeTransaction(id: $id)
   }
 ''');
 
 /// 更新
-final UPDATE_TRANSACTION = gql(r'''
+final UPDATE_BY_ID = gql(r'''
   mutation UpdateTransaction($id: Int!, $updateBy: UpdateTransactionBy!) {
     updateTransaction(id: $id, updateBy: $updateBy)
+  }
+''');
+
+/// 查询按分类合计的交易金额
+final AMOUNTS_GROUPED_BY_CATEGORY = gql('''
+  query TransactionAmountsGroupedByCategory(\$grounBy: GroupTransactionAmountByCategory!) {
+    transactionAmountsGroupedByCategory(groupBy: \$grounBy) {
+      categoryId
+      amount
+    }
+  }
+''');
+
+/// 查询按分类合计的交易金额，同时查询交易列表
+final AMOUNTS_GROUPED_BY_CATEGORY_WITH_TRANSACTIONS = gql('''
+  $CATEGORY_FRAGMENT
+  query TransactionAmountsGroupedByCategory(\$grounBy: GroupTransactionAmountByCategory!, \$filterBy: FilterTransactionBy!) {
+    transactionAmountsGroupedByCategory(groupBy: \$grounBy) {
+      categoryId
+      amount
+    }
+    transactions(filterBy: \$filterBy) {
+      items {
+        id
+        amount
+        remark
+        billingId
+        happenedAt
+        category {
+          ...CategoryFragment
+        }
+      }
+    }
   }
 ''');

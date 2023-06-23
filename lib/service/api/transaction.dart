@@ -1,17 +1,19 @@
 import 'package:fanfan/service/entities/transaction/editable.dart';
+import 'package:fanfan/service/entities/transaction/amount_grouped_by_category.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/entities/transaction/paginated_transactions.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
 import 'package:fanfan/service/schemas/transaction.dart';
 import 'package:fanfan/utils/service.dart';
 import 'package:graphql/client.dart';
+import 'package:tuple/tuple.dart';
 
 /// 创建
-Future<Transaction> createTransaction({
+Future<Transaction> create({
   required Editable editable,
 }) async {
   final response = await Client().mutate(MutationOptions(
-    document: CREATE_TRANSACTION,
+    document: CREATE,
     variables: Map.from(
       {
         "createBy": editable.toJson(),
@@ -74,9 +76,9 @@ Future<Transaction> queryTransactionById(int id) async {
 }
 
 /// 根据id删除交易
-Future<bool> removeTransactionById(int id) async {
+Future<bool> removeById(int id) async {
   final response = await Client().mutate(MutationOptions(
-    document: REMOVE_TRANSACTION,
+    document: REMOVE_BY_ID,
     variables: {
       "id": id,
     },
@@ -91,12 +93,12 @@ Future<bool> removeTransactionById(int id) async {
 }
 
 /// 更新
-Future<bool> updateTransactionById({
+Future<bool> updateById({
   required int id,
   required Editable editable,
 }) async {
   final response = await Client().mutate(MutationOptions(
-    document: UPDATE_TRANSACTION,
+    document: UPDATE_BY_ID,
     variables: Map.from(
       {
         "id": id,
@@ -111,4 +113,51 @@ Future<bool> updateTransactionById({
   }
 
   return response.data!['updateTransaction'];
+}
+
+/// 查询统计数据
+Future<Tuple2<List<AmountGroupedByCategory>, PaginatedTransactions?>>
+    queryTransactionAmountsGroupedByCategory({
+  bool withTransaction = false,
+  required int billingId,
+  PaginateBy? paginateBy,
+}) async {
+  assert(withTransaction && paginateBy != null, '查询交易列表时，必须携带分页参数');
+
+  final variables = Map<String, dynamic>.from({
+    "grounBy": {
+      "billingId": billingId,
+    }
+  });
+
+  // 查询交易需要附带的查询条件
+  if (withTransaction) {
+    variables.addAll({
+      "filterBy": {
+        "billingId": billingId,
+      },
+      "paginateBy": paginateBy?.toJson(),
+    });
+  }
+
+  final response = await Client().query(QueryOptions(
+    document: withTransaction
+        ? AMOUNTS_GROUPED_BY_CATEGORY_WITH_TRANSACTIONS
+        : AMOUNTS_GROUPED_BY_CATEGORY,
+    variables: variables,
+  ));
+
+  if (response.hasException || response.data == null) {
+    reject(List.from(response.exception?.graphqlErrors ?? [])
+      ..add(const GraphQLError(message: '获取失败！')));
+  }
+
+  return Tuple2(
+    (response.data!['transactionAmountsGroupedByCategory'] as List<dynamic>)
+        .map((e) => AmountGroupedByCategory.fromJson(e))
+        .toList(),
+    response.data!['transactions'] != null
+        ? PaginatedTransactions.fromJson(response.data!['transactions'])
+        : null,
+  );
 }

@@ -163,14 +163,14 @@ class _State extends State<Editable> {
     // 向服务端请求：存在id时，更新；不存在id时，创建
     (() async {
       if (widget.id != null) {
-        await updateTransactionById(
+        await updateById(
           id: widget.id!,
           editable: _transaction,
         );
         // 返回交易id
         return widget.id!;
       }
-      return (await createTransaction(editable: _transaction)).id!;
+      return (await create(editable: _transaction)).id!;
     })()
         .then((transactionId) {
       // 提交成功后，如果指定了前往页，跳转到前往页

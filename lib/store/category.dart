@@ -9,6 +9,7 @@ class Category with ChangeNotifier, DiagnosticableTreeMixin {
 
   factory Category() => _instance ??= Category._internal();
 
+  /// 分类列表
   List<entities.Category> _categories = [];
 
   belong(List<entities.Category> categories) {

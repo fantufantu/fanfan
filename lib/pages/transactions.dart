@@ -93,7 +93,7 @@ class _State extends State<Transactions> {
     }
 
     // 请求删除交易
-    final isSucceed = await removeTransactionById(id);
+    final isSucceed = await removeById(id);
     return isSucceed;
   }
 

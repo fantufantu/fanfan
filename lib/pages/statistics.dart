@@ -1,8 +1,9 @@
-import 'package:fanfan/components/chart/expense_ratio.dart';
+import 'package:fanfan/components/chart/category_amounts_pie.dart';
 import 'package:fanfan/components/transaction/thumbnail.dart';
 import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
+import 'package:fanfan/service/entities/transaction/amount_grouped_by_category.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
 import 'package:fanfan/store/user_profile.dart';
@@ -34,8 +35,11 @@ class _State extends State<Statistics> {
   /// 周期列表
   late final List<_StatisticDuration> _durations;
 
+  /// 分类下交易金额
+  late List<AmountGroupedByCategory> _amountsGroupedByCategory = [];
+
   /// 当前对应的页码
-  int _page = 0;
+  int _page = 1;
 
   /// 总数
   int _total = 0;
@@ -58,6 +62,7 @@ class _State extends State<Statistics> {
           page: page,
           pageSize: 20,
         ));
+
     // 请求成功，更新页面数据
     setState(() {
       _total = paginatedTransactions.total ?? 0;
@@ -102,16 +107,53 @@ class _State extends State<Statistics> {
     ];
   }
 
+  /// 初始化页面的请求
+  void _initFetch() async {
+    // 没有账本id，无法获取对应交易数据
+    if (_billingId == null) {
+      return;
+    }
+
+    // 请求页面数据
+    final fetched = await queryTransactionAmountsGroupedByCategory(
+      billingId: _billingId!,
+      withTransaction: true,
+      paginateBy: PaginateBy(
+        page: _page,
+        pageSize: 20,
+      ),
+    );
+
+    final paginatedTransactions = fetched.item2!;
+
+    // 请求成功，更新页面数据
+    setState(() {
+      _amountsGroupedByCategory = fetched.item1;
+      _total = paginatedTransactions.total ?? 0;
+      _transactions = [
+        ..._transactions,
+        ...paginatedTransactions.items,
+      ];
+    });
+  }
+
+  /// 初始化账本id
+  _initBillingId() {
+    _billingId = context.read<UserProfile>().whoAmI?.defaultBilling?.id;
+  }
+
   @override
   initState() {
     super.initState();
 
-    // 周期选项
+    // 初始化周期选项
     _initDurations();
-    // 默认账本id
-    _billingId = context.read<UserProfile>().whoAmI?.defaultBilling?.id;
-    // 按着默认时间间隔请求交易列表
-    _fetchMore();
+    // 初始化账本id
+    _initBillingId();
+
+    // 初始化页面数据
+    _initFetch();
+
     // 监听滚动器，滚动到下方时，请求下一页数据
     _scrollController.addListener(() {
       // 没有更多数据时，不再请求
@@ -211,7 +253,9 @@ class _State extends State<Statistics> {
                             ),
                           ],
                         ),
-                        const ExpenseRatio(),
+                        CategoryAmountsPie(
+                          amounts: _amountsGroupedByCategory,
+                        ),
                         Container(
                           margin: const EdgeInsets.only(top: 20),
                           child: Row(
