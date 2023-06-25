@@ -53,33 +53,6 @@ class _State extends State<Statistics> {
   /// 获取交易列表的订阅器
   late final PublishSubject<int> transactionsQuerier;
 
-  _fetchMore() async {
-    // 没有账本id，无法获取对应交易数据
-    if (_billingId == null) {
-      return;
-    }
-
-    // 需要查询的页码
-    final page = _page + 1;
-    // 请求服务端获取交易列表
-    final paginatedTransactions = await queryTransactions(
-        billingId: _billingId!,
-        paginateBy: PaginateBy(
-          page: page,
-          limit: 20,
-        ));
-
-    // 请求成功，更新页面数据
-    setState(() {
-      _total = paginatedTransactions.total ?? 0;
-      _page = page;
-      _transactions = [
-        ..._transactions,
-        ...paginatedTransactions.items,
-      ];
-    });
-  }
-
   /// 初始化周期选项
   _initDurations() {
     final currentAt = DateTime.now();
@@ -161,7 +134,8 @@ class _State extends State<Statistics> {
 
     // 交易列表请求器
     transactionsQuerier = PublishSubject<int>()
-      ..distinctUnique()
+      ..takeWhile((_) => _billingId != null)
+          .distinctUnique()
           .asyncMap<Tuple2<int, PaginatedTransactions>>((page) async {
             return Tuple2(
               page,
@@ -193,9 +167,7 @@ class _State extends State<Statistics> {
         // 仅当滚动到底部时，发起请求更多
         if (_transactions.length >= _total ||
             (_scrollController.position.pixels <
-                _scrollController.position.maxScrollExtent - 100)) {
-          return;
-        }
+                _scrollController.position.maxScrollExtent - 50)) return;
 
         // 执行查询更多
         transactionsQuerier.add(_page + 1);

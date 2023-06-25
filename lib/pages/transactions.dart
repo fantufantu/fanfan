@@ -77,7 +77,7 @@ class _State extends State<Transactions> {
         // 仅当滚动到底部时，发起请求更多
         if (_transactions.length >= _total ||
             (_scrollController.position.pixels <
-                _scrollController.position.maxScrollExtent - 100)) return;
+                _scrollController.position.maxScrollExtent - 50)) return;
 
         transactionsQuerier.add(_page + 1);
       });
