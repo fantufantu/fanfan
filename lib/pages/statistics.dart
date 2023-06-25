@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:fanfan/components/chart/category_amounts_pie.dart';
 import 'package:fanfan/components/transaction/thumbnail.dart';
 import 'package:fanfan/layouts/main.dart';

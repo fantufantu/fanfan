@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:fanfan/components/transaction/thumbnail.dart';
 import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/router/main.dart';

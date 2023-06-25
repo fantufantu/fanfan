@@ -86,6 +86,7 @@ final AMOUNTS_GROUPED_BY_CATEGORY_WITH_TRANSACTIONS = gql('''
       amount
     }
     transactions(filterBy: \$filterBy, paginateBy: \$paginateBy) {
+      total
       items {
         id
         amount
