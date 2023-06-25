@@ -12,8 +12,9 @@ final CREATE = gql('''
 
 final TRANSACTIONS = gql('''
   $CATEGORY_FRAGMENT
-  query Transactions(\$filterBy: FilterTransactionBy!) {
-    transactions(filterBy: \$filterBy) {
+  query Transactions(\$filterBy: FilterTransactionBy!, \$paginateBy: PaginateBy!) {
+    transactions(filterBy: \$filterBy, paginateBy: \$paginateBy) {
+      total
       items {
         id
         amount

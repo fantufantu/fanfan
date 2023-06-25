@@ -60,7 +60,8 @@ class App extends StatelessWidget {
       GoRoute(
         path: '/profile',
         name: NamedRoute.Profile.name,
-        builder: (context, state) => const profile.Profile(),
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: profile.Profile()),
         routes: [
           GoRoute(
             path: 'editable',
@@ -86,8 +87,8 @@ class App extends StatelessWidget {
       GoRoute(
         path: '/authorization',
         name: NamedRoute.Authorization.name,
-        builder: (context, staet) {
-          return const Authorization();
+        pageBuilder: (context, staet) {
+          return const MaterialPage(child: Authorization());
         },
         routes: [
           GoRoute(

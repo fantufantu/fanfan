@@ -60,7 +60,7 @@ class _State extends State<Statistics> {
         billingId: _billingId!,
         paginateBy: PaginateBy(
           page: page,
-          pageSize: 20,
+          limit: 20,
         ));
 
     // 请求成功，更新页面数据
@@ -120,7 +120,7 @@ class _State extends State<Statistics> {
       withTransaction: true,
       paginateBy: PaginateBy(
         page: _page,
-        pageSize: 20,
+        limit: 20,
       ),
     );
 

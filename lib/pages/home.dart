@@ -74,12 +74,6 @@ class Home extends StatelessWidget {
           );
         },
       ),
-      ServiceEntry(
-        color: Colors.red,
-        label: '心愿单',
-        icon: CupertinoIcons.heart_fill,
-        onPressed: () => context.pushNamed(NamedRoute.EditableTransaction.name),
-      ),
     ];
 
     const double SPACING = 20;

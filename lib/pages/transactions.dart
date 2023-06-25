@@ -3,11 +3,13 @@ import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
+import 'package:fanfan/service/entities/transaction/paginated_transactions.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
 import 'package:fanfan/utils/confirm.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:tuple/tuple.dart';
 
 class Transactions extends StatefulWidget {
   final int billingId;
@@ -24,60 +26,61 @@ class Transactions extends StatefulWidget {
 class _State extends State<Transactions> {
   List<Transaction> _transactions = [];
 
-  /// 滚动控制器
-  final ScrollController _scrollController = ScrollController();
-
   /// 当前对应的页码
   int _page = 0;
 
   /// 总数
   int _total = 0;
 
-  _fetchMore() async {
-    // 需要查询的页码
-    final page = _page + 1;
+  /// 滚动控制器
+  late final ScrollController _scrollController;
 
-    // 请求服务端获取交易列表
-    final paginatedTransactions = await queryTransactions(
-        billingId: widget.billingId,
-        paginateBy: PaginateBy(
-          page: page,
-          pageSize: 20,
-        ));
-
-    // 请求成功，更新页面数据
-    setState(() {
-      _total = paginatedTransactions.total ?? 0;
-      _page = page;
-      _transactions = [
-        ..._transactions,
-        ...paginatedTransactions.items,
-      ];
-    });
-  }
+  /// 获取交易列表的订阅器
+  late final PublishSubject<int> transactionsQuerier;
 
   @override
   void initState() {
     super.initState();
 
-    // 初始化请求列表数据，请求第一页数据
-    _fetchMore();
+    // 交易列表请求器
+    transactionsQuerier = PublishSubject<int>()
+      ..distinctUnique()
+          .asyncMap<Tuple2<int, PaginatedTransactions>>((page) async {
+            return Tuple2(
+              page,
+              await queryTransactions(
+                billingId: widget.billingId,
+                paginateBy: PaginateBy(
+                  page: page,
+                  limit: 20,
+                ),
+              ),
+            );
+          })
+          .doOnError((p0, p1) {})
+          .listen((value) {
+            setState(() {
+              _total = value.item2.total ?? 0;
+              _page = value.item1;
+              _transactions = [
+                ..._transactions,
+                ...value.item2.items,
+              ];
+            });
+          })
+      ..add(_page + 1);
 
     // 监听滚动器，滚动到下方时，请求下一页数据
-    _scrollController.addListener(() {
-      // 没有更多数据时，不再请求
-      if (_transactions.length >= _total) {
-        return;
-      }
+    _scrollController = ScrollController()
+      ..addListener(() {
+        // 没有更多数据时，不再请求
+        // 仅当滚动到底部时，发起请求更多
+        if (_transactions.length >= _total ||
+            (_scrollController.position.pixels <
+                _scrollController.position.maxScrollExtent - 100)) return;
 
-      // 仅当滚动到底部时，发起请求更多
-      if (_scrollController.position.pixels <
-          _scrollController.position.maxScrollExtent - 30) {
-        return;
-      }
-
-      _fetchMore();
-    });
+        transactionsQuerier.add(_page + 1);
+      });
   }
 
   Future<bool> _confirmDismiss(int id) async {
