@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fanfan/components/transaction/thumbnail.dart';
 import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/router/main.dart';
@@ -36,38 +38,37 @@ class _State extends State<Transactions> {
   late final ScrollController _scrollController;
 
   /// 获取交易列表的订阅器
-  late final PublishSubject<int> transactionsQuerier;
+  late final StreamController<int> transactionsQuerier;
 
   @override
   void initState() {
     super.initState();
 
     // 交易列表请求器
-    transactionsQuerier = PublishSubject<int>()
-      ..distinctUnique()
+    transactionsQuerier = StreamController<int>()
+      ..stream
+          .distinctUnique()
           .asyncMap<Tuple2<int, PaginatedTransactions>>((page) async {
-            return Tuple2(
-              page,
-              await queryTransactions(
-                billingId: widget.billingId,
-                paginateBy: PaginateBy(
-                  page: page,
-                  limit: 20,
-                ),
-              ),
-            );
-          })
-          .doOnError((p0, p1) {})
-          .listen((value) {
-            setState(() {
-              _total = value.item2.total ?? 0;
-              _page = value.item1;
-              _transactions = [
-                ..._transactions,
-                ...value.item2.items,
-              ];
-            });
-          })
+        return Tuple2(
+          page,
+          await queryTransactions(
+            billingId: widget.billingId,
+            paginateBy: PaginateBy(
+              page: page,
+              limit: 20,
+            ),
+          ),
+        );
+      }).listen((value) {
+        setState(() {
+          _total = value.item2.total ?? 0;
+          _page = value.item1;
+          _transactions = [
+            ..._transactions,
+            ...value.item2.items,
+          ];
+        });
+      })
       ..add(_page + 1);
 
     // 监听滚动器，滚动到下方时，请求下一页数据

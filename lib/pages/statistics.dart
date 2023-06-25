@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fanfan/components/chart/category_amounts_pie.dart';
 import 'package:fanfan/components/transaction/thumbnail.dart';
 import 'package:fanfan/layouts/main.dart';
@@ -51,7 +53,7 @@ class _State extends State<Statistics> {
   late final List<_StatisticDuration> _durations;
 
   /// 获取交易列表的订阅器
-  late final PublishSubject<int> transactionsQuerier;
+  late final StreamController<int> transactionsQuerier;
 
   /// 初始化周期选项
   _initDurations() {
@@ -133,32 +135,31 @@ class _State extends State<Statistics> {
     _initStatistics();
 
     // 交易列表请求器
-    transactionsQuerier = PublishSubject<int>()
-      ..takeWhile((_) => _billingId != null)
+    transactionsQuerier = StreamController<int>()
+      ..stream
+          .takeWhile((_) => _billingId != null)
           .distinctUnique()
           .asyncMap<Tuple2<int, PaginatedTransactions>>((page) async {
-            return Tuple2(
-              page,
-              await queryTransactions(
-                billingId: _billingId!,
-                paginateBy: PaginateBy(
-                  page: page,
-                  limit: 20,
-                ),
-              ),
-            );
-          })
-          .doOnError((p0, p1) {})
-          .listen((value) {
-            setState(() {
-              _total = value.item2.total ?? 0;
-              _page = value.item1;
-              _transactions = [
-                ..._transactions,
-                ...value.item2.items,
-              ];
-            });
-          });
+        return Tuple2(
+          page,
+          await queryTransactions(
+            billingId: _billingId!,
+            paginateBy: PaginateBy(
+              page: page,
+              limit: 20,
+            ),
+          ),
+        );
+      }).listen((value) {
+        setState(() {
+          _total = value.item2.total ?? 0;
+          _page = value.item1;
+          _transactions = [
+            ..._transactions,
+            ...value.item2.items,
+          ];
+        });
+      });
 
     // 监听滚动器，滚动到下方时，请求下一页数据
     _scrollController = ScrollController()

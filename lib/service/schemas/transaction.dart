@@ -80,12 +80,12 @@ final AMOUNTS_GROUPED_BY_CATEGORY = gql('''
 /// 查询按分类合计的交易金额，同时查询交易列表
 final AMOUNTS_GROUPED_BY_CATEGORY_WITH_TRANSACTIONS = gql('''
   $CATEGORY_FRAGMENT
-  query TransactionAmountsGroupedByCategory(\$grounBy: GroupTransactionAmountByCategory!, \$filterBy: FilterTransactionBy!) {
+  query TransactionAmountsGroupedByCategory(\$grounBy: GroupTransactionAmountByCategory!, \$filterBy: FilterTransactionBy!, \$paginateBy: PaginateBy!) {
     transactionAmountsGroupedByCategory(groupBy: \$grounBy) {
       categoryId
       amount
     }
-    transactions(filterBy: \$filterBy) {
+    transactions(filterBy: \$filterBy, paginateBy: \$paginateBy) {
       items {
         id
         amount
