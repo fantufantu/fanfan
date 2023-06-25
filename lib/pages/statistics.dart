@@ -5,6 +5,7 @@ import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/service/entities/transaction/amount_grouped_by_category.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
+import 'package:fanfan/service/entities/transaction/paginated_transactions.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/utils/bottom_action_sheet.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:tuple/tuple.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({
@@ -29,23 +32,26 @@ class _State extends State<Statistics> {
   /// 交易列表
   List<Transaction> _transactions = [];
 
-  /// 账本id
-  late final int? _billingId;
-
-  /// 周期列表
-  late final List<_StatisticDuration> _durations;
-
-  /// 分类下交易金额
-  late List<AmountGroupedByCategory> _amountsGroupedByCategory = [];
-
   /// 当前对应的页码
   int _page = 1;
 
   /// 总数
   int _total = 0;
 
+  /// 分类下交易金额
+  List<AmountGroupedByCategory> _amountsGroupedByCategory = [];
+
   /// 滚动控制器
-  final ScrollController _scrollController = ScrollController();
+  late final ScrollController _scrollController;
+
+  /// 账本id
+  late final int? _billingId;
+
+  /// 周期列表
+  late final List<_StatisticDuration> _durations;
+
+  /// 获取交易列表的订阅器
+  late final PublishSubject<int> transactionsQuerier;
 
   _fetchMore() async {
     // 没有账本id，无法获取对应交易数据
@@ -108,7 +114,7 @@ class _State extends State<Statistics> {
   }
 
   /// 初始化页面的请求
-  void _initFetch() async {
+  void _initStatistics() async {
     // 没有账本id，无法获取对应交易数据
     if (_billingId == null) {
       return;
@@ -150,24 +156,50 @@ class _State extends State<Statistics> {
     _initDurations();
     // 初始化账本id
     _initBillingId();
+    // 初始化统计数据
+    _initStatistics();
 
-    // 初始化页面数据
-    _initFetch();
+    // 交易列表请求器
+    transactionsQuerier = PublishSubject<int>()
+      ..distinctUnique()
+          .asyncMap<Tuple2<int, PaginatedTransactions>>((page) async {
+            return Tuple2(
+              page,
+              await queryTransactions(
+                billingId: _billingId!,
+                paginateBy: PaginateBy(
+                  page: page,
+                  limit: 20,
+                ),
+              ),
+            );
+          })
+          .doOnError((p0, p1) {})
+          .listen((value) {
+            setState(() {
+              _total = value.item2.total ?? 0;
+              _page = value.item1;
+              _transactions = [
+                ..._transactions,
+                ...value.item2.items,
+              ];
+            });
+          });
 
     // 监听滚动器，滚动到下方时，请求下一页数据
-    _scrollController.addListener(() {
-      // 没有更多数据时，不再请求
-      if (_transactions.length >= _total) {
-        return;
-      }
-      // 仅当滚动到底部时，发起请求更多
-      if (_scrollController.position.pixels <
-          _scrollController.position.maxScrollExtent - 30) {
-        return;
-      }
-      // 执行查询更多
-      _fetchMore();
-    });
+    _scrollController = ScrollController()
+      ..addListener(() {
+        // 没有更多数据时，不再请求
+        // 仅当滚动到底部时，发起请求更多
+        if (_transactions.length >= _total ||
+            (_scrollController.position.pixels <
+                _scrollController.position.maxScrollExtent - 100)) {
+          return;
+        }
+
+        // 执行查询更多
+        transactionsQuerier.add(_page + 1);
+      });
   }
 
   /// 修改周期
