@@ -5,20 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class NavigationLayout extends StatelessWidget {
+class NavigationLayout extends StatefulWidget {
   final Widget child;
 
-  NavigationLayout({
-    super.key,
-    required this.child,
-  });
-
+  // 可用导航条目
   final _navigationItems = [
     const _NavigationItem(
       icon: Icon(CupertinoIcons.house),
       activeIcon: Icon(CupertinoIcons.house_fill),
       routeName: NamedRoute.Home,
       label: "主页",
+      isAuthorized: false,
     ),
     _NavigationItem(
       icon: const Icon(CupertinoIcons.chart_bar_square),
@@ -33,6 +30,7 @@ class NavigationLayout extends StatelessWidget {
         ),
         backgroundColor: Colors.grey.shade50,
       ),
+      isAuthorized: true,
     ),
     _NavigationItem(
       icon: const Icon(CupertinoIcons.tickets),
@@ -46,6 +44,7 @@ class NavigationLayout extends StatelessWidget {
           color: Colors.blueGrey.shade500,
         ),
       ),
+      isAuthorized: true,
     ),
     _NavigationItem(
       icon: const Icon(CupertinoIcons.person),
@@ -60,31 +59,38 @@ class NavigationLayout extends StatelessWidget {
           color: Colors.orange.shade500,
         ),
       ),
+      isAuthorized: false,
     )
   ];
 
-  /// 根据路由计算所在的导航位置
-  int _calculateSelectedIndex(BuildContext context) {
-    return _navigationItems.indexWhere(
-        (item) => item.routeName.name == GoRouterState.of(context).name);
-  }
-
-  /// 路由导航
-  _navigate(
-    BuildContext context, {
-    required int activeIndex,
-  }) {
-    final isLoggedIn = context.read<UserProfile>().isLoggedIn;
-    context
-        .goNamed(_navigationItems.elementAt(activeIndex).to(isLoggedIn).name);
-  }
+  NavigationLayout({
+    super.key,
+    required this.child,
+  });
 
   @override
+  State<NavigationLayout> createState() => _State();
+}
+
+class _State extends State<NavigationLayout> {
+  @override
   Widget build(BuildContext context) {
-    // 当前导航所在索引
-    final selectedIndex = _calculateSelectedIndex(context);
+    // 登录状态
+    final isLoggedIn =
+        context.select((UserProfile userProfile) => userProfile.isLoggedIn);
+
+    // 可用导航
+    final validNavigationItems = widget._navigationItems
+        .where((element) => isLoggedIn || !element.isAuthorized)
+        .toList();
+
+    // 当前导航下标
+    final selectedIndex = validNavigationItems.indexWhere(
+        (item) => item.routeName.name == GoRouterState.of(context).name);
+
     // 当前导航
-    final selectedNavigationItem = _navigationItems.elementAt(selectedIndex);
+    final selectedNavigationItem =
+        validNavigationItems.elementAt(selectedIndex);
 
     return Scaffold(
       appBar: selectedNavigationItem.appBar != null
@@ -120,10 +126,8 @@ class NavigationLayout extends StatelessWidget {
         ),
         child: BottomNavigationBar(
           currentIndex: selectedIndex,
-          onTap: (int activeIndex) => _navigate(
-            context,
-            activeIndex: activeIndex,
-          ),
+          onTap: (int activeIndex) => context.goNamed(
+              validNavigationItems.elementAt(activeIndex).to(isLoggedIn).name),
           type: BottomNavigationBarType.fixed,
           unselectedIconTheme: IconThemeData(
             color: Colors.grey.shade500,
@@ -141,7 +145,7 @@ class NavigationLayout extends StatelessWidget {
             height: 2,
             fontSize: 12,
           ),
-          items: _navigationItems
+          items: validNavigationItems
               .map((item) => BottomNavigationBarItem(
                     icon: item.icon,
                     activeIcon: item.activeIcon,
@@ -153,7 +157,7 @@ class NavigationLayout extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: SizedBox.expand(child: child),
+        child: SizedBox.expand(child: widget.child),
       ),
     );
   }
@@ -165,6 +169,7 @@ class _NavigationItem {
   final Widget activeIcon;
   final NamedRoute routeName;
   final String label;
+  final bool isAuthorized;
   final _AppBar? appBar;
   final NamedRoute? guardRouteName;
 
@@ -173,6 +178,7 @@ class _NavigationItem {
     required this.activeIcon,
     required this.routeName,
     required this.label,
+    required this.isAuthorized,
     this.guardRouteName,
     this.appBar,
   });

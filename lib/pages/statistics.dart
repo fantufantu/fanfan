@@ -5,6 +5,7 @@ import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
 import 'package:fanfan/service/entities/transaction/amount_grouped_by_category.dart';
+import 'package:fanfan/service/entities/transaction/group_by.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/entities/transaction/paginated_transactions.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
@@ -96,7 +97,10 @@ class _State extends State<Statistics> {
 
     // 请求页面数据
     final fetched = await queryTransactionAmountsGroupedByCategory(
-      billingId: _billingId!,
+      groupBy: GroupBy(
+        billingId: _billingId!,
+        happenedFrom: _durations.elementAt(_durationIndex).from,
+      ),
       withTransaction: true,
       paginateBy: PaginateBy(
         page: _page,

@@ -1,7 +1,7 @@
 import 'package:fanfan/components/service_entry.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/store/user_profile.dart';
-import 'package:fanfan/utils/toast.dart';
+import 'package:fanfan/utils/message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -36,7 +36,7 @@ class Home extends StatelessWidget {
         onPressed: () {
           // 当前用户没有设置默认账本时，消息提醒用户设置
           if (defaultBillingId == null) {
-            Notifier.error(
+            Message.error(
               context,
               message: "请先设置默认账本！",
             );
@@ -58,7 +58,7 @@ class Home extends StatelessWidget {
         onPressed: () {
           // 当前用户没有设置默认账本时，消息提醒用户设置
           if (defaultBillingId == null) {
-            Notifier.error(
+            Message.error(
               context,
               message: "请先设置默认账本！",
             );

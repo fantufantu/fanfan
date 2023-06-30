@@ -1,5 +1,6 @@
 import 'package:fanfan/service/entities/transaction/editable.dart';
 import 'package:fanfan/service/entities/transaction/amount_grouped_by_category.dart';
+import 'package:fanfan/service/entities/transaction/group_by.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/entities/transaction/paginated_transactions.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
@@ -119,22 +120,20 @@ Future<bool> updateById({
 Future<Tuple2<List<AmountGroupedByCategory>, PaginatedTransactions?>>
     queryTransactionAmountsGroupedByCategory({
   bool withTransaction = false,
-  required int billingId,
+  required GroupBy groupBy,
   PaginateBy? paginateBy,
 }) async {
   assert(withTransaction && paginateBy != null, '查询交易列表时，必须携带分页参数');
 
   final variables = Map<String, dynamic>.from({
-    "grounBy": {
-      "billingId": billingId,
-    }
+    "grounBy": groupBy.toJson(),
   });
 
   // 查询交易需要附带的查询条件
   if (withTransaction) {
     variables.addAll({
       "filterBy": {
-        "billingId": billingId,
+        "billingId": groupBy.billingId,
       },
       "paginateBy": paginateBy?.toJson(),
     });
@@ -145,6 +144,7 @@ Future<Tuple2<List<AmountGroupedByCategory>, PaginatedTransactions?>>
         ? AMOUNTS_GROUPED_BY_CATEGORY_WITH_TRANSACTIONS
         : AMOUNTS_GROUPED_BY_CATEGORY,
     variables: variables,
+    fetchPolicy: FetchPolicy.noCache,
   ));
 
   if (response.hasException || response.data == null) {
