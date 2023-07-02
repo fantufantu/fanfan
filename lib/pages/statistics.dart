@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fanfan/utils/bottom_action_sheet.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
 class Statistics extends StatefulWidget {
@@ -37,14 +36,14 @@ class _State extends State<Statistics> {
   /// 交易列表
   List<Transaction> _transactions = [];
 
-  /// 当前对应的页码
-  int _page = 1;
-
-  /// 总数
-  int _total = 0;
-
   /// 分类下交易金额
   List<AmountGroupedByCategory> _amountsGroupedByCategory = [];
+
+  /// 当前对应的页码
+  late int _page;
+
+  /// 总数
+  late int _total;
 
   /// 滚动控制器
   late final ScrollController _scrollController;
@@ -109,22 +108,17 @@ class _State extends State<Statistics> {
         categoryIds: _categoryIds,
       ),
       withTransaction: true,
-      paginateBy: PaginateBy(
-        page: _page,
-        limit: 20,
-      ),
+      paginateBy: PaginateBy(page: 1, limit: 20),
     );
 
     final paginatedTransactions = fetched.item2!;
 
     // 请求成功，更新页面数据
     setState(() {
+      _page = 1;
       _amountsGroupedByCategory = fetched.item1;
       _total = paginatedTransactions.total ?? 0;
-      _transactions = [
-        ..._transactions,
-        ...paginatedTransactions.items,
-      ];
+      _transactions = paginatedTransactions.items;
     });
   }
 
@@ -156,17 +150,21 @@ class _State extends State<Statistics> {
     transactionsQuerier = StreamController<int>()
       ..stream
           .takeWhile((_) => _billingId != null)
-          .distinctUnique()
-          .asyncMap<Tuple2<int, PaginatedTransactions>>((page) async {
-        return Tuple2(
-          page,
-          await queryTransactions(
-            filterBy:
-                FilterBy(billingId: _billingId!, categoryIds: _categoryIds),
-            paginateBy: PaginateBy(page: page, limit: 20),
-          ),
-        );
-      }).listen((value) {
+          .distinct()
+          .asyncMap<Tuple2<int, PaginatedTransactions>>(
+        (page) async {
+          return Tuple2(
+            page,
+            await queryTransactions(
+              filterBy: FilterBy(
+                billingId: _billingId!,
+                categoryIds: _categoryIds,
+              ),
+              paginateBy: PaginateBy(page: page, limit: 20),
+            ),
+          );
+        },
+      ).listen((value) {
         setState(() {
           _total = value.item2.total ?? 0;
           _page = value.item1;
@@ -194,19 +192,15 @@ class _State extends State<Statistics> {
   /// 修改周期
   void _changeDuration() async {
     final selectedIndex = await showBottomActionSheet(context,
-        actions: _durations.map(
-          (e) {
-            return e.label;
-          },
-        ).toList());
+        actions: _durations.map((e) => e.label).toList());
 
     // 用户取消选择
-    if (selectedIndex == null) {
-      return;
-    }
-    // 修改时间周期，获取新的周期内的数据
+    if (selectedIndex == null) return;
+
+    // 修改时间周期，重新获取周期内的数据
     setState(() {
       _durationIndex = selectedIndex;
+      _initStatistics();
     });
   }
 
