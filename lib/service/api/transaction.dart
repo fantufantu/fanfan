@@ -1,5 +1,6 @@
 import 'package:fanfan/service/entities/transaction/editable.dart';
 import 'package:fanfan/service/entities/transaction/amount_grouped_by_category.dart';
+import 'package:fanfan/service/entities/transaction/filter_by.dart';
 import 'package:fanfan/service/entities/transaction/group_by.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/entities/transaction/paginated_transactions.dart';
@@ -32,16 +33,14 @@ Future<Transaction> create({
 
 /// 查询列表
 Future<PaginatedTransactions> queryTransactions({
-  required int billingId,
+  required FilterBy filterBy,
   required PaginateBy paginateBy,
 }) async {
   final response = await Client().query(
     QueryOptions(
       document: TRANSACTIONS,
       variables: {
-        "filterBy": {
-          "billingId": billingId,
-        },
+        "filterBy": filterBy.toJson(),
         "paginateBy": paginateBy.toJson(),
       },
       fetchPolicy: FetchPolicy.noCache,
@@ -132,9 +131,10 @@ Future<Tuple2<List<AmountGroupedByCategory>, PaginatedTransactions?>>
   // 查询交易需要附带的查询条件
   if (withTransaction) {
     variables.addAll({
-      "filterBy": {
-        "billingId": groupBy.billingId,
-      },
+      "filterBy": FilterBy(
+        billingId: groupBy.billingId,
+        categoryIds: groupBy.categoryIds,
+      ).toJson(),
       "paginateBy": paginateBy?.toJson(),
     });
   }

@@ -34,22 +34,17 @@ class _State<T> extends State<Picker<T>> {
   /// 焦点
   final FocusNode _focusNode = FocusNode();
 
-  /// 下标选择器
-  late final FixedExtentScrollController _scrollController;
-
   /// 选中的选项
   int? _selectedItem;
 
   @override
   initState() {
     super.initState();
+
     // 监听聚焦节点
     _focusNode.addListener(_onFocusChanged);
     // 初始化默认选中值
     _selectedItem = widget.value;
-    // 滚动控制器
-    _scrollController =
-        FixedExtentScrollController(initialItem: widget.value ?? 0);
   }
 
   @override
@@ -63,6 +58,9 @@ class _State<T> extends State<Picker<T>> {
   _open(BuildContext context) {
     // 焦点置于输入框
     _focusNode.requestFocus();
+    // 生成一个滚动控制器
+    final scrollController =
+        FixedExtentScrollController(initialItem: widget.value ?? 0);
 
     // 唤起底部抽屉
     showModalBottomSheet(
@@ -87,11 +85,10 @@ class _State<T> extends State<Picker<T>> {
                         onPressed: () {
                           // 更新状态
                           setState(() {
-                            _selectedItem = _scrollController.selectedItem;
+                            _selectedItem = scrollController.selectedItem;
                           });
                           // 回调函数
-                          widget.onChanged
-                              ?.call(_scrollController.selectedItem);
+                          widget.onChanged?.call(scrollController.selectedItem);
                           Navigator.pop(context);
                         },
                         child: const Text('确定')),
@@ -105,7 +102,7 @@ class _State<T> extends State<Picker<T>> {
                   child: CupertinoPicker(
                     itemExtent: widget.itemExtent,
                     onSelectedItemChanged: null,
-                    scrollController: _scrollController,
+                    scrollController: scrollController,
                     children: widget.options
                         .map(
                           (option) => Center(

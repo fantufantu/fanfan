@@ -4,11 +4,14 @@ import 'package:fanfan/components/transaction/thumbnail.dart';
 import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
+import 'package:fanfan/service/entities/direction.dart';
 import 'package:fanfan/service/entities/transaction/amount_grouped_by_category.dart';
+import 'package:fanfan/service/entities/transaction/filter_by.dart';
 import 'package:fanfan/service/entities/transaction/group_by.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/entities/transaction/paginated_transactions.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
+import 'package:fanfan/store/category.dart';
 import 'package:fanfan/store/user_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,8 +58,11 @@ class _State extends State<Statistics> {
   /// 获取交易列表的订阅器
   late final StreamController<int> transactionsQuerier;
 
+  /// 需要查询的分类id列表
+  late final List<int> _categoryIds;
+
   /// 初始化周期选项
-  _initDurations() {
+  void _initDurations() {
     final currentAt = DateTime.now();
     final currentYear = currentAt.year;
     final currentMonth = currentAt.month;
@@ -100,6 +106,7 @@ class _State extends State<Statistics> {
       groupBy: GroupBy(
         billingId: _billingId!,
         happenedFrom: _durations.elementAt(_durationIndex).from,
+        categoryIds: _categoryIds,
       ),
       withTransaction: true,
       paginateBy: PaginateBy(
@@ -122,19 +129,27 @@ class _State extends State<Statistics> {
   }
 
   /// 初始化账本id
-  _initBillingId() {
+  void _initBillingId() {
     _billingId = context.read<UserProfile>().whoAmI?.defaultBilling?.id;
+  }
+
+  /// 初始化需要查询的分类id列表
+  void _initCategoryIds() {
+    _categoryIds = context
+        .read<Category>()
+        .categories
+        .where((element) => element.direction == Direction.Out)
+        .map((e) => e.id)
+        .toList();
   }
 
   @override
   initState() {
     super.initState();
 
-    // 初始化周期选项
     _initDurations();
-    // 初始化账本id
     _initBillingId();
-    // 初始化统计数据
+    _initCategoryIds();
     _initStatistics();
 
     // 交易列表请求器
@@ -146,11 +161,9 @@ class _State extends State<Statistics> {
         return Tuple2(
           page,
           await queryTransactions(
-            billingId: _billingId!,
-            paginateBy: PaginateBy(
-              page: page,
-              limit: 20,
-            ),
+            filterBy:
+                FilterBy(billingId: _billingId!, categoryIds: _categoryIds),
+            paginateBy: PaginateBy(page: page, limit: 20),
           ),
         );
       }).listen((value) {
@@ -216,7 +229,7 @@ class _State extends State<Statistics> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              "Statistics Grapgh",
+                              "统计图表",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -271,7 +284,7 @@ class _State extends State<Statistics> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Text(
-                                "Transactions",
+                                "交易",
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
@@ -287,7 +300,7 @@ class _State extends State<Statistics> {
                                     );
                                   },
                                   child: const Text(
-                                    "See All",
+                                    "全部",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,

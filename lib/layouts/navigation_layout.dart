@@ -23,7 +23,7 @@ class NavigationLayout extends StatefulWidget {
       routeName: NamedRoute.Statistics,
       label: "统计",
       appBar: _AppBar(
-        title: 'Statistics',
+        title: '统计数据',
         leading: _Leading(
           icon: CupertinoIcons.chart_bar_square_fill,
           color: Colors.amber.shade500,

@@ -3,6 +3,7 @@ import 'package:fanfan/components/transaction/thumbnail.dart';
 import 'package:fanfan/layouts/main.dart';
 import 'package:fanfan/router/main.dart';
 import 'package:fanfan/service/api/transaction.dart';
+import 'package:fanfan/service/entities/transaction/filter_by.dart';
 import 'package:fanfan/service/entities/transaction/main.dart';
 import 'package:fanfan/service/entities/transaction/paginated_transactions.dart';
 import 'package:fanfan/service/factories/paginate_by.dart';
@@ -51,11 +52,8 @@ class _State extends State<Transactions> {
         return Tuple2(
           page,
           await queryTransactions(
-            billingId: widget.billingId,
-            paginateBy: PaginateBy(
-              page: page,
-              limit: 20,
-            ),
+            filterBy: FilterBy(billingId: widget.billingId),
+            paginateBy: PaginateBy(page: page, limit: 20),
           ),
         );
       }).listen((value) {
