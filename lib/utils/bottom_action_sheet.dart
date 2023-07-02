@@ -29,12 +29,9 @@ Future<int?> showBottomActionSheet(
               .asMap()
               .entries
               .map(
-                (e) => InkWell(
-                  onTap: () => Navigator.pop(context, e.key),
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 20, bottom: 20),
-                    child: Text(e.value),
-                  ),
+                (e) => TextButton(
+                  onPressed: () => Navigator.pop(context, e.key),
+                  child: Text(e.value),
                 ),
               )
               .toList(),
