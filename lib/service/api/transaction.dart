@@ -134,6 +134,8 @@ Future<Tuple2<List<AmountGroupedByCategory>, PaginatedTransactions?>>
       "filterBy": FilterBy(
         billingId: groupBy.billingId,
         categoryIds: groupBy.categoryIds,
+        happenedFrom: groupBy.happenedFrom,
+        happenedTo: groupBy.happenedTo,
       ).toJson(),
       "paginateBy": paginateBy?.toJson(),
     });

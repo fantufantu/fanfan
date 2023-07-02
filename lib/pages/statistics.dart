@@ -45,6 +45,9 @@ class _State extends State<Statistics> {
   /// 总数
   late int _total;
 
+  /// 获取交易列表的订阅器
+  late StreamController<int> _transactionsQuerier;
+
   /// 滚动控制器
   late final ScrollController _scrollController;
 
@@ -53,9 +56,6 @@ class _State extends State<Statistics> {
 
   /// 周期列表
   late final List<_StatisticDuration> _durations;
-
-  /// 获取交易列表的订阅器
-  late final StreamController<int> transactionsQuerier;
 
   /// 需要查询的分类id列表
   late final List<int> _categoryIds;
@@ -100,25 +100,27 @@ class _State extends State<Statistics> {
       return;
     }
 
+    const firstPage = 1;
     // 请求页面数据
     final fetched = await queryTransactionAmountsGroupedByCategory(
       groupBy: GroupBy(
         billingId: _billingId!,
-        happenedFrom: _durations.elementAt(_durationIndex).from,
         categoryIds: _categoryIds,
+        happenedFrom: _durations.elementAt(_durationIndex).from,
       ),
       withTransaction: true,
-      paginateBy: PaginateBy(page: 1, limit: 20),
+      paginateBy: PaginateBy(page: firstPage, limit: 20),
     );
 
     final paginatedTransactions = fetched.item2!;
 
     // 请求成功，更新页面数据
     setState(() {
-      _page = 1;
+      _page = firstPage;
       _amountsGroupedByCategory = fetched.item1;
       _total = paginatedTransactions.total ?? 0;
       _transactions = paginatedTransactions.items;
+      _initTransactionsQuerier();
     });
   }
 
@@ -137,17 +139,9 @@ class _State extends State<Statistics> {
         .toList();
   }
 
-  @override
-  initState() {
-    super.initState();
-
-    _initDurations();
-    _initBillingId();
-    _initCategoryIds();
-    _initStatistics();
-
-    // 交易列表请求器
-    transactionsQuerier = StreamController<int>()
+  /// 初始化交易列表查询器
+  void _initTransactionsQuerier() {
+    _transactionsQuerier = StreamController<int>()
       ..stream
           .takeWhile((_) => _billingId != null)
           .distinct()
@@ -159,6 +153,7 @@ class _State extends State<Statistics> {
               filterBy: FilterBy(
                 billingId: _billingId!,
                 categoryIds: _categoryIds,
+                happenedFrom: _durations.elementAt(_durationIndex).from,
               ),
               paginateBy: PaginateBy(page: page, limit: 20),
             ),
@@ -174,6 +169,16 @@ class _State extends State<Statistics> {
           ];
         });
       });
+  }
+
+  @override
+  initState() {
+    super.initState();
+
+    _initDurations();
+    _initBillingId();
+    _initCategoryIds();
+    _initStatistics();
 
     // 监听滚动器，滚动到下方时，请求下一页数据
     _scrollController = ScrollController()
@@ -185,7 +190,7 @@ class _State extends State<Statistics> {
                 _scrollController.position.maxScrollExtent - 50)) return;
 
         // 执行查询更多
-        transactionsQuerier.add(_page + 1);
+        _transactionsQuerier.add(_page + 1);
       });
   }
 

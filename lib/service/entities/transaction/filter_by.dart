@@ -7,9 +7,17 @@ class FilterBy extends Entity {
   // 分类id
   List<int>? categoryIds;
 
+  // 起始时间
+  DateTime? happenedFrom;
+
+  // 截止时间
+  DateTime? happenedTo;
+
   FilterBy({
     required this.billingId,
     this.categoryIds,
+    this.happenedFrom,
+    this.happenedTo,
   });
 
   @override
@@ -17,6 +25,8 @@ class FilterBy extends Entity {
     return {
       "billingId": billingId,
       "categoryIds": categoryIds,
+      "happenedFrom": happenedFrom?.toString(),
+      "happenedTo": happenedTo?.toString(),
     };
   }
 }
