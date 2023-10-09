@@ -40,7 +40,7 @@ dependencies:
   tuple: ^2.0.1
   intl: ^0.18.1
   graphql: ^5.1.3
-  fl_chart: ^0.63.0
+  fl_chart: ^0.64.0
   rxdart: ^0.27.7
   fluttertoast: ^8.2.2
 
