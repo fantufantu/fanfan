@@ -68,11 +68,11 @@ Future<ConfirmAction> showConfirmBottomSheet(
           padding: const EdgeInsets.only(left: 12, right: 12),
           child: ElevatedButton(
             style: ButtonStyle(
-              elevation: const MaterialStatePropertyAll(0),
-              backgroundColor: MaterialStatePropertyAll(Colors.blue.shade50),
-              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+              elevation: const WidgetStatePropertyAll(0),
+              backgroundColor: WidgetStatePropertyAll(Colors.blue.shade50),
+              shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(99))),
-              padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
+              padding: const WidgetStatePropertyAll(EdgeInsets.all(16)),
             ),
             onPressed: () {
               Navigator.pop(context, ConfirmAction.Cancel);
@@ -94,9 +94,9 @@ Future<ConfirmAction> showConfirmBottomSheet(
           padding: const EdgeInsets.only(left: 12, right: 12),
           child: ElevatedButton(
             style: ButtonStyle(
-              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+              shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(99))),
-              padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
+              padding: const WidgetStatePropertyAll(EdgeInsets.all(16)),
             ),
             onPressed: () {
               Navigator.pop(context, ConfirmAction.Ok);

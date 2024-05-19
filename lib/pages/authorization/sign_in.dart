@@ -220,7 +220,7 @@ class _SignInFormState extends State<_SignInForm> {
                         child: ElevatedButton(
                           onPressed: _useLogin(context),
                           style: const ButtonStyle(
-                            shape: MaterialStatePropertyAll(
+                            shape: WidgetStatePropertyAll(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(24),

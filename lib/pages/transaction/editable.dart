@@ -134,7 +134,7 @@ class _State extends State<Editable> {
       return ElevatedButton(
           onPressed: () {},
           style: ButtonStyle(
-            shape: MaterialStatePropertyAll(
+            shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -367,12 +367,12 @@ class _State extends State<Editable> {
               child: ElevatedButton(
                 onPressed: _submit,
                 style: ButtonStyle(
-                  padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
-                  shape: MaterialStatePropertyAll(
+                  padding: const WidgetStatePropertyAll(EdgeInsets.all(16)),
+                  shape: WidgetStatePropertyAll(
                     RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(99)),
                   ),
-                  elevation: const MaterialStatePropertyAll(8),
+                  elevation: const WidgetStatePropertyAll(8),
                 ),
                 child: const Text(
                   '提交',

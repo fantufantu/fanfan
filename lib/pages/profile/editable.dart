@@ -105,12 +105,14 @@ class _State extends State<Editable> {
               child: ElevatedButton(
                 onPressed: _submit,
                 style: ButtonStyle(
-                  shape: MaterialStatePropertyAll(
+                  shape: WidgetStatePropertyAll(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(99),
                     ),
                   ),
-                  padding: const MaterialStatePropertyAll(EdgeInsets.all(16)),
+                  padding: const WidgetStatePropertyAll(
+                    EdgeInsets.all(16),
+                  ),
                 ),
                 child: const Text(
                   "更新",

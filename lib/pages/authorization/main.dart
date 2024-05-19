@@ -71,8 +71,8 @@ class Authorization extends StatelessWidget {
                     height: 48,
                     child: FilledButton(
                       style: const ButtonStyle(
-                        shadowColor: MaterialStatePropertyAll(Colors.blue),
-                        elevation: MaterialStatePropertyAll(4),
+                        shadowColor: WidgetStatePropertyAll(Colors.blue),
+                        elevation: WidgetStatePropertyAll(4),
                       ),
                       onPressed: () => context.go('/authorization/sign-in'),
                       child: const Text(

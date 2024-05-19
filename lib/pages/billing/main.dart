@@ -209,8 +209,10 @@ class _State extends State<Billing> {
                   ),
                   FilledButton.tonalIcon(
                     style: const ButtonStyle(
-                        padding: MaterialStatePropertyAll(
-                            EdgeInsets.only(left: 12, right: 12))),
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.only(left: 12, right: 12),
+                      ),
+                    ),
                     onPressed: () {
                       GoRouter.of(context).pushNamed(
                         NamedRoute.BillingLimitSettings.name,

@@ -344,7 +344,7 @@ class _SignUpFormState extends State<_SignUpForm> {
                         child: ElevatedButton(
                           onPressed: _useRegister(context),
                           style: const ButtonStyle(
-                            shape: MaterialStatePropertyAll(
+                            shape: WidgetStatePropertyAll(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(24),

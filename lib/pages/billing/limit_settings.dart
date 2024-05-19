@@ -148,13 +148,15 @@ class _State extends State<LimitSettings> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ButtonStyle(
-                    shape: MaterialStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(99),
-                      ),
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(99),
                     ),
-                    padding: const MaterialStatePropertyAll(
-                        EdgeInsets.only(top: 16, bottom: 16))),
+                  ),
+                  padding: const WidgetStatePropertyAll(
+                    EdgeInsets.only(top: 16, bottom: 16),
+                  ),
+                ),
                 onPressed: _submit,
                 child: const Text(
                   "保存修改",

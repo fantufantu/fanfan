@@ -46,7 +46,9 @@ void main() async {
 }
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App({
+    super.key,
+  });
 
   /// 路由
   List<RouteBase> _buildRoutes(BuildContext context) {
@@ -54,8 +56,9 @@ class App extends StatelessWidget {
       GoRoute(
         path: "/statistics",
         name: NamedRoute.Statistics.name,
-        pageBuilder: (context, state) =>
-            const MaterialPage(child: Statistics()),
+        pageBuilder: (context, state) => const MaterialPage(
+          child: Statistics(),
+        ),
       ),
       GoRoute(
         path: '/profile',
@@ -130,9 +133,10 @@ class App extends StatelessWidget {
                 return billing.LimitSettings(
                   id: int.parse(state.pathParameters['id']!),
                   initialLimitAmount: double.tryParse(
-                      state.queryParameters['limitAmount'] ?? ''),
+                    state.uri.queryParameters['limitAmount'] ?? '',
+                  ),
                   initialLimitDuration: LimitDuration.values
-                      .asNameMap()[state.queryParameters['limitDuration']],
+                      .asNameMap()[state.uri.queryParameters['limitDuration']],
                 );
               })
         ],
@@ -152,8 +156,10 @@ class App extends StatelessWidget {
         builder: (context, state) {
           return transaction.Editable(
             billing: (state.extra as Map<String, dynamic>?)?['billing'],
-            id: int.tryParse(state.queryParameters['id'] ?? ''),
-            to: NamedRoute.values.asNameMap()[state.queryParameters['to']],
+            id: int.tryParse(
+              state.uri.queryParameters['id'] ?? '',
+            ),
+            to: NamedRoute.values.asNameMap()[state.uri.queryParameters['to']],
             listener: (state.extra as Map<String, dynamic>?)?['listener'],
           );
         },
@@ -175,8 +181,9 @@ class App extends StatelessWidget {
         builder: (context, state) {
           return transaction.Transaction(
             id: int.parse(state.pathParameters['id']!),
-            isOneMore:
-                bool.tryParse(state.queryParameters['isOneMore'] ?? 'false'),
+            isOneMore: bool.tryParse(
+              state.uri.queryParameters['isOneMore'] ?? 'false',
+            ),
             listener: (state.extra as Map<String, dynamic>?)?['listener'],
           );
         },
